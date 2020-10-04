@@ -67,14 +67,14 @@ public class LoadXmlTask extends Task<Boolean> {
             updateProgress(60,100);
             updateMessage("Getting Customers..");
 
-            for (SDMCustomer customer : superDuperMarketDescriptor.getSDMCustomers().getSDMCustomer()) {
+           /* for (SDMCustomer customer : superDuperMarketDescriptor.getSDMCustomers().getSDMCustomer()) {
                 if (!CustomersInSystem.containsKey((long)customer.getId()))
                     crateNewCustomerInSystem(customer);
                 else {
                     updateMessage("Error! - XML contains 2 Customers at the same location" + customer.getId());
                     throw new DuplicateCustomerInSystemException(customer.getId());
                 }
-            }
+            }*/
 
             Thread.sleep(SLEEP_TIME);
             updateProgress(90,100);
@@ -158,7 +158,7 @@ public class LoadXmlTask extends Task<Boolean> {
                 }
                 if (curDis.getIfYouBuy().getQuantity() < 0) {
                     updateMessage("Error! -Discount "+curDis.getName()+" want you to Buy Negative Amount...");
-                    throw new NegativeQuantityException(curDis.getIfYouBuy().getQuantity());
+                    throw new NegativeQuantityException((int)curDis.getIfYouBuy().getQuantity());
                 }
                 if (curDis.getThenYouGet().getSDMOffer().isEmpty()) {
                     updateMessage("Error! -Discount "+curDis.getName()+" does not offer anything...");
@@ -196,7 +196,7 @@ public class LoadXmlTask extends Task<Boolean> {
                         throw new StoreDoesNotSellItemException("Item of Discount is not sold at store", curDis.getIfYouBuy().getItemId());}
                     if (offer.getQuantity() < 0) {
                         updateMessage("Error! -Discount "+curDis.getName()+" Quantity is Negative");
-                        throw new NegativeQuantityException(offer.getQuantity());}
+                        throw new NegativeQuantityException((int)offer.getQuantity());}
 
                     Item itemForCtor = ItemsInSystem.get((long) offer.getItemId()).getItem();
 
@@ -209,7 +209,7 @@ public class LoadXmlTask extends Task<Boolean> {
         SystemGrid.put(newStore.getCoordinate(), newStore);
     }
 
-    private void crateNewCustomerInSystem(SDMCustomer customer) throws PointOutOfGridException, DuplicatePointOnGridException {
+    /*private void crateNewCustomerInSystem(SDMCustomer customer) throws PointOutOfGridException, DuplicatePointOnGridException {
 
         Point location = new Point(customer.getLocation().getX(),customer.getLocation().getY());
 
@@ -223,7 +223,7 @@ public class LoadXmlTask extends Task<Boolean> {
         Customer newUser = new Customer(customer.getId(),customer.getName().trim(),location);
         CustomersInSystem.put(newUser.getIdNumber(),newUser);
         SystemGrid.put(newUser.getCoordinate(),newUser);
-    }
+    }*/
 
 
     private void checkMissingItem() throws ItemIsNotSoldAtAllException {

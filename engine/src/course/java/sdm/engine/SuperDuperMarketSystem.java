@@ -2,7 +2,6 @@ package course.java.sdm.engine;
 import course.java.sdm.classesForUI.*;
 import course.java.sdm.exceptions.*;
 import course.java.sdm.generatedClasses.*;
-import course.java.sdm.gui.MainMenu.MainMenuController;
 import javafx.concurrent.Task;
 
 import javax.management.openmbean.*;
@@ -22,7 +21,7 @@ public class SuperDuperMarketSystem {
     private static long OrdersSerialGenerator = 4000000;
 
     private Task<Boolean> currentRunningTask;
-    private final MainMenuController controller;
+
 
     private Map<Long,ProductInSystem> m_ItemsInSystem = new HashMap<>();
     private Map<Long,Customer> m_CustomersInSystem = new HashMap<>();
@@ -32,9 +31,6 @@ public class SuperDuperMarketSystem {
     private Order m_tempOrder = null;
     private boolean locked = true;
 
-    public SuperDuperMarketSystem(MainMenuController controller) {
-        this.controller = controller;
-    }
 
     static double CalculatePPK(Store FromStore, Point curLocation)   {
         return (double)FromStore.getPPK() * FromStore.getCoordinate().distance(curLocation);
@@ -556,7 +552,7 @@ public class SuperDuperMarketSystem {
         }
         currentRunningTask = new LoadXmlTask(superDuperMarketDescriptor,this);
         //controller.bindTaskToUIComponents(currentRunningTask,onFinish);
-        controller.bindTaskToUIComponents(currentRunningTask);
+        //controller.bindTaskToUIComponents(currentRunningTask);
         new Thread(currentRunningTask).start();
     }
 
