@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/SDMWebApp/SDMWebApp.iml" filepath="$PROJECT_DIR$/SDMWebApp/SDMWebApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/engine/engine.iml" filepath="$PROJECT_DIR$/engine/engine.iml" />
       <module fileurl="file://$PROJECT_DIR$/mediatorClasses/mediatorClasses.iml" filepath="$PROJECT_DIR$/mediatorClasses/mediatorClasses.iml" />
     </modules>
