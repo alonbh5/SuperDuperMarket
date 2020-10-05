@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="engienSDM">
+    <output-path>$PROJECT_DIR$/out/artifacts/engienSDM</output-path>
+    <root id="archive" name="engienSDM.jar">
+      <element id="module-output" name="engine" />
+      <element id="module-output" name="mediatorClasses" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/engine/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

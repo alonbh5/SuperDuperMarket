@@ -4,6 +4,7 @@ public class DuplicateCustomerInSystemException extends Exception {
 
     public final long id;
 
+
     public DuplicateCustomerInSystemException(long id) {
         this.id = id;
     }

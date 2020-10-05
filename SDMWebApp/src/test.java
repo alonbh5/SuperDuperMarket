@@ -1,9 +1,9 @@
-import course.java.sdm.engine.SuperDuperMarketSystem;
+
 
 public class test {
 
     public void foo () {
-        SuperDuperMarketSystem gaga = new SuperDuperMarketSystem();
+        int gaga = 4;
         System.out.println(gaga);
     }
 
