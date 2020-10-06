@@ -5,10 +5,11 @@
     <title>SDM by AlonBH - Sign In</title>
 
     <!-- Link the Bootstrap (from twitter) CSS framework in order to use its classes-->
-    <link rel="stylesheet" href="Common/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="Common/bootstrap.min.css">-->
 
     <!-- Link jQuery JavaScript library in order to use the $ (jQuery) method-->
-    <script src="Common/jquery-3.5.1.min.js"></script>
+    <script src="Common/jquery-2.0.3.min.js"></script>
+    <script src="Common/LoginRoom.js"></script>
 
 </head>
 <body>
@@ -17,16 +18,22 @@
     <br/>
     <h2>Please Enter a Unique User Name,Select Type of User and then Press "Login":</h2>
     <br>
-    <form method="GET" action="login">
-        <input type="text" name="username" class=""/>
+    <form id="loginSubmitForm" method="GET" action="login">
+        <input id="UserNameTextBox" type="text" name="username" class=""/>
         <br><br>
-        <input type="radio" id="seller" name="userType" value="seller">
+        <input  type="radio" id="seller" name="userType" value="seller">
         <label for="seller">Seller</label>
         <input type="radio" id="costumer" name="userType" value="costumer">
         <label for="costumer">Customer</label><br>
         <br>
         <input type="submit" value="Login"/>
     </form>
+
+    <br><br>
+    <div >
+        <h1 id="ErrorMassage"></h1>
+    </div>
+
 </div>
 </body>
 </html>

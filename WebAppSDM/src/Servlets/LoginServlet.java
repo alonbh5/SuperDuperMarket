@@ -1,9 +1,12 @@
 package Servlets;
 
+import Constants.Constants;
+import Utils.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -17,6 +20,8 @@ public class LoginServlet extends HttpServlet {
     private final String CHAT_ROOM_URL = "../chatroom/chatroom.html";
     private final String SIGN_UP_URL = "../signup/signup.html";
     private final String LOGIN_ERROR_URL = "/pages/loginerror/login_attempt_after_error.jsp";  // must start with '/' since will be used in request dispatcher...
+
+    private final String WELCOME_ROOM_URL = "Pages/WelcomeRoom/WelcomeRoom.html";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -29,7 +34,7 @@ public class LoginServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)   throws ServletException, IOException {
 
-        /*response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         String usernameFromSession = SessionUtils.getUsername(request);
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
         if (usernameFromSession == null) {
@@ -44,7 +49,18 @@ public class LoginServlet extends HttpServlet {
                 //normalize the username value
                 usernameFromParameter = usernameFromParameter.trim();
 
+                /*
+                One can ask why not enclose all the synchronizations inside the userManager object ?
+                Well, the atomic action we need to perform here includes both the question (isUserExists) and (potentially) the insertion
+                of a new user (addUser). These two actions needs to be considered atomic, and synchronizing only each one of them, solely, is not enough.
+                (of course there are other more sophisticated and performable means for that (atomic objects etc) but these are not in our scope)
 
+                The synchronized is on this instance (the servlet).
+                As the servlet is singleton - it is promised that all threads will be synchronized on the very same instance (crucial here)
+
+                A better code would be to perform only as little and as necessary things we need here inside the synchronized block and avoid
+                do here other not related actions (such as request dispatcher\redirection etc. this is shown here in that manner just to stress this issue
+                 */
                 synchronized (this) {
                     if (userManager.isUserExists(usernameFromParameter)) {
                         String errorMessage = "Username " + usernameFromParameter + " already exists. Please enter a different username.";
@@ -73,11 +89,9 @@ public class LoginServlet extends HttpServlet {
         } else {
             //user is already logged in
             response.sendRedirect(CHAT_ROOM_URL);
-        }*/
-
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<h1>Welcome to the Super Duper Market!</h1>");
         }
+
+        //response.sendRedirect(WELCOME_ROOM_URL);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
