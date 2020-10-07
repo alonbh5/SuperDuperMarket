@@ -10,11 +10,12 @@ class Customer extends Person implements Coordinatable {
 
     private Point m_currentLocation;
     private final Map<Long,Order> m_OrderHistory = new HashMap<>();
+    private final Map<Seller,FeedBack> FeedBacks = new HashMap<>();
 
 
-    Customer(int i_IDNumber, String i_Name, Point i_currentLocation) {
+    Customer(Long i_IDNumber, String i_Name) {
         super(i_IDNumber, i_Name);
-        this.m_currentLocation = i_currentLocation;
+        this.m_currentLocation = new Point();
     }
 
     Long getIdNumber () {return super.getIDNumber();}
@@ -58,6 +59,10 @@ class Customer extends Person implements Coordinatable {
                 .stream()
                 .mapToDouble(v->v.getItemsPrice())
                 .average().getAsDouble();
+    }
+
+    void addFeedBack (FeedBack FeedbackToAdd) {
+        FeedBacks.put(FeedbackToAdd.getSeller(),FeedbackToAdd);
     }
 
     int getAmountOFOrders() {

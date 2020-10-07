@@ -10,6 +10,8 @@ import java.util.List;
 
 class Store implements HasName, Coordinatable,Serializable {
 
+    private final String m_Zone;
+    private final Seller m_Seller;
     private final Point m_locationCoordinate;
     private final Long m_StoreID;
     private double m_profitFromShipping = 0;
@@ -19,11 +21,13 @@ class Store implements HasName, Coordinatable,Serializable {
     private String m_Name;
     private int PPK;
 
-    Store(Long i_serialNumber,Point i_locationCoordinate,String m_Name, int i_PPK) {
+    Store(Long i_serialNumber,Point i_locationCoordinate,String m_Name, int i_PPK,Seller seller,String Zone) {
         this.m_StoreID = i_serialNumber;
         this.m_locationCoordinate = i_locationCoordinate;
         this.PPK=i_PPK;
         this.m_Name = m_Name;
+        this.m_Seller=seller;
+        this.m_Zone=Zone;
     }
 
     int getPPK() {
@@ -36,6 +40,8 @@ class Store implements HasName, Coordinatable,Serializable {
 
     int getAmountOfItems () {return m_items.size();}
 
+    String getZone() {return m_Zone;}
+
     Collection getDiscounts () {return m_Discounts;};
 
     double getProfitFromShipping() {
@@ -45,6 +51,10 @@ class Store implements HasName, Coordinatable,Serializable {
     ProductInStore getProductInStoreByID (Long itemID)
     {
             return m_items.get(itemID);
+    }
+
+    public Seller getSeller() {
+        return m_Seller;
     }
 
     void addItemToStore (ProductInStore ProductToAdd) throws NegativePriceException {

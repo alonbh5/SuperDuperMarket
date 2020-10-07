@@ -2,7 +2,6 @@ package course.java.sdm.engine;
 import course.java.sdm.classesForUI.*;
 import course.java.sdm.exceptions.*;
 import course.java.sdm.generatedClasses.*;
-import javafx.concurrent.Task;
 
 import javax.management.openmbean.*;
 import javax.xml.bind.JAXBException;
@@ -15,22 +14,22 @@ public class SuperDuperMarketSystem {
 
     public static final int MAX_COORDINATE = 50;
     public static final int MIN_COORDINATE = 1;
-    private static long UsersSerialGenerator = 1000;
-    private static long ItemSerialGenerator = 20000;
-    private static long StoreSerialGenerator = 300000;
-    private static long OrdersSerialGenerator = 4000000;
 
-    private Task<Boolean> currentRunningTask;
-
+    private final String Zone;
+    private final Seller ZoneManger;
+    private Map<Long,Seller> m_SellersInSystem = new HashMap<>();
 
     private Map<Long,ProductInSystem> m_ItemsInSystem = new HashMap<>();
-    private Map<Long,Customer> m_CustomersInSystem = new HashMap<>();
     private Map<Point,Coordinatable> m_SystemGrid = new HashMap<>(); //all the shops
     private Map<Long,Order> m_OrderHistory = new HashMap<>(); //all the shops
     private Map<Long,Store> m_StoresInSystem = new HashMap<>();
     private Order m_tempOrder = null;
     private boolean locked = true;
 
+    public SuperDuperMarketSystem(String zone, Seller zoneManger) {
+        Zone = zone;
+        ZoneManger = zoneManger;
+    }
 
     static double CalculatePPK(Store FromStore, Point curLocation)   {
         return (double)FromStore.getPPK() * FromStore.getCoordinate().distance(curLocation);
@@ -55,11 +54,6 @@ public class SuperDuperMarketSystem {
     public boolean isStoreInSystem (long i_serialNumber)
     {
         return m_StoresInSystem.containsKey(i_serialNumber);
-    }
-
-    public boolean isCustomerInSystem (long i_serialNumber)
-    {
-        return m_CustomersInSystem.containsKey(i_serialNumber);
     }
 
     public boolean isOrderInSystem (long i_serialNumber)
@@ -135,25 +129,7 @@ public class SuperDuperMarketSystem {
         return res;
     }
 
-    public List<CustomerInfo> getListOfAllCustomerInSystem () throws NoValidXMLException    {
-        if (locked)
-            throw new NoValidXMLException();
 
-        List<CustomerInfo> res = new ArrayList<>();
-
-        for (Customer curCustomer : m_CustomersInSystem.values()){
-            CustomerInfo newCustomer = new CustomerInfo(curCustomer.getName(),
-                    curCustomer.getIdNumber()
-                    ,curCustomer.getCoordinate()
-                    ,curCustomer.getAvgPriceOfShipping()
-                    ,curCustomer.getAvgPriceOfOrdersWithoutShipping()
-                    ,curCustomer.getAmountOFOrders());
-            res.add(newCustomer);
-        }
-
-
-        return res;
-    }
 
     public Collection<ItemInfo> getListOfAllItems () throws NoValidXMLException    {
         if (locked)
@@ -266,19 +242,17 @@ public class SuperDuperMarketSystem {
 
 
 
-    public List<DiscountInfo> getDiscountsFromStaticOrder (Collection<ItemInOrderInfo> itemsChosen, StoreInfo storeChosen, CustomerInfo curUser, Date OrderDate) throws PointOutOfGridException, StoreDoesNotSellItemException, CustomerNotInSystemException, OrderIsNotForThisCustomerException {
+    public List<DiscountInfo> CreateTempStaticOrderAndGetDiscounts (Collection<ItemInOrderInfo> itemsChosen, StoreInfo storeChosen, Customer customer, Date OrderDate) throws PointOutOfGridException, StoreDoesNotSellItemException {
         //create temp static order, return entitled discount..
-
+        //todo add seller and all that...
         if (!m_StoresInSystem.containsKey(storeChosen.StoreID))
             throw (new RuntimeException("Store ID #"+storeChosen.StoreID+" is not in System"));
         if (itemsChosen.isEmpty())
             throw (new RuntimeException("Empty List"));
-        if (!isCustomerInSystem(curUser.ID))
-            throw (new CustomerNotInSystemException(curUser.ID));
 
-        Customer curCustomer = m_CustomersInSystem.get(curUser.ID);
+
         Store curStore = m_StoresInSystem.get(storeChosen.StoreID);
-        Order newOrder = createEmptyOrder(curCustomer,OrderDate,true);
+        Order newOrder = createEmptyOrder(customer,OrderDate,true);
 
         for (ItemInOrderInfo curItem : itemsChosen) {
             if (!curStore.isItemInStore(curItem.serialNumber))
@@ -307,25 +281,22 @@ public class SuperDuperMarketSystem {
         updateSoldCounterInStore(m_tempOrder); // updated the counter of item in the store (how many times has been sold)
         for (Store curStore : m_tempOrder.getStoreSet())
             curStore.addOrderToStoreHistory(m_tempOrder);
-        m_tempOrder.getCostumer().addOrderToHistory(m_tempOrder);
+        m_tempOrder.getCostumer().addOrderToHistory(m_tempOrder); //todo add history to both seller and cosmer...and ask for feedback?
 
     }
 
     public OrderInfo getTempOrder() {
         return createOrderInfo(m_tempOrder);
-    }
+    } //todo fix that
 
-    public OrderInfo getDynamicOrderInfoBeforeDiscounts (Collection<ItemInOrderInfo> itemsChosen,CustomerInfo curUser, Date OrderDate) throws InvalidKeyException, PointOutOfGridException, ItemIsNotSoldAtAllException, CustomerNotInSystemException {
+    public OrderInfo getDynamicOrderInfoBeforeDiscounts (Collection<ItemInOrderInfo> itemsChosen,Customer customer, Date OrderDate) throws InvalidKeyException, PointOutOfGridException, ItemIsNotSoldAtAllException {
         //NOTE - You need to use approveDynamicOrder to insert to system after
         //part 1 - Create Temp... (UI want to see stores...)
-        if (!isCustomerInSystem(curUser.ID))
-            throw (new CustomerNotInSystemException(curUser.ID));
 
-        Customer curCustomer = m_CustomersInSystem.get(curUser.ID);
 
         Store minSellingStore;
         ProductInSystem itemInSys;
-        Order newOrder = createEmptyOrder(curCustomer,OrderDate,false);
+        Order newOrder = createEmptyOrder(customer,OrderDate,false);
 
         for (ItemInOrderInfo curItem : itemsChosen) {
             if (!isItemInSystem(curItem.serialNumber))
@@ -435,10 +406,9 @@ public class SuperDuperMarketSystem {
         if (!isCoordinateInRange(customer.getCoordinate()))
             throw (new PointOutOfGridException(customer.getCoordinate()));
 
-        while (m_OrderHistory.containsKey(OrdersSerialGenerator))
-            OrdersSerialGenerator++;
+        Long OrdersSerialGenerator = MainSystem.getOrderSerial();
 
-        return new Order (customer,OrdersSerialGenerator++,OrderDate,isStatic);
+        return new Order (customer,OrdersSerialGenerator,OrderDate,isStatic);
     }
 
     public void DeleteItemFromStore(long itemID, long storeID) throws InvalidKeyException, StoreDoesNotSellItemException, ItemIsNotSoldAtAllException, ItemIsTheOnlyOneInStoreException { //bonus
@@ -541,20 +511,7 @@ public class SuperDuperMarketSystem {
     }*/
 
 
-    public void UploadInfoFromXML (String XMLPath) throws  NoValidXMLException {
-        SuperDuperMarketDescriptor superDuperMarketDescriptor;
 
-        try {
-            superDuperMarketDescriptor = FileHandler.UploadFile(XMLPath);
-
-        } catch (JAXBException e) {
-            throw new NoValidXMLException();
-        }
-        currentRunningTask = new LoadXmlTask(superDuperMarketDescriptor,this);
-        //controller.bindTaskToUIComponents(currentRunningTask,onFinish);
-        //controller.bindTaskToUIComponents(currentRunningTask);
-        new Thread(currentRunningTask).start();
-    }
 
 
     private void updateShippingProfitAfterOrder(Order newOrder) {
@@ -667,10 +624,9 @@ public class SuperDuperMarketSystem {
         locked = false;
     }*/
 
-    void setInfoFromTask (Map<Long,ProductInSystem> ItemsInSystem, Map<Point,Coordinatable> SystemGrid ,Map<Long,Store> StoresInSystem ,
-    Map<Long,Order> OrderHistory, Map<Long,Customer> CustomersInSystem) {
+    void setNewSystemFromFile (Map<Long,ProductInSystem> ItemsInSystem, Map<Point,Coordinatable> SystemGrid ,Map<Long,Store> StoresInSystem ,
+    Map<Long,Order> OrderHistory) {
         this.m_SystemGrid = SystemGrid;
-        this.m_CustomersInSystem = CustomersInSystem;
         this.m_StoresInSystem = StoresInSystem;
         this.m_OrderHistory=OrderHistory;
         this.m_ItemsInSystem=ItemsInSystem;
