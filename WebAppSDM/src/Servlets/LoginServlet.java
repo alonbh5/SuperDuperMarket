@@ -79,9 +79,14 @@ public class LoginServlet extends HttpServlet {
                         //create a new one
                         request.getSession(true).setAttribute(Constants.USERNAME, newUser.getName());
                         request.getSession(false).setAttribute(Constants.USERID,newUser.getId());
+                        request.getSession(false).setAttribute(Constants.USERTYPE,userTypeFromParameter);
                         //redirect the request to the chat room - in order to actually change the URL
                         System.out.println("On login, request URI is: " + request.getRequestURI());
-                        response.sendRedirect(WELCOME_ROOM_URL);
+
+                        if (userTypeFromParameter.equals("seller"))
+                            response.sendRedirect(WELCOME_ROOM_URL); //todo one
+                        else
+                            response.sendRedirect(WELCOME_ROOM_URL); //todo two
                     }
                 }
             }

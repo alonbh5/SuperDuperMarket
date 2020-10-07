@@ -12,6 +12,18 @@ public class SessionUtils {
         return sessionAttribute != null ? (Long) sessionAttribute : null;
     }
 
+    public static String getUserName (HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Object sessionAttribute = session != null ? session.getAttribute(Constants.USERNAME) : null;
+        return sessionAttribute != null ? sessionAttribute.toString() : null;
+    }
+
+    public static String getUserType (HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Object sessionAttribute = session != null ? session.getAttribute(Constants.USERTYPE) : null;
+        return sessionAttribute != null ? sessionAttribute.toString() : null;
+    }
+
     public static void clearSession (HttpServletRequest request) {
         request.getSession().invalidate();
     }
