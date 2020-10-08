@@ -1,23 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Welcome Page</title>
     <meta charset="UTF-8">
-    <title>AlonBh5</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../../Common/jquery-2.0.3.min.js"></script>
-    <script> //todo here you can block no good user..(if he type the url) redirct to
-    $.ajax({
-        data:'',
-        url: 'http://localhost:8080/WebAppSDM_war_exploded/getUserType',
-        success: function(data) {
-                $('#writeMe').text(data);
-            }
+    <script src="WelcomePage.js"> </script>
 
-        }); //todo this works buy do it ONLOAD!@#@!%@!@%!!%@%@!%!@%!!%!@%
-    </script>
+    <link rel="stylesheet" href="WelcomePage.css">
 </head>
+<!---------------------------------Body Start--------------------------------->
 <body>
-<h1>my name is alon</h1>
-<h2 id="writeMe"></h2>
+
+<div class="header">
+    <h1>Super Duper Market</h1>
+    <p>created by Alon Ben Harosh.</p>
+</div>
+
+<div class="navbar" id="MainBar">
+    <a href="#">Main</a>
+    <a href="#" id="AddedButton">Account</a>
+    <!-- <a href="#" ></a> -->
+    <a href="#" class="right">Sign Out</a>
+</div>
+
+<div class="row" id="UserRow">
+    <div class="side">
+        <h2>Users Online</h2>
+        <p id="Users">
+            <ul id="userslist">
+
+            </ul>
+        </p>
+
+    </div>
+
+
+    <div class="main">
+        <h2>Areas Information</h2>
+        <div class="fakeimg" style="height:200px;">Image</div>
+
+    </div>
+</div>
+
+<div class="footer">
+    <h2>End</h2>
+</div>
+
 </body>
 </html>

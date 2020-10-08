@@ -20,4 +20,13 @@
         <servlet-name>GetUserTypeServlet</servlet-name>
         <url-pattern>/getUserType</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UsersListServlet</servlet-name>
+        <servlet-class>Servlets.UsersListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsersListServlet</servlet-name>
+        <url-pattern>/UsersList</url-pattern>
+    </servlet-mapping>
 </web-app>

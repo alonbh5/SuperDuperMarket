@@ -27,10 +27,10 @@ public class GetUserTypeServlet extends HttpServlet {
             //todo ridirect to home page!!
         }
 
-        Gson gson = new Gson();
-        String res = gson.toJson(userType);
+        //Gson gson = new Gson();
+        //String res = gson.toJson(userType);
 
-        response.getWriter().println(res);
+        response.getWriter().println(userType);
     }
 
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

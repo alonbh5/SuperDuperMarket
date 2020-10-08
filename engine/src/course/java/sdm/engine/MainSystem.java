@@ -62,4 +62,14 @@ public class MainSystem {
     public boolean isUserExists(String name) {
         return m_CustomersInSystem.containsKey(name) || m_SellersInSystem.containsKey(name);
     }
+
+
+    public Set<String> getAllUsersForList() {
+        Set<String> res = new HashSet<>();
+        for (Customer cur : m_CustomersInSystem.values())
+            res.add(cur.getName()+" (Customer)");
+        for (Seller cur : m_SellersInSystem.values())
+            res.add(cur.getName()+" (Seller)");
+        return res;
+    }
 }
