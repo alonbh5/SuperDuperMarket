@@ -1,10 +1,11 @@
 package course.java.sdm.engine;
 
 import course.java.sdm.classesForUI.CustomerInfo;
-import course.java.sdm.exceptions.NoValidXMLException;
+import course.java.sdm.exceptions.*;
 import course.java.sdm.generatedClasses.SuperDuperMarketDescriptor;
 
 import javax.xml.bind.JAXBException;
+import java.io.InputStream;
 import java.util.*;
 
 public class MainSystem {
@@ -71,5 +72,29 @@ public class MainSystem {
         for (Seller cur : m_SellersInSystem.values())
             res.add(cur.getName()+" (Seller)");
         return res;
+    }
+
+
+    public void uploadFile(InputStream inputStream, String sellerName) throws DuplicatePointOnGridException, DuplicateItemInStoreException, NoOffersInDiscountException, IllegalOfferException, PointOutOfGridException, DuplicateStoreInSystemException, ItemIsNotSoldAtAllException, StoreItemNotInSystemException, StoreDoesNotSellItemException, NegativePriceException, NoValidXMLException, NegativeQuantityException, DuplicateItemIDException, WrongPayingMethodException, DuplicateZoneException {
+        Seller curSeller = m_SellersInSystem.get(sellerName);
+
+
+        SuperDuperMarketDescriptor superDuperMarketDescriptor;
+
+        try {
+            superDuperMarketDescriptor = FileHandler.UploadFile(inputStream);
+
+        } catch (JAXBException e) {
+            throw new NoValidXMLException();
+        }
+
+        String Zone = superDuperMarketDescriptor.getSDMZone().getName();
+
+        for (Seller cur : m_SellersInSystem.values())
+            if (cur.isZoneInUser(Zone))
+                throw new DuplicateZoneException(Zone,cur.getName());
+
+        curSeller.UploadInfoFromXML(Zone,superDuperMarketDescriptor);
+
     }
 }

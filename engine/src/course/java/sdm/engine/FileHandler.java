@@ -17,14 +17,11 @@ class FileHandler {
 
     private final static String JAXB_XML_SDM_PACKAGE_NAME = "course.java.sdm.generatedClasses";
 
-     static SuperDuperMarketDescriptor UploadFile (String str) throws JAXBException, NoValidXMLException {
+     static SuperDuperMarketDescriptor UploadFile (InputStream inputStream) throws JAXBException, NoValidXMLException {
+
+         return deserializeFrom(inputStream);
 
 
-         Path XmlPath = Paths.get(str);
-         File XmlFile = XmlPath.toFile();
-         if (!XmlFile.exists())
-             throw new NoValidXMLException();
-         return deserializeFrom(XmlFile);
      }
 
     static SuperDuperMarketDescriptor deserializeFrom(InputStream inputStream) throws JAXBException {

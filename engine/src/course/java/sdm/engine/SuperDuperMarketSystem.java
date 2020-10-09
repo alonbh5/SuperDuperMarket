@@ -17,7 +17,6 @@ public class SuperDuperMarketSystem {
 
     private final String Zone;
     private final Seller ZoneManger;
-    private Map<Long,Seller> m_SellersInSystem = new HashMap<>();
 
     private Map<Long,ProductInSystem> m_ItemsInSystem = new HashMap<>();
     private Map<Point,Coordinatable> m_SystemGrid = new HashMap<>(); //all the shops

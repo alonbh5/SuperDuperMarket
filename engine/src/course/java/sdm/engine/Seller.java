@@ -4,6 +4,7 @@ import course.java.sdm.exceptions.*;
 import course.java.sdm.generatedClasses.SuperDuperMarketDescriptor;
 
 import javax.xml.bind.JAXBException;
+import java.io.InputStream;
 import java.util.*;
 
 public class Seller extends Person {
@@ -41,19 +42,14 @@ public class Seller extends Person {
         return FeedBacks.containsKey(customer);
     }
 
-    public void UploadInfoFromXML (String XMLPath) throws NoValidXMLException, IllegalOfferException, DuplicateItemIDException, WrongPayingMethodException, NoOffersInDiscountException, DuplicateItemInStoreException, ItemIsNotSoldAtAllException, StoreDoesNotSellItemException, DuplicateStoreInSystemException, DuplicatePointOnGridException, NegativePriceException, PointOutOfGridException, NegativeQuantityException, StoreItemNotInSystemException {
-        SuperDuperMarketDescriptor superDuperMarketDescriptor;
+    public void UploadInfoFromXML (String Zone,SuperDuperMarketDescriptor superDuperMarketDescriptor) throws NoValidXMLException, IllegalOfferException, DuplicateItemIDException, WrongPayingMethodException, NoOffersInDiscountException, DuplicateItemInStoreException, ItemIsNotSoldAtAllException, StoreDoesNotSellItemException, DuplicateStoreInSystemException, DuplicatePointOnGridException, NegativePriceException, PointOutOfGridException, NegativeQuantityException, StoreItemNotInSystemException {
 
-        try {
-            superDuperMarketDescriptor = FileHandler.UploadFile(XMLPath);
-
-        } catch (JAXBException e) {
-            throw new NoValidXMLException();
-        }
-
-        String Zone = superDuperMarketDescriptor.getSDMZone().getName();
         SuperDuperMarketSystem newArea = new SuperDuperMarketSystem(Zone,this);
         LoadXml loader = new LoadXml(superDuperMarketDescriptor,this,newArea);
+        this.AllSuperMarket.put(Zone,newArea); //will not add if the file no good
+    }
 
+    boolean isZoneInUser (String zone) {
+        return AllSuperMarket.containsKey(zone);
     }
 }

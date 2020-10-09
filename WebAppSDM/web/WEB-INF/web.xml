@@ -29,4 +29,13 @@
         <servlet-name>UsersListServlet</servlet-name>
         <url-pattern>/UsersList</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UploadXml</servlet-name>
+        <servlet-class>Servlets.UploadXml</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UploadXml</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
 </web-app>
