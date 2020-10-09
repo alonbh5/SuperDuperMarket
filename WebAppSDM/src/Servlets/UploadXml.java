@@ -20,7 +20,7 @@ public class UploadXml extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)   throws ServletException, IOException {
 
-        response.setContentType("text/plain");
+        response.setContentType("text/html");
 
         Collection<Part> parts = request.getParts();
         MainSystem MainSDM = ServletUtils.getMainSystem(getServletContext());
@@ -29,6 +29,7 @@ public class UploadXml extends HttpServlet {
 
         try {
             MainSDM.uploadFile(parts.iterator().next().getInputStream(),userNameFromSession); //only one file
+            out.println("File Uploaded!");
         } catch (DuplicatePointOnGridException e) {
             out.println("Error - There is a Duplicated Point on Grid - "+ e.PointInput.x+","+e.PointInput.y);
         } catch (DuplicateItemInStoreException e) {

@@ -92,7 +92,7 @@ public class MainSystem {
 
         for (Seller cur : m_SellersInSystem.values())
             if (cur.isZoneInUser(Zone))
-                throw new DuplicateZoneException(Zone,cur.getName());
+                throw new DuplicateZoneException(cur.getName(),Zone);
 
         curSeller.UploadInfoFromXML(Zone,superDuperMarketDescriptor);
 

@@ -2,7 +2,7 @@ var refreshRate = 2000; //milli seconds
 
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
 
-    //
+
 
     $.ajax({
         data:'',
@@ -53,21 +53,33 @@ function HandelFile() {
     $('.main').empty().append("<form id='SendFile' action=\"../../upload\" enctype=\"multipart/form-data\" method=\"POST\">\n" +
         "    <input id='uploadButton' type=\"file\" value=\"Choose File\" accept=\"text/xml\" name=\"file1\"><br>\n" +
         "    <input id='submitButton' type=\"Submit\" value=\"Upload File\" ><br>\n" +
-        "<label for='uploadButton'>Select File </label>"+
         "</form>");
 
-    $('SendFile').submit(
-        function () {
-             $.ajax({
-                data:this.serialize(),
-                contentType:false,
-                processData:false,
-                url: 'http://localhost:8080/WebAppSDM_war_exploded/upload',
-            //while get "seller" or "customer" (with ")
-                success: function(data) {
+    $('#SendFile').submit(function (e) {
 
-                }});
-            return false;});
+        e.preventDefault();
+        var form = $('form')[0]; // You need to use standard javascript object here
+        var formData = new FormData(form);
+        $.ajax({
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            url: this.action,
+            error: function (data) {
+                $('#rrrr').text(data)
+            },
+            success: function (data) {
+                $('#rrrr').text(data)
+            }
+
+        });
+        return false;
+    });
+}
+
+
+
+
    // $('#uploadButton').onclick($('#submitButton').setAttribute("disabled","false"));
 
-}
