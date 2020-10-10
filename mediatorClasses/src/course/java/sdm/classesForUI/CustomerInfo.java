@@ -9,14 +9,16 @@ public class CustomerInfo {
     public final Double AvgPriceForShipping;
     public final Double AvgPriceForOrderWithoutShipping;
     public final Integer AmountOfOrders;
+    public final WalletInfo Wallet;
 
-    public CustomerInfo(String name, long ID, Point location, double avgPriceForShipping, double avgPriceForOrderWithoutShipping, int amountOfOrders) {
+    public CustomerInfo(String name, long ID, Point location, double avgPriceForShipping, double avgPriceForOrderWithoutShipping, int amountOfOrders,WalletInfo wallet) {
         this.name = name;
         this.ID = ID;
         Location = location;
         AvgPriceForShipping = avgPriceForShipping;
         AvgPriceForOrderWithoutShipping = avgPriceForOrderWithoutShipping;
         AmountOfOrders = amountOfOrders;
+        this.Wallet = wallet;
     }
 
     public String getLocationString (){

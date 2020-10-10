@@ -11,7 +11,7 @@ class Customer extends Person implements Coordinatable {
     private Point m_currentLocation;
     private final Map<Long,Order> m_OrderHistory = new HashMap<>();
     private final Map<Seller,FeedBack> FeedBacks = new HashMap<>();
-
+    private final Wallet wallet = new Wallet();
 
     Customer(Long i_IDNumber, String i_Name) {
         super(i_IDNumber, i_Name);
@@ -23,6 +23,10 @@ class Customer extends Person implements Coordinatable {
     void setCurrentLocation (Point i_newLocation)
     {
         this.m_currentLocation = i_newLocation;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
     }
 
     void addOrderToHistory (Order newOrder) throws OrderIsNotForThisCustomerException {

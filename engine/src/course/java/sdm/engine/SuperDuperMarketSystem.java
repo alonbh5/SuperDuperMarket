@@ -86,6 +86,10 @@ public class SuperDuperMarketSystem {
         throw  ( new InvalidKeyException("Store #"+StoreID+" is not in System"));
     }
 
+    public String getZone () {
+        return this.Zone;
+    }
+
     private ProductInSystem getItemByID (Long ItemID) throws InvalidKeyException  {
         if (isItemInSystem(ItemID))
             return m_ItemsInSystem.get(ItemID);
@@ -398,7 +402,7 @@ public class SuperDuperMarketSystem {
     }
 
     private CustomerInfo createCustomerInfo (Customer user) {
-        return new CustomerInfo(user.getName(),user.getId(),user.getCoordinate(),user.getAvgPriceOfShipping(),user.getAvgPriceOfOrdersWithoutShipping(),user.getAmountOFOrders());
+        return new CustomerInfo(user.getName(),user.getId(),user.getCoordinate(),user.getAvgPriceOfShipping(),user.getAvgPriceOfOrdersWithoutShipping(),user.getAmountOFOrders(),user.getWallet().getWalletInfo());
     }
 
     private Order createEmptyOrder (Customer customer, Date OrderDate,boolean isStatic) throws PointOutOfGridException {
@@ -742,4 +746,12 @@ public class SuperDuperMarketSystem {
    }
 
 
+    public Double getAvgOrderPrice() {
+        if (m_OrderHistory.isEmpty())
+            return 0d;
+
+        return Arrays.stream(m_OrderHistory.values().stream()
+                .mapToDouble(t -> t.getItemsPrice()).toArray())
+                .average().getAsDouble();
+    }
 }

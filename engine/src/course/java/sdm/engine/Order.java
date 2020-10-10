@@ -28,7 +28,7 @@ class Order implements Coordinatable, Serializable {
         this.isStatic=isStatic;
     }
 
-     long getOrderSerialNumber() {
+     public long getOrderSerialNumber() {
         return m_OrderSerialNumber;
     }
 

@@ -155,7 +155,7 @@ class Store implements HasName, Coordinatable,Serializable {
         {
             stores = curOrder.getStoreInfo();
             itemsOnlyFromStore = curOrder.getItemsOnlyFromStore(this.m_StoreID);
-            customer =  new CustomerInfo(curOrder.getCostumer().getName(),curOrder.getCostumer().getId(),curOrder.getCostumer().getCoordinate(),curOrder.getCostumer().getAvgPriceOfShipping(),curOrder.getCostumer().getAvgPriceOfOrdersWithoutShipping(),curOrder.getCostumer().getAmountOFOrders());
+            customer =  new CustomerInfo(curOrder.getCostumer().getName(),curOrder.getCostumer().getId(),curOrder.getCostumer().getCoordinate(),curOrder.getCostumer().getAvgPriceOfShipping(),curOrder.getCostumer().getAvgPriceOfOrdersWithoutShipping(),curOrder.getCostumer().getAmountOFOrders(),curOrder.getCostumer().getWallet().getWalletInfo());
             OrderInfo newOrder = new OrderInfo(curOrder.getOrderSerialNumber(),curOrder.getDate(),stores
             ,itemsOnlyFromStore,curOrder.getTotalPrice(),curOrder.getShippingPrice()
                     ,curOrder.getItemsPrice(),curOrder.getAmountOfItems(),customer,curOrder.isStatic());

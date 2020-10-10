@@ -1,12 +1,21 @@
+var Version = 0;
 var refreshRate = 2000; //milli seconds
+var updateArea = false;
+var getAreasUrl = "http://localhost:8080/WebAppSDM_war_exploded/getAreas";
+var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
+var UserListUrl = 'http://localhost:8080/WebAppSDM_war_exploded/UsersList';
 
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
 
+    $('#HomeButton').on("click",function(){
+        SetAres();
+    });
 
+    SetAres();
 
     $.ajax({
         data:'',
-        url: 'http://localhost:8080/WebAppSDM_war_exploded/getUserType',
+        url: getUserTypeUrl,
         //while get "seller" or "customer" (with ")
         success: function(data) {
 
@@ -27,9 +36,89 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
 
 });
 
+function SetAres() {
+    $('.main').empty().append('<h2>Areas Information</h2><br>\n' +
+        '        <table id="AreasTable">\n' +
+        '            <tr>\n' +
+        '                <th>User Name</th>\n' +
+        '                <th>Area Name</th>\n' +
+        '                <th>Amount Of Stores</th>\n' +
+        '                <th>Amount Of Items</th>\n' +
+        '                <th>Amount Of Orders</th>\n' +
+        '                <th>Average Order Price</th>\n' +
+        '            </tr>\n' +
+        '        </table>');
+    //todo set interval for update
+    updateArea=true;
+    Version = 0;
+    setTimeout(showAreas,refreshRate);
+}
+
+
+
+function showAreas() {
+
+    $.ajax({
+        data: "areasVersion=" +Version,
+        url: getAreasUrl,
+        dataType: 'json',
+        success: function (data) {
+            /*
+             data will arrive in the next form:
+             {
+                "entries": [
+                    {
+                        "chatString":"Hi",
+                        "username":"bbb",
+                        "time":1485548397514
+                    },
+                    {
+                        "chatString":"Hello",
+                        "username":"bbb",
+                        "time":1485548397514
+                    }
+                ],
+                "version":1
+             }
+             */
+            if (data.version !== Version) {
+                Version = data.version;
+                appendToAreas(data.entries);
+            }
+
+        }
+
+    });
+
+    if (updateArea)
+        setTimeout(showAreas,refreshRate);
+}
+
+function appendToAreas(entries) {
+
+    // add the relevant entries
+    $.each(entries || [], appendAreaEntry);
+}
+
+function appendAreaEntry(index, entry) {
+    var entryElement = createAreaEntry(entry);
+    $("#AreasTable").append(entryElement);
+}
+
+function createAreaEntry(entry) {
+    return $('<tr>\n' +
+        '       <td>'+entry.UserName+'</td>\n' +
+        '       <td>'+entry.Zone+'</td>\n' +
+        '       <td>'+entry.AmountOfItems+'</td>\n' +
+        '       <td>'+entry.AmountOfStores+'</td>\n' +
+        '       <td>'+entry.AmountOfOrder+'</td>\n' +
+        '       <td>'+entry.AvgOrderPriceWithoutShipping+'</td>\n' +
+        '     </tr>')
+}
+
 function ajaxUsersList() {
     $.ajax({
-        url: 'http://localhost:8080/WebAppSDM_war_exploded/UsersList',
+        url: UserListUrl,
         success: function(users) {
             refreshUsersList(users);
         }
@@ -50,6 +139,9 @@ function refreshUsersList(users) {
 }
 //todo change this to get dom
 function HandelFile() {
+    //todo unset interval for update
+    updateArea=false;
+
     $('.main').empty().append("<form id='SendFile' action=\"../../upload\" enctype=\"multipart/form-data\" method=\"POST\">\n" +
         "    <input id='uploadButton' type=\"file\" value=\"Choose File\" accept=\"text/xml\" name=\"file1\"><br>\n" +
         "    <input id='submitButton' type=\"Submit\" value=\"Upload File\" ><br>\n" +
@@ -67,10 +159,10 @@ function HandelFile() {
             processData: false,
             url: this.action,
             error: function (data) {
-                $('#rrrr').text(data)
+                $('#EndLine').text(data)
             },
             success: function (data) {
-                $('#rrrr').text(data)
+                $('#EndLine').text(data)
             }
 
         });

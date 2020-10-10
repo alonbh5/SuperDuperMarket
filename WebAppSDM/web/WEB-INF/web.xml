@@ -38,4 +38,13 @@
         <servlet-name>UploadXml</servlet-name>
         <url-pattern>/upload</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AllAreas</servlet-name>
+        <servlet-class>Servlets.AllAreasServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AllAreas</servlet-name>
+        <url-pattern>/getAreas</url-pattern>
+    </servlet-mapping>
 </web-app>
