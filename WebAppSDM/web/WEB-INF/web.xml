@@ -47,4 +47,13 @@
         <servlet-name>AllAreas</servlet-name>
         <url-pattern>/getAreas</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LocalZone</servlet-name>
+        <servlet-class>Servlets.LocalZoneServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LocalZone</servlet-name>
+        <url-pattern>/LocalZones</url-pattern>
+    </servlet-mapping>
 </web-app>

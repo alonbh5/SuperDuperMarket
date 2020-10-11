@@ -93,7 +93,7 @@ public class MainSystem {
             throw new NoValidXMLException();
         }
 
-        String Zone = superDuperMarketDescriptor.getSDMZone().getName();
+        String Zone = superDuperMarketDescriptor.getSDMZone().getName().trim();
 
         for (Seller cur : m_SellersInSystem.values())
             if (cur.isZoneInUser(Zone))
@@ -113,5 +113,14 @@ public class MainSystem {
             fromIndex = 0;
         }
         return Areas.subList(fromIndex, Areas.size());
+    }
+
+    public synchronized List<AreaInfo> getAllAreaEntries() {
+        List<AreaInfo> res = new ArrayList<>();
+        for (Seller cur : m_SellersInSystem.values())
+            for (String Zone :cur.getZones())
+                 res.add(cur.getAreaInfo(Zone));
+
+        return res;
     }
 }

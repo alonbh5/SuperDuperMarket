@@ -66,7 +66,7 @@ public class LoginServlet extends HttpServlet {
                         // see this link for more details:
                         // http://timjansen.github.io/jarfiller/guide/servlet25/requestdispatcher.xhtml
                         request.setAttribute(Constants.USER_NAME_ERROR, errorMessage);
-                        getServletContext().getRequestDispatcher(SIGN_UP_URL).forward(request, response);//todo!!!
+                        getServletContext().getRequestDispatcher(SIGN_UP_URL).forward(request, response);//todo error!!!
                     } else {
                         //add the new user to the users list
                         Person newUser;

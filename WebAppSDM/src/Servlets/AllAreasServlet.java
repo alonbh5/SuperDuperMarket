@@ -31,10 +31,9 @@ public class AllAreasServlet extends HttpServlet {
         }
 
         AreaAndVersion cav = new AreaAndVersion(areasEntries, OfficialAreasVersion);
+        //List<AreaInfo> areasEntries = MainSDM.getAllAreaEntries();
         Gson gson = new Gson();
         String jsonResponse = gson.toJson(cav);
-        System.out.println("Server Chat version: " + OfficialAreasVersion + ", User '" + userNameFromSession + "' Chat version: " + UserAreaVersion);
-        System.out.println(jsonResponse);
 
         try (PrintWriter out = response.getWriter()) {
             out.print(jsonResponse);

@@ -5,10 +5,13 @@ var getAreasUrl = "http://localhost:8080/WebAppSDM_war_exploded/getAreas";
 var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
 var UserListUrl = 'http://localhost:8080/WebAppSDM_war_exploded/UsersList';
 
+//todo I need to if areas are changes!
+
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
 
     $('#HomeButton').on("click",function(){
-        SetAres();
+        if (!updateArea)
+             SetAres();
     });
 
     SetAres();
@@ -106,9 +109,11 @@ function appendAreaEntry(index, entry) {
 }
 
 function createAreaEntry(entry) {
+
+    var zone=entry.Zone;
     return $('<tr>\n' +
         '       <td>'+entry.UserName+'</td>\n' +
-        '       <td>'+entry.Zone+'</td>\n' +
+        '       <td><a href="http://localhost:8080/WebAppSDM_war_exploded/LocalZones?zoneSelected='+entry.Zone+'">'+entry.Zone+'</a></td>\n' +
         '       <td>'+entry.AmountOfItems+'</td>\n' +
         '       <td>'+entry.AmountOfStores+'</td>\n' +
         '       <td>'+entry.AmountOfOrder+'</td>\n' +
