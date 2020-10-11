@@ -123,4 +123,12 @@ public class MainSystem {
 
         return res;
     }
+
+    public synchronized SuperDuperMarketSystem getSDMByZone (String Zone) {
+        for (Seller cur : m_SellersInSystem.values())
+            if (cur.isZoneInUser(Zone))
+                return cur.getAllSuperMarket().get(Zone);
+
+            return null;
+    }
 }

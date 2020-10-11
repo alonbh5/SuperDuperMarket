@@ -56,4 +56,13 @@
         <servlet-name>LocalZone</servlet-name>
         <url-pattern>/LocalZones</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetZoneInfo</servlet-name>
+        <servlet-class>Servlets.GetZoneInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetZoneInfo</servlet-name>
+        <url-pattern>/GetZoneInfo</url-pattern>
+    </servlet-mapping>
 </web-app>
