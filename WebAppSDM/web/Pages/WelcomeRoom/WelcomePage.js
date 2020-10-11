@@ -22,7 +22,17 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
         //while get "seller" or "customer" (with ")
         success: function(data) {
 
-            if (data.includes("seller")){
+            /*
+             data will arrive in the next form:
+             {
+             "userType":"seller",
+             "userName":"Alon",
+             "userId":"1",
+             ,"userZone":"Tel Aviv"
+             }
+             */
+
+            if (data.userType.includes("seller")){
                 $('#MainBar').append(
                     $('<a href="#" id="uploadButton">Upload New Zone</a>').on("click",function(){
                         HandelFile();
