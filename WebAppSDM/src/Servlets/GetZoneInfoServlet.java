@@ -38,12 +38,12 @@ public class GetZoneInfoServlet extends HttpServlet {
          * if it related to Zone
          */
         response.setContentType("application/json");
+        MainSystem MainSDM = ServletUtils.getMainSystem(getServletContext());
         String CurUserZone = SessionUtils.getUserCurZone(request); //return null if no session
+        String userRequest = request.getParameter(Constants.USER_REQUEST);
 
         if (CurUserZone != null) {
-            MainSystem MainSDM = ServletUtils.getMainSystem(getServletContext());
             SuperDuperMarketSystem sdmByZone = MainSDM.getSDMByZone(CurUserZone);
-            String userRequest = request.getParameter(Constants.USER_REQUEST);
 
             switch (userRequest) {
                 case StoreRequest:
@@ -66,6 +66,14 @@ public class GetZoneInfoServlet extends HttpServlet {
                     break;
                 default:
                     // code block //todo error
+            }
+        }
+        else {
+            String CurUserName = SessionUtils.getUserName(request);
+            if (userRequest.equals(AccentWalletRequest) && CurUserName!=null)
+                SendUserWallet(request,response,MainSDM);
+            else {
+                //todo error
             }
         }
     }

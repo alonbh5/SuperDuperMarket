@@ -4,6 +4,8 @@ var updateArea = false;
 var getAreasUrl = "http://localhost:8080/WebAppSDM_war_exploded/getAreas";
 var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
 var UserListUrl = 'http://localhost:8080/WebAppSDM_war_exploded/UsersList';
+var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
+var ServletRequestAttributeName = "infoType=";
 
 //todo I need to if areas are changes!
 
@@ -12,6 +14,10 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
     $('#HomeButton').on("click",function(){
         if (!updateArea)
              SetAres();
+    });
+
+    $('#AddedButton').on("click",function(){
+        ShowAccount();
     });
 
     SetAres();
@@ -39,7 +45,7 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
                     }));
             }
             else {
-                console.log("noooo");
+                //todo
             }
         }
 
@@ -48,6 +54,80 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
     setInterval(ajaxUsersList, refreshRate);
 
 });
+
+function ShowAccount() {
+    SetAccount();
+
+    $.ajax({
+        data: ServletRequestAttributeName+"wallet",
+        url: getZoneInfo,
+        //while get "seller" or "customer" (with ")
+        success: function (data) { //todo
+            /*
+             data will arrive in array for each is the form:
+             {
+             "Balance":0.0,
+             "AllTransactions":[
+             ...
+             ]
+             }
+
+             */
+
+            //todo append to accountBody (ID) /*<tr>\n" +
+            //         "                        <td class=\"column1\">2017-09-29 01:22</td>\n" +
+            //         "                        <td class=\"column2\">200398</td>\n" +
+            //         "                        <td class=\"column3\">iPhone X 64Gb Grey</td>\n" +
+            //         "                        <td class=\"column4\">$999.00</td>\n" +
+            //         "                        <td class=\"column5\">1</td>\n" +
+            //         "                        <td class=\"column6\">$999.00</td>\n" +
+            //         "                    </tr>\n" +
+            //         "                    \n" +
+            //         "\n" +*/
+            $("#balance").text(data.Balance);
+            $.each(data.AllTransactions || [], SetTransatcion(index, transction));
+        }
+    });
+}
+
+function SetAccount() {
+    $('.main').empty().append("<div class=\"limiter\">\n" +
+        "    <div class=\"container-table100\">\n" +
+        "        <div class=\"wrap-table100\"><div class=\"balanceDiv\"> <br> <h1 id=\"balance\">150</h1><br><br></div>\n" +
+        "            <div class=\"table100\">\n" +
+        "                <table>\n" +
+        "                    <thead>\n" +
+        "                    <tr class=\"table100-head\">\n" +
+        "                        <th class=\"column1\">Transaction ID</th>\n" +
+        "                        <th class=\"column2\">Type</th>\n" +
+        "                        <th class=\"column3\">Date</th>\n" +
+        "                        <th class=\"column4\">Amount</th>\n" +
+        "                        <th class=\"column5\">Balance Before</th>\n" +
+        "                        <th class=\"column6\">Balance After</th>\n" +
+        "                    </tr>\n" +
+        "                    </thead>\n" +
+        "                    \n" +
+        "                    <tbody id='accountBody'>\n" +
+        "                    </tbody>\n" +
+        "                </table>\n" +
+        "            </div>\n" +
+        "        </div>\n" +
+        "    </div>\n" +
+        "</div>");
+}
+
+function SetTransatcion(index, transction) {
+
+$('#accountBody').append(' <tr>\\n" +\n' +
+    '        "                        <td class=\\"column1\\">transction.SerialNumber</td>\\n" +\n' +
+    '        "                        <td class=\\"column2\\">transction.transactionMethod</td>\\n" +\n' +
+    '        "                        <td class=\\"column3\\">transction.date</td>\\n" +\n' +
+    '        "                        <td class=\\"column4\\">transction.AmountOfTransaction</td>\\n" +\n' +
+    '        "                        <td class=\\"column5\\">transction.BalanceBefore</td>\\n" +\n' +
+    '        "                        <td class=\\"column6\\">transction.BalanceAfter</td>\\n" +\n' +
+    '        "                    </tr>\\n" +');
+}
+
 
 function SetAres() {
     $('.main').empty().append('<h2>Areas Information</h2><br>\n' +
@@ -146,7 +226,6 @@ function refreshUsersList(users) {
 
     // rebuild the list of users: scan all users and add them to the list of users
     $.each(users || [], function(index, username) {
-        console.log("Adding user #" + index + ": " + username);
         //create a new <option> tag with a value in it and
         //appeand it to the #userslist (div with id=userslist) element
         $('<li>' + username + '</li>').appendTo($("#userslist"));

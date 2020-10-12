@@ -14,7 +14,6 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
     });
 
     $('#StoreButton').on("click",function(){
-        if (!updateArea)
             ShowStores();
     });
 
@@ -60,7 +59,7 @@ function makeBars() {
                 MakeNewOrder();
             })).append(
             $('<a href="#" id="OrderHistoryButton">My Order History</a>').on("click",function(){
-                OrderHistory();
+                BuyerOrderHistory();
             }))}
 
     $('#MyHeader').text("Welcome To "+CurUserZone+"!");
@@ -72,6 +71,40 @@ function ShowStores() {
         url: getZoneInfo,
         //while get "seller" or "customer" (with ")
         success: function (data) {
+            /*
+            data will arrive in array for each is the form:
+            [{
+            "locationCoordinate":{"x":3,"y":4},
+            "StoreID":1,
+            "profitFromShipping":0.0,
+            "Name":"super baba",
+            "PPK":30,
+            "Items":[
+                        {"serialNumber":1,"Name":"Ketshop","PayBy":"AMOUNT","PriceInStore":20.0,"SoldCounter":0.0}
+                        ,{"serialNumber":2,"Name":"Banana","PayBy":"WEIGHT","PriceInStore":10.0,"SoldCounter":0.0},
+                        {"serialNumber":5,"Name":"Tomato","PayBy":"WEIGHT","PriceInStore":50.0,"SoldCounter":0.0}
+                    ],
+            "OrderHistory":[],
+            "Discount":[
+                        {"Name":"Balabait ishtagea !",
+                        "DiscountOperator":"ONE_OF",
+                        "itemToBuy":{"ID":1,"Name":"Ketshop","PayBy":"AMOUNT","Amount":1.0,"PricePerOne":0.0},
+                        "AmountToBuy":1.0,
+                        "StoreID":1,
+                        "OfferedItem":[{"ID":5,"Name":"Tomato","PayBy":"WEIGHT","Amount":2.0,"PricePerOne":20.0}
+                        ,{"ID":2,"Name":"Banana","PayBy":"WEIGHT","Amount":1.0,"PricePerOne":0.0}],
+                        "IndexOfWantedItem":[],
+                        "MaxAmount":0,
+                        "i":0,
+                        "AmountEntitled":{"name":"","value":0,"valid":true},
+                        "AmountWanted":{"name":"","value":0,"valid":true}},
+                       ]
+            }]
+            .
+            .
+            .
+            ]
+            */
         }
     });
 }
@@ -96,6 +129,12 @@ function ShowItems() {
              .
              ]
              */
+            setItemTable();
+            $.each(data || [], function(index, username) {
+                //create a new <option> tag with a value in it and
+                //appeand it to the #userslist (div with id=userslist) element
+                SetItem(username);
+            });
         }
     });
 }
@@ -103,7 +142,7 @@ function ShowItems() {
 function MakeNewOrder() {
 
 }
-function OrderHistory() {
+function BuyerOrderHistory() {
     $.ajax({
         data: ServletRequestAttributeName+"buyerOrders",
         url: getZoneInfo,
@@ -114,7 +153,13 @@ function OrderHistory() {
 }
 //====================seller====================
 function SellersOrder() {
+    $.ajax({
+        data: ServletRequestAttributeName+"sellerOrders",
+        url: getZoneInfo,
 
+        success: function (data) {
+        }
+    });
 }
 function OpenNewStore() {
 
@@ -128,4 +173,44 @@ function ShowFeedback() {
         }
     });
 }
+//------------------------------helper---------------------------------------
+function setItemTable() {
 
+    $('.main').empty().append(table);
+
+}
+
+function SetItem(item){
+    $('#accountBody').append(' <tr>\\n" +\n' +
+        '        "                        <td class=\"column1\">'+item.serialNumber+'</td>\\n" +\n' +
+        '        "                        <td class=\"column2\">'+item.Name+'</td>\\n" +\n' +
+        '        "                        <td class=\"column3\">'+item.PayBy+'</td>\\n" +\n' +
+        '        "                        <td class=\"column4\">'+item.NumOfSellingStores+'</td>\\n" +\n' +
+        '        "                        <td class=\"column5\">'+item.AvgPrice+'</td>\\n" +\n' +
+        '        "                        <td class=\"column6\">'+item.SoldCount+'</td>\\n" +\n' +
+        '        "                    </tr>\\n" +');
+}
+
+var table = "<div class=\"limiter\">\n" +
+    "    <div class=\"container-table100\">\n" +
+    "        <div class=\"wrap-table100\">\n" +
+    "            <div class=\"table100\">\n" +
+    "                <table>\n" +
+    "                    <thead>\n" +
+    "                    <tr class=\"table100-head\">\n" +
+    "                        <th class=\"column1\">Serial Number</th>\n" +
+    "                        <th class=\"column2\">Name</th>\n" +
+    "                        <th class=\"column3\">Purchase Method </th>\n" +
+    "                        <th class=\"column4\">Selling Stores</th>\n" +
+    "                        <th class=\"column5\">Average Price</th>\n" +
+    "                        <th class=\"column6\">Sold Counter</th>\n" +
+    "                    </tr>\n" +
+    "                    </thead>\n" +
+    "                    \n" +
+    "                    <tbody id='accountBody'>\n" +
+    "                    </tbody>\n" +
+    "                </table>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</div>";
