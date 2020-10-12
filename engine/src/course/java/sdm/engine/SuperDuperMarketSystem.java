@@ -754,4 +754,15 @@ public class SuperDuperMarketSystem {
                 .mapToDouble(t -> t.getItemsPrice()).toArray())
                 .average().getAsDouble();
     }
+
+    public Collection<OrderInfo> getListOfAllOrderByUser(String curUserName) {
+        List<OrderInfo> res = new ArrayList<>();
+
+        for (Order cur : m_OrderHistory.values())
+            if (cur.getCostumer().getName().equals(curUserName))
+                res.add(createOrderInfo(cur));
+        return res;
+    }
+
+
 }

@@ -60,7 +60,7 @@ public class Seller extends Person {
         return FeedBacks.containsKey(customer);
     }
 
-    public void UploadInfoFromXML (String Zone,SuperDuperMarketDescriptor superDuperMarketDescriptor) throws NoValidXMLException, IllegalOfferException, DuplicateItemIDException, WrongPayingMethodException, NoOffersInDiscountException, DuplicateItemInStoreException, ItemIsNotSoldAtAllException, StoreDoesNotSellItemException, DuplicateStoreInSystemException, DuplicatePointOnGridException, NegativePriceException, PointOutOfGridException, NegativeQuantityException, StoreItemNotInSystemException {
+    void UploadInfoFromXML (String Zone,SuperDuperMarketDescriptor superDuperMarketDescriptor) throws NoValidXMLException, IllegalOfferException, DuplicateItemIDException, WrongPayingMethodException, NoOffersInDiscountException, DuplicateItemInStoreException, ItemIsNotSoldAtAllException, StoreDoesNotSellItemException, DuplicateStoreInSystemException, DuplicatePointOnGridException, NegativePriceException, PointOutOfGridException, NegativeQuantityException, StoreItemNotInSystemException {
 
         SuperDuperMarketSystem newArea = new SuperDuperMarketSystem(Zone,this);
         LoadXml loader = new LoadXml(superDuperMarketDescriptor,this,newArea);
@@ -75,5 +75,11 @@ public class Seller extends Person {
         SuperDuperMarketSystem cur = AllSuperMarket.get(Zone);
         return new AreaInfo(this.getName(),cur.getZone(),cur.getAmountOfItemsInSystem(),cur.getAmountOfStoresInSystem()
         ,cur.getAmountOfOrdersInSystem(),cur.getAvgOrderPrice());
+    }
+
+    SuperDuperMarketSystem getSDMByZone(String zone) {
+        if (!AllSuperMarket.containsKey(zone))
+            return null;
+        return AllSuperMarket.get(zone);
     }
 }

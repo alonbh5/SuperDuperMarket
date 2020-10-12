@@ -10,7 +10,7 @@ public class CustomerInfo {
     public final Double AvgPriceForOrderWithoutShipping;
     public final Integer AmountOfOrders;
     public final WalletInfo Wallet;
-
+//todo add feedback..
     public CustomerInfo(String name, long ID, Point location, double avgPriceForShipping, double avgPriceForOrderWithoutShipping, int amountOfOrders,WalletInfo wallet) {
         this.name = name;
         this.ID = ID;

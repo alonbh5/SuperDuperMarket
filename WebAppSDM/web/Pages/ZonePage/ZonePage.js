@@ -105,9 +105,9 @@ function MakeNewOrder() {
 }
 function OrderHistory() {
     $.ajax({
-        data: ServletRequestAttributeName+"orders",
+        data: ServletRequestAttributeName+"buyerOrders",
         url: getZoneInfo,
-        //while get "seller" or "customer" (with ")
+
         success: function (data) {
         }
     });

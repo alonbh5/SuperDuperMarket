@@ -1,6 +1,9 @@
 package course.java.sdm.engine;
 
 import course.java.sdm.classesForUI.CustomerInfo;
+import course.java.sdm.classesForUI.FeedBackInfo;
+import course.java.sdm.classesForUI.OrderInfo;
+import course.java.sdm.classesForUI.WalletInfo;
 import course.java.sdm.exceptions.*;
 import course.java.sdm.generatedClasses.AreaInfo;
 import course.java.sdm.generatedClasses.SuperDuperMarketDescriptor;
@@ -130,5 +133,38 @@ public class MainSystem {
                 return cur.getAllSuperMarket().get(Zone);
 
             return null;
+    }
+
+
+    public Collection<FeedBackInfo> getSellerFeedbackByZone(String zone, String curUserName) {
+        List<FeedBackInfo> res = new ArrayList<>();
+        if (!m_SellersInSystem.containsKey(curUserName))
+            return res;
+        Seller curSeller = m_SellersInSystem.get(curUserName);
+        for (FeedBack curFeed : curSeller.getFeedBacks().values())
+            if (curFeed.isFromZone(zone))
+                res.add(new FeedBackInfo(
+                        curFeed.getStars(), curFeed.getFeed(),
+                        curFeed.getCustomer().getName(),
+                        curFeed.getSeller().getName(), curFeed.getDate()));
+        return res;
+    }
+
+    public WalletInfo getWalletByUser(String name) {
+
+        Wallet UserWallet;
+        if (m_SellersInSystem.containsKey(name)) {
+            Seller curSeller = m_SellersInSystem.get(name);
+            UserWallet = curSeller.getWallet();
+        } else {
+            if (m_CustomersInSystem.containsKey(name)) {
+                Customer curSeller = m_CustomersInSystem.get(name);
+                UserWallet = curSeller.getWallet();
+            }
+            else
+                return null;
+        }
+
+        return UserWallet.getWalletInfo();
     }
 }
