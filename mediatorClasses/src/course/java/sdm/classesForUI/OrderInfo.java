@@ -29,9 +29,9 @@ public class OrderInfo {
         this.m_Date = m_Date;
         this.Stores = stores;
         this.ItemsInOrder = itemsInOrder;
-        this.m_TotalPrice = m_TotalPrice;
-        this.m_ShippingPrice = m_ShippingPrice;
-        this.m_ItemsPrice = m_ItemsPrice;
+        this.m_TotalPrice = Double.parseDouble(String.format("%.2f", m_TotalPrice));
+        this.m_ShippingPrice = Double.parseDouble(String.format("%.2f", m_ShippingPrice));
+        this.m_ItemsPrice = Double.parseDouble(String.format("%.2f", m_ItemsPrice));
         this.m_amountOfItems = m_amountOfItems;
         //this.Distance = distance;
         //this.StaticPPK=PPK;

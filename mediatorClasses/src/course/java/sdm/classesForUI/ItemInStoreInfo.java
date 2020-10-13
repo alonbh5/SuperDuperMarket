@@ -18,8 +18,8 @@ public class ItemInStoreInfo {
         this.serialNumber = serialNumber;
         Name = name;
         PayBy = payBy;
-        PriceInStore = priceInStore;
-        SoldCounter = soldCount;
+        PriceInStore = Double.parseDouble(String.format("%.2f", priceInStore));
+        SoldCounter = Double.parseDouble(String.format("%.2f", soldCount));
 
     }
 

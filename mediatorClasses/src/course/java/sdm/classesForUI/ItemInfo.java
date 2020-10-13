@@ -15,7 +15,7 @@ public class ItemInfo {
         this.serialNumber = serialNumber;
         Name = name;
         PayBy = payBy;
-        AvgPrice = avgPrice;
+        AvgPrice = Double.parseDouble(String.format("%.2f", avgPrice));
         NumOfSellingStores = numOfSellingStores;
         SoldCount = soldCount;
     }

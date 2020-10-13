@@ -11,7 +11,7 @@ public class OfferItemInfo {
         this.ID = ID;
         Name = name;
         PayBy = payBy;
-        Amount = amount;
-        PricePerOne = pricePerOne;
+        Amount = Double.parseDouble(String.format("%.2f", amount));
+        PricePerOne = Double.parseDouble(String.format("%.2f", pricePerOne));
     }
 }

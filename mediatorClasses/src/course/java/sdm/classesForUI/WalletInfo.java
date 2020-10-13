@@ -11,7 +11,7 @@ public class WalletInfo {
     public final List<TransactionInfo> AllTransactions = new ArrayList<>();
 
     public WalletInfo(Double balance, Collection<Transaction> transactions) {
-        Balance = balance;
+        Balance = Double.parseDouble(String.format("%.2f", balance));
         for (Transaction cur : transactions) {
             AllTransactions.add(new TransactionInfo(
                     cur.getSerialNumber(),cur.getFromOrderID(),cur.getTransactionMethodString(),

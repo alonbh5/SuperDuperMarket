@@ -9,9 +9,9 @@ public class StoreInOrderInfo {
 
     public StoreInOrderInfo(StoreInfo store, Double distanceFromUser, Double shippingCost, Double priceOfItems, Integer amountOfItemsType) {
         Store = store;
-        DistanceFromUser = distanceFromUser;
-        ShippingCost = shippingCost;
-        PriceOfItems = priceOfItems;
+        DistanceFromUser = Double.parseDouble(String.format("%.2f", distanceFromUser));
+        ShippingCost = Double.parseDouble(String.format("%.2f", shippingCost));
+        PriceOfItems = Double.parseDouble(String.format("%.2f", priceOfItems));
         AmountOfItems = amountOfItemsType;
     }
 

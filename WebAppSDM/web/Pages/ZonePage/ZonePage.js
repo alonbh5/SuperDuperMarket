@@ -191,7 +191,7 @@ function SetItem(item){
         '        "                    </tr>\\n" +');
 }
 
-var table = "<div class=\"limiter\">\n" +
+var table = "<div class=\"limiter\">\n" + //todo this with ajax?
     "    <div class=\"container-table100\">\n" +
     "        <div class=\"wrap-table100\">\n" +
     "            <div class=\"table100\">\n" +
@@ -214,3 +214,4 @@ var table = "<div class=\"limiter\">\n" +
     "        </div>\n" +
     "    </div>\n" +
     "</div>";
+

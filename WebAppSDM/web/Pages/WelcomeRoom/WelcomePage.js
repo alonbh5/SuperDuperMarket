@@ -37,7 +37,7 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
              ,"userZone":"Tel Aviv"
              }
              */
-
+            $('#HayButton').text("Hallo "+data.userName+"!")
             if (data.userType.includes("seller")){
                 $('#MainBar').append(
                     $('<a href="#" id="uploadButton">Upload New Zone</a>').on("click",function(){
@@ -204,8 +204,8 @@ function createAreaEntry(entry) {
     return $('<tr>\n' +
         '       <td>'+entry.UserName+'</td>\n' +
         '       <td><a href="http://localhost:8080/WebAppSDM_war_exploded/LocalZones?zoneSelected='+entry.Zone+'">'+entry.Zone+'</a></td>\n' +
-        '       <td>'+entry.AmountOfItems+'</td>\n' +
         '       <td>'+entry.AmountOfStores+'</td>\n' +
+        '       <td>'+entry.AmountOfItems+'</td>\n' +
         '       <td>'+entry.AmountOfOrder+'</td>\n' +
         '       <td>'+entry.AvgOrderPriceWithoutShipping+'</td>\n' +
         '     </tr>')

@@ -1,12 +1,17 @@
 /*
 
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+}
 */
-
 
 
 * {
     box-sizing: border-box;
 }
+
 
 /* Style the body */
 body {
@@ -141,11 +146,7 @@ tr:nth-child(even) {
 
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
-* {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-}
+
 
 body, html {
     height: 100%;
@@ -176,7 +177,7 @@ p {margin: 0px;}
 
 ul, li {
     margin: 0px;
-    list-style-type: none;
+    //*list-style-type: ;*/
 }
 
 
@@ -185,6 +186,10 @@ input {
     display: block;
     outline: none;
     border: none !important;
+}
+
+#submitButton {
+    display: block;
 }
 
 textarea {
@@ -335,17 +340,17 @@ tbody tr:hover {
 
 .column4 {
     width: 110px;
-    text-align: right;
+    text-align: left;
 }
 
 .column5 {
     width: 170px;
-    text-align: right;
+    text-align: left;
 }
 
 .column6 {
     width: 222px;
-    text-align: right;
+    text-align: left;
     padding-right: 62px;
 }
 

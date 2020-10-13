@@ -82,28 +82,29 @@ public class MainSystem {
         return res;
     }
 
-
+    Object key = new Object();
     public void uploadFile(InputStream inputStream, String sellerName) throws DuplicatePointOnGridException, DuplicateItemInStoreException, NoOffersInDiscountException, IllegalOfferException, PointOutOfGridException, DuplicateStoreInSystemException, ItemIsNotSoldAtAllException, StoreItemNotInSystemException, StoreDoesNotSellItemException, NegativePriceException, NoValidXMLException, NegativeQuantityException, DuplicateItemIDException, WrongPayingMethodException, DuplicateZoneException {
         Seller curSeller = m_SellersInSystem.get(sellerName);
 
+        synchronized (key) {
+            SuperDuperMarketDescriptor superDuperMarketDescriptor;
 
-        SuperDuperMarketDescriptor superDuperMarketDescriptor;
+            try {
+                superDuperMarketDescriptor = FileHandler.UploadFile(inputStream);
 
-        try {
-            superDuperMarketDescriptor = FileHandler.UploadFile(inputStream);
+            } catch (JAXBException e) {
+                throw new NoValidXMLException();
+            }
 
-        } catch (JAXBException e) {
-            throw new NoValidXMLException();
+            String Zone = superDuperMarketDescriptor.getSDMZone().getName().trim();
+
+            for (Seller cur : m_SellersInSystem.values())
+                if (cur.isZoneInUser(Zone))
+                    throw new DuplicateZoneException(cur.getName(), Zone);
+
+            curSeller.UploadInfoFromXML(Zone, superDuperMarketDescriptor);
+            Areas.add(curSeller.getAreaInfo(Zone));
         }
-
-        String Zone = superDuperMarketDescriptor.getSDMZone().getName().trim();
-
-        for (Seller cur : m_SellersInSystem.values())
-            if (cur.isZoneInUser(Zone))
-                throw new DuplicateZoneException(cur.getName(),Zone);
-
-        curSeller.UploadInfoFromXML(Zone,superDuperMarketDescriptor);
-        Areas.add(curSeller.getAreaInfo(Zone));
     }
 
     private CustomerInfo createCustomerInfo (Customer user) {

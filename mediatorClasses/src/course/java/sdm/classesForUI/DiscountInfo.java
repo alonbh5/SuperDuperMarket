@@ -25,7 +25,7 @@ public class DiscountInfo {
         Name = name;
         DiscountOperator = discountOperator;
         this.itemToBuy = itemToBuy;
-        AmountToBuy = amountToBuy;
+        AmountToBuy = Double.parseDouble(String.format("%.2f", amountToBuy));
         if (offeredItem == null)
             OfferedItem = new ArrayList<>();
         else

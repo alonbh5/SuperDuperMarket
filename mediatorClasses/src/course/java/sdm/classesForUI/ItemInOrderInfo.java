@@ -17,9 +17,9 @@ public class ItemInOrderInfo {
         Name = name;
         PayBy = payBy;
         FromStoreID = fromStoreID;
-        this.amountBought = amountBought;
-        PricePerUint = PricePerUnit;
-        this.TotalPrice = totalPrice;
+        this.amountBought = Double.parseDouble(String.format("%.2f", amountBought));
+        PricePerUint = Double.parseDouble(String.format("%.2f", PricePerUnit));
+        this.TotalPrice = Double.parseDouble(String.format("%.2f", totalPrice));
         FromSale = fromSale;
         this.FromStoreName = fromStoreName;
     }

@@ -17,8 +17,8 @@ public class TransactionInfo {
         FromOrderID = fromOrder;
         this.transactionMethod = transactionMethod;
         this.date = date;
-        AmountOfTransaction = amountOfTransaction;
-        BalanceBefore = balanceBefore;
-        BalanceAfter = balanceAfter;
+        AmountOfTransaction = Double.parseDouble(String.format("%.2f", amountOfTransaction));
+        BalanceBefore = Double.parseDouble(String.format("%.2f", balanceBefore));
+        BalanceAfter = Double.parseDouble(String.format("%.2f", balanceAfter));
     }
 }

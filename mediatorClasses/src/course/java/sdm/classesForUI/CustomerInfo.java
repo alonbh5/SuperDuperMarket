@@ -15,8 +15,8 @@ public class CustomerInfo {
         this.name = name;
         this.ID = ID;
         Location = location;
-        AvgPriceForShipping = avgPriceForShipping;
-        AvgPriceForOrderWithoutShipping = avgPriceForOrderWithoutShipping;
+        AvgPriceForShipping = Double.parseDouble(String.format("%.2f", avgPriceForShipping));
+        AvgPriceForOrderWithoutShipping = Double.parseDouble(String.format("%.2f", avgPriceForOrderWithoutShipping));
         AmountOfOrders = amountOfOrders;
         this.Wallet = wallet;
     }
