@@ -27,8 +27,73 @@ public class GetZoneInfoServlet extends HttpServlet {
     public final String SellerFeedbackRequest = "feedbacks";
     public final String AccentWalletRequest = "wallet";
 
+    public final String CreateOrderRequest = "createOrder";
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //todo post for getting new store or order or waller
+
+        response.setContentType("application/json");
+        MainSystem MainSDM = ServletUtils.getMainSystem(getServletContext());
+        String CurUserZone = SessionUtils.getUserCurZone(request); //return null if no session
+        String userRequest = request.getParameter(Constants.USER_REQUEST);
+
+        if (CurUserZone != null) {
+            SuperDuperMarketSystem sdmByZone = MainSDM.getSDMByZone(CurUserZone);
+
+            switch (userRequest) {
+                case CreateOrderRequest:
+                    CreatOrderAndSendItems(request,response,sdmByZone);
+                    break;
+                default:
+                    // code block //todo error
+            }
+        }
+        else {
+            String CurUserName = SessionUtils.getUserName(request);
+            if (userRequest.equals(AccentWalletRequest) && CurUserName!=null)
+                SendUserWallet(request,response,MainSDM);
+            else {
+                //todo error
+            }
+        }
+    }
+
+    private void CreatOrderAndSendItems(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone) {
+        String usernameFromParameter = SessionUtils.getUserName(request);
+        String userDate = request.getParameter("datepicker");
+        String OrderType = request.getParameter("orderType");
+        if (OrderType.toLowerCase().equals("static")){
+            try{
+            String storeIdChosen = request.getParameter("stores");
+            StoreInfo storeInfoByID = sdmByZone.getStoreInfoByID(Long.parseLong(storeIdChosen));
+            //todo return all item from that store...
+            Gson gson = new Gson();
+            String ItemsJson = gson.toJson(storeInfoByID.Items);
+            System.out.println(ItemsJson);
+            PrintWriter out = response.getWriter();
+            out.print(ItemsJson);
+            out.flush();
+            }
+            catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        }
+        else {
+            Collection<ItemInfo> listOfAllItems;
+            try {
+                listOfAllItems = sdmByZone.getListOfAllItems();
+                Gson gson = new Gson();
+                String ItemsJson = gson.toJson(listOfAllItems);
+                System.out.println(ItemsJson);
+                PrintWriter out = response.getWriter();
+                out.print(ItemsJson);
+                out.flush();
+            } catch (NoValidXMLException | IOException e) {
+                e.printStackTrace();
+            }
+            //todo return all items     
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

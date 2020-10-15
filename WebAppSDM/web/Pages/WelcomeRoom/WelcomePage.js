@@ -56,6 +56,7 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
 });
 
 function ShowAccount() {
+    updateArea=false;
     SetAccount();
 
     $.ajax({

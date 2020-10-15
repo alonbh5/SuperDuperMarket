@@ -140,7 +140,8 @@ function ShowItems() {
 }
 //====================Buyer====================
 function MakeNewOrder() {
-
+    $('.main').empty().append(MakeOrderForm);
+    LinkCreateOrderForm();
 }
 function BuyerOrderHistory() {
     $.ajax({
@@ -181,7 +182,7 @@ function setItemTable() {
 }
 
 function SetItem(item){
-    $('#accountBody').append(' <tr>\\n" +\n' +
+    $('#itemBody').append(' <tr>\\n" +\n' +
         '        "                        <td class=\"column1\">'+item.serialNumber+'</td>\\n" +\n' +
         '        "                        <td class=\"column2\">'+item.Name+'</td>\\n" +\n' +
         '        "                        <td class=\"column3\">'+item.PayBy+'</td>\\n" +\n' +
@@ -207,7 +208,7 @@ var table = "<div class=\"limiter\">\n" + //todo this with ajax?
     "                    </tr>\n" +
     "                    </thead>\n" +
     "                    \n" +
-    "                    <tbody id='accountBody'>\n" +
+    "                    <tbody id='itemBody'>\n" +
     "                    </tbody>\n" +
     "                </table>\n" +
     "            </div>\n" +

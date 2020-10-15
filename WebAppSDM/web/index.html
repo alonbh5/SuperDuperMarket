@@ -10,22 +10,28 @@
     <!-- Link jQuery JavaScript library in order to use the $ (jQuery) method-->
     <script src="Common/jquery-2.0.3.min.js"></script>
     <script src="Common/LoginRoom.js"></script>
+
+    <link rel="stylesheet" href="Common/LoginCss.css">
 </head>
 <body>
-<div class="container">
+<div class="container ">
     <h1>Welcome to the Super Duper Market!</h1>
     <br/>
     <h2>Please Enter a Unique User Name,Select Type of User and then Press "Login":</h2>
     <br>
     <form id="loginSubmitForm" method="GET" action="login">
+        <div class="user-box">
         <input id="UserNameTextBox" type="text" name="username" class=""/>
-        <br><br>
+        </div>
+        <div class="user-box">
         <input  type="radio" id="seller" name="userType" value="seller">
         <label for="seller">Seller</label>
         <input type="radio" id="costumer" name="userType" value="costumer">
         <label for="costumer">Customer</label><br>
-        <br>
-        <input type="submit" value="Login"/>
+        </div>
+        <input class="btn btn-primary btn-ghost" id="submitLogin" type="submit" value="Login"/>
+
+
     </form>
 
     <br><br>

@@ -285,6 +285,7 @@ public class SuperDuperMarketSystem {
         for (Store curStore : m_tempOrder.getStoreSet())
             curStore.addOrderToStoreHistory(m_tempOrder);
         m_tempOrder.getCostumer().addOrderToHistory(m_tempOrder); //todo add history to both seller and cosmer...and ask for feedback?
+        //todo add wallet, todo notification....
 
     }
 
