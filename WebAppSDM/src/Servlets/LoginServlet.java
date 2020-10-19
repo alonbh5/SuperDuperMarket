@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
             } else {
                 //normalize the username value
                 usernameFromParameter = usernameFromParameter.trim();
-                usernameFromParameter.toLowerCase();
+                usernameFromParameter = usernameFromParameter.toLowerCase();
                 usernameFromParameter = usernameFromParameter.substring(0, 1).toUpperCase() + usernameFromParameter.substring(1);
 
                 synchronized (this) {

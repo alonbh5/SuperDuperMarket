@@ -30,6 +30,7 @@ public class UploadXml extends HttpServlet {
         try {
             MainSDM.uploadFile(parts.iterator().next().getInputStream(),userNameFromSession); //only one file
             out.println("File Uploaded!");
+            System.out.println(userNameFromSession+" Uploaded File!");
         } catch (DuplicatePointOnGridException e) {
             out.println("Error - There is a Duplicated Point on Grid - "+ e.PointInput.x+","+e.PointInput.y);
         } catch (DuplicateItemInStoreException e) {

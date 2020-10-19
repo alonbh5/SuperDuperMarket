@@ -1,42 +1,64 @@
 var orderIsStatic;
-var date;
-var Store;
+var Items;
+var Stores;
+var ItemChosen;
 
 function MakeOrderForm (stores) {
-    return $("<form id='createOrderForm'></form>")
-        .append('<li>\n' +
-            '\t\t<label for="datepicker">Please Choose Order Date :</label>\n' +
-            '        <input type="date" id="datepicker" name="datepicker">\n' +
-            '        </li><br>\n' +
-            '        \n' +
-            '        <li>   \n' +
-            '        <label for="orderType">Please Choose Order Type:</label>\n' +
-            '        <input  type="radio" id="staticRadio" name="orderType" value="static">\n' +
-            '        <label for="staticRadio">Static Order</label>\n' +
-            '        <input type="radio" id="dynamicRadio" name="orderType" value="costumer">\n' +
-            '        <label for="dynamicRadio">Dynamic Order</label><br>\n' +
-            '        </li><br>\n' +
-            '        \n' +
-            '     \t<li>\n' +
-            '        <label for="stores">Choose a Store:</label>\n' +
-            '   \t    <select name="stores" id="stores">\n' +
-            '        <option value="1">Volvo</option>\n' +
-            '        <!--<option value="saab">Saab</option>\n' +
-            '        <option value="opel">Opel</option>\n' +
-            '        <option value="audi">Audi</option>-->\n' +
-            '  \t    </select>\n' +
-            '        </li>'+' <br><br>\n' +
-            '    <input type="submit" value="Continue">\n' +
-            '<input type="hidden" name="infoType" value="createOrder">'+
-            '</form>');
+    return ('<form action="/action_page.php">\n' +
+        '    <li>\n' +
+        '        <label for="datepicker">Please Choose Order Date :</label>\n' +
+        '        <input type="date" id="datepicker" name="datepicker">\n' +
+        '    </li>\n' +
+        '    <br>\n' +
+        '    <li>\n' +
+        '        <h4 for="orderType">Please Choose Order Type:</h4>\n' +
+        '        <input  type="radio" id="staticRadio" name="orderType" value="static">\n' +
+        '        <label for="staticRadio">Static Order</label>\n' +
+        '        <input type="radio" id="dynamicRadio" name="orderType" value="costumer">\n' +
+        '        <label for="dynamicRadio">Dynamic Order</label><br>\n' +
+        '    </li>\n' +
+        '    <br>\n' +
+        '    <li>\n' +
+        '        <label for="stores">Choose a Store:</label>\n' +
+        '        <select name="stores" id="stores">\n' +
+        '        </select>\n' +
+        '    </li>\n' +
+        '    <br>\n' +
+        '\n' +
+        '    <table id="OrderItems">\n' +
+        '        <thead>\n' +
+        '        <tr>\n' +
+        '            <th>Item ID</th>\n' +
+        '            <th>Item Name</th>\n' +
+        '            <th>Purchase By</th>\n' +
+        '            <th>Price</th>\n' +
+        '        </tr>\n' +
+        '        </thead>\n' +
+        '        <tbody id="ItemTitles">\n' +
+        '        </tbody>\n' +
+        '\n' +
+        '\n' +
+        '\n' +
+        '    </table>\n' +
+        '\n' +
+        '    <br><br>\n' +
+        '    <input type="submit" value="Continue">\n' +
+        '    <input type="hidden" name="infoType" value="createOrder"> <!--for Servlet To Know what to do-->\n' +
+        '    <input type="submit" value="Submit">\n' +
+        '</form>');
 
     // .append('<label for="stores">Choose a Store:</label>')
         //.append('<select name="stores" id="stores">') //add <option value="saab">Saab</option>
 }
 
 function LinkCreateOrderForm() {
-    linkOrderType();
+    linkOrderType(); //bol bar for stores and shop..
+    linkSubmit();//when form is sent what to do
 
+}
+
+
+function linkSubmit() {
     $('#createOrderForm').submit(function () {
         $.ajax({
             data: $('#createOrderForm').serialize(), //{userdata: $('#createOrderForm').serialize(), infoType:"createOrder"},
@@ -61,20 +83,105 @@ function LinkCreateOrderForm() {
     })
 }
 
-function addStore(store) {
-    /*<option value="volvo">Volvo</option>\n' +
-            '        <!--<option value="saab">Saab</option>\n' +
-            '        <option value="opel">Opel</option>\n' +
-            '        <option value="audi">Audi</option>-->\n' +*/
-    $('#stores').append('<option value='+store.id+'>'+store.id+' - '+store.name+'</option>'); //todo make sure its like this! balue is store id
-}
+
 
 function linkOrderType() {
-    $('#staticRadio').on('ifChecked', function(event){
-        orderIsStatic = true; //todo show here stores...
+
+    $('#staticRadio').click(function(){
+        if ($(this).is(':checked'))
+        {
+            orderIsStatic = true; //todo show here stores...
+            $("#stores").prop("disabled", false);
+            if (Stores == null) { //to no send over and over
+                getStoreCombo();
+                LinkStores();
+            }
+        }
     });
 
-    $('#dynamicRadio').on('ifChecked', function(event){
-        orderIsStatic = false;
+    $('#dynamicRadio').click(function(){
+        if ($(this).is(':checked'))
+        {
+            $("#stores").prop("disabled", true);
+            orderIsStatic = false;
+                SetAllItems();
+        }
     });
 }
+
+function  getStoreCombo(){
+
+        $.ajax({
+            data: ServletRequestAttributeName+"stores",
+            url: getZoneInfo,
+            //while get "seller" or "customer" (with ")
+            success: function (data) {
+
+                Stores = data;
+
+                $.each(data, function(i, store) {
+                    $('#stores').append('<option value='+store.StoreID+'>'+store.StoreID+' - '+store.Name+'</option>'); //todo make sure its like this! balue is store id
+                });
+            }
+        });
+}
+
+function LinkStores() {
+    $('#stores').on('change', function() {
+        var indexInStores = this.value - 1;
+        $('#ItemTitles').empty();
+        var ItemsInStore = Stores[indexInStores].Items;
+        ItemsInStore.forEach(addItem);
+
+    });
+}
+
+function addItem(item, index, array) {
+    $('#ItemTitles').append('<tr>\n' +
+        '            <td value="'+item.serialNumber+'">'+item.serialNumber+'</td>\n' +
+        '            <td value="'+item.serialNumber+'">'+item.Name+'</td>\n' +
+        '            <td value="'+item.serialNumber+'">'+item.PayBy+'</td>\n' +
+        '            <td value="'+item.serialNumber+'">'+item.PriceInStore+'</td>\n' +
+        '        </tr>');
+}
+
+function SetAllItems() {
+
+    if (Items == null) {
+        $.ajax({
+            data: ServletRequestAttributeName + "items",
+            url: getZoneInfo,
+            //while get "seller" or "customer" (with ")
+            success: function (data) {
+                /*
+                 data will arrive in array for each is the form:
+                 [
+                 {"serialNumber":1,
+                 "Name":"Toilet Paper",
+                 "PayBy":"AMOUNT",
+                 "AvgPrice":30.5,
+                 "NumOfSellingStores":2,
+                 "SoldCount":0},
+                 .
+                 .
+                 .
+                 ]
+                 */
+                Items = data;
+                $('#ItemTitles').empty();
+                Items.forEach(addItem);
+            }
+        });
+    }
+    else {
+        $('#ItemTitles').empty();
+        Items.forEach(addItem);
+    }
+}
+
+function BindItemsClick() {
+    $('td').on('click',function (item) {       //todo show how much you want?
+        console.log($(this).attr("value")); //todo this is how to get itemId...
+    });
+}
+

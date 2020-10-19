@@ -140,7 +140,7 @@ function ShowItems() {
 }
 //====================Buyer====================
 function MakeNewOrder() {
-    $('.main').empty().append(MakeOrderForm);
+    $('.main').empty().append(MakeOrderForm());
     LinkCreateOrderForm();
 }
 function BuyerOrderHistory() {

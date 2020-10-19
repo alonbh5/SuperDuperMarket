@@ -1,22 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Page Title</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #OrderItems {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers td, #OrderItems th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #OrderItems tr:nth-child(even){background-color: #f2f2f2;}
+
+        #OrderItems tr:hover {background-color: #ddd;}
+
+        #OrderItems th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
 <form action="/action_page.php">
-    <label for="stores">Choose a Store:</label>
-    <select name="stores" id="stores">
-        <option value="volvo">Volvo</option>
-        <option value="saab">Saab</option>
-        <option value="opel">Opel</option>
-        <option value="audi">Audi</option>
-    </select>
+    <li>
+        <label for="datepicker">Please Choose Order Date :</label>
+        <input type="date" id="datepicker" name="datepicker">
+    </li>
+    <br>
+    <li>
+        <h4 for="orderType">Please Choose Order Type:</h4>
+        <input  type="radio" id="staticRadio" name="orderType" value="static">
+        <label for="staticRadio">Static Order</label>
+        <input type="radio" id="dynamicRadio" name="orderType" value="costumer">
+        <label for="dynamicRadio">Dynamic Order</label><br>
+    </li>
+    <br>
+    <li>
+        <label for="stores">Choose a Store:</label>
+        <select name="stores" id="stores">
+        </select>
+    </li>
+    <br>
+
+    <table id="OrderItems">
+        <thead>
+        <tr>
+            <th>Item ID</th>
+            <th>Item Name</th>
+            <th>Purchase By</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody id="ItemTitles">
+        </tbody>
+
+
+
+    </table>
+
     <br><br>
+    <input type="submit" value="Continue">
+    <input type="hidden" name="infoType" value="createOrder"> <!--for Servlet To Know what to do-->
     <input type="submit" value="Submit">
 </form>
+
 
 </body>
 </html>

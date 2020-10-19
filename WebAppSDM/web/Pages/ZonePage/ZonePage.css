@@ -416,3 +416,27 @@ tbody tr:hover {
     }
 }
 /*============================================================================================*/
+/*============================FOR CREATE ORDER====================================*/
+#OrderItems {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#customers td, #OrderItems th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#OrderItems tr:nth-child(even){background-color: #f2f2f2;}
+
+#OrderItems tr:hover {background-color: #ddd;}
+
+#OrderItems th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+/*============================================================================================*/
