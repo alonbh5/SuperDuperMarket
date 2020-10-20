@@ -31,7 +31,7 @@
 </head>
 <body>
 
-<form action="/action_page.php">
+<form>
     <li>
         <label for="datepicker">Please Choose Order Date :</label>
         <input type="date" id="datepicker" name="datepicker">
@@ -47,7 +47,8 @@
     <br>
     <li>
         <label for="stores">Choose a Store:</label>
-        <select name="stores" id="stores">
+        <select name="stores" id="stores" >
+        <option disabled selected value> -- Select a Store -- </option>
         </select>
     </li>
     <br>

@@ -4,7 +4,7 @@ var Stores;
 var ItemChosen;
 
 function MakeOrderForm (stores) {
-    return ('<form action="/action_page.php">\n' +
+    return ('<form>\n' +
         '    <li>\n' +
         '        <label for="datepicker">Please Choose Order Date :</label>\n' +
         '        <input type="date" id="datepicker" name="datepicker">\n' +
@@ -20,7 +20,8 @@ function MakeOrderForm (stores) {
         '    <br>\n' +
         '    <li>\n' +
         '        <label for="stores">Choose a Store:</label>\n' +
-        '        <select name="stores" id="stores">\n' +
+        '        <select name="stores" id="stores" >\n' +
+        '        <option disabled selected value> -- Select a Store -- </option>\n' +
         '        </select>\n' +
         '    </li>\n' +
         '    <br>\n' +
@@ -96,6 +97,8 @@ function linkOrderType() {
                 getStoreCombo();
                 LinkStores();
             }
+            else
+                fillStoreItem();
         }
     });
 
@@ -136,12 +139,24 @@ function LinkStores() {
     });
 }
 
+function fillStoreItem() {
+    var indexInStores = $('#stores').val() - 1;
+    $('#ItemTitles').empty();
+    var ItemsInStore = Stores[indexInStores].Items;
+    ItemsInStore.forEach(addItem);
+}
+
 function addItem(item, index, array) {
+
+    var price= item.PriceInStore;
+    if (price == null)
+        price = "-";
+
     $('#ItemTitles').append('<tr>\n' +
         '            <td value="'+item.serialNumber+'">'+item.serialNumber+'</td>\n' +
         '            <td value="'+item.serialNumber+'">'+item.Name+'</td>\n' +
         '            <td value="'+item.serialNumber+'">'+item.PayBy+'</td>\n' +
-        '            <td value="'+item.serialNumber+'">'+item.PriceInStore+'</td>\n' +
+        '            <td value="'+item.serialNumber+'">'+price+'</td>\n' +
         '        </tr>');
 }
 
