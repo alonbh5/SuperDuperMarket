@@ -168,4 +168,8 @@ public class MainSystem {
 
         return UserWallet.getWalletInfo();
     }
+
+    public Customer getCustomer(String usernameFromParameter) {
+        return m_CustomersInSystem.get(usernameFromParameter);
+    }
 }

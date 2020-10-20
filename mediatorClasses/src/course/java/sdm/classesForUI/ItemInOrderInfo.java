@@ -36,6 +36,18 @@ public class ItemInOrderInfo {
         FromSale=false;
     }
 
+    public ItemInOrderInfo(ItemInfo item, Double Amount) {
+        this.serialNumber = item.serialNumber;
+        this.amountBought = Amount;
+        this.PayBy = item.PayBy;
+        this.Name = item.Name;
+        this.FromStoreID= 0L;
+        this.FromStoreName=null;
+        this.PricePerUint = 0d;
+        this.TotalPrice=Amount*PricePerUint;
+        FromSale=false;
+    }
+
     public void addAmount(double AmountToAdd) {
         this.amountBought+=AmountToAdd;
     }

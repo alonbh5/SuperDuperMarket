@@ -11,6 +11,13 @@ function MakeOrderForm (stores) {
         '    </li>\n' +
         '    <br>\n' +
         '    <li>\n' +
+        '        <label>Please Enter Your Location (X,Y) :</label>       \n' +
+        '        <input type="number" class="point" name="LocX"  min="1" max =50 >\n' +
+        '        <span>,</span>\n' +
+        '        <input type="number" class="point" name="LocY"  min="1" max =50 >\n' +
+        '    </li>\n' +
+        '    <br>\n' +
+        '    <li>\n' +
         '        <h4 for="orderType">Please Choose Order Type:</h4>\n' +
         '        <input  type="radio" id="staticRadio" name="orderType" value="static">\n' +
         '        <label for="staticRadio">Static Order</label>\n' +
@@ -149,13 +156,13 @@ function fillStoreItem() {
 
 function addItem(item, index, array) {
 
-    var amount = "<input type=\"number\" id=\"quantity\" name=\"quantity\" step=\"any\" min=\"0.1\" >";
+    var amount = "<input type=\"number\" class=\"quantity\" name=\""+item.serialNumber+"\" step=\"any\" min=\"0.1\" >";
     var price= item.PriceInStore;
     if (price == null)
         price = "-";
 
     if (item.PayBy.toString().toLowerCase() === "amount")
-        amount = "<input type=\"number\" id=\"quantity\" name=\"quantity\"  min=\"1\" >";
+        amount = "<input type=\"number\" class=\"quantity\" name=\""+item.serialNumber+"\"  min=\"1\" >";
 
     $('#ItemTitles').append('<tr>\n' +
         '            <td value="'+item.serialNumber+'">'+item.serialNumber+'</td>\n' +

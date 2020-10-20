@@ -5,17 +5,26 @@ import Utils.ServletUtils;
 import Utils.SessionUtils;
 import com.google.gson.Gson;
 import course.java.sdm.classesForUI.*;
+import course.java.sdm.engine.Customer;
 import course.java.sdm.engine.MainSystem;
 import course.java.sdm.engine.SuperDuperMarketSystem;
+import course.java.sdm.exceptions.ItemIsNotSoldAtAllException;
 import course.java.sdm.exceptions.NoValidXMLException;
+import course.java.sdm.exceptions.PointOutOfGridException;
+import course.java.sdm.exceptions.StoreDoesNotSellItemException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class GetZoneInfoServlet extends HttpServlet {
@@ -42,7 +51,7 @@ public class GetZoneInfoServlet extends HttpServlet {
 
             switch (userRequest) {
                 case CreateOrderRequest:
-                    CreatOrderAndSendItems(request,response,sdmByZone);
+                    CreatOrder(request,response,sdmByZone,MainSDM);
                     break;
                 default:
                     // code block //todo error
@@ -58,41 +67,64 @@ public class GetZoneInfoServlet extends HttpServlet {
         }
     }
 
-    private void CreatOrderAndSendItems(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone) {
+    private void CreatOrder(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone, MainSystem mainSDM) {
         String usernameFromParameter = SessionUtils.getUserName(request);
         String userDate = request.getParameter("datepicker");
         String OrderType = request.getParameter("orderType");
+        Customer curCustomer = mainSDM.getCustomer(usernameFromParameter);
+        List<ItemInOrderInfo> wantedItems = new ArrayList<>();
+        String amountWanted;
+
+        int x= Integer.parseInt(request.getParameter("LocX"));
+        int y= Integer.parseInt(request.getParameter("LocY"));
+        curCustomer.setCurrentLocation(new Point(x,y));
+
+        try {
+            
+            Date date=new SimpleDateFormat("yyyy-MM-dd").parse(userDate);
+            
         if (OrderType.toLowerCase().equals("static")){
-            try{
+
             String storeIdChosen = request.getParameter("stores");
             StoreInfo storeInfoByID = sdmByZone.getStoreInfoByID(Long.parseLong(storeIdChosen));
-            //todo return all item from that store...
-            Gson gson = new Gson();
-            String ItemsJson = gson.toJson(storeInfoByID.Items);
-            System.out.println(ItemsJson);
-            PrintWriter out = response.getWriter();
-            out.print(ItemsJson);
-            out.flush();
-            }
-            catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        }
-        else {
-            Collection<ItemInfo> listOfAllItems;
-            try {
-                listOfAllItems = sdmByZone.getListOfAllItems();
-                Gson gson = new Gson();
-                String ItemsJson = gson.toJson(listOfAllItems);
-                System.out.println(ItemsJson);
-                PrintWriter out = response.getWriter();
-                out.print(ItemsJson);
-                out.flush();
-            } catch (NoValidXMLException | IOException e) {
-                e.printStackTrace();
+
+
+            for (ItemInStoreInfo cur : storeInfoByID.Items) {
+                amountWanted = request.getParameter(cur.serialNumber.toString());
+                if (!amountWanted.isEmpty())
+                    wantedItems.add(new ItemInOrderInfo(cur,Double.parseDouble(amountWanted)));
             }
+
+
+            List<DiscountInfo> discountInfos = sdmByZone.CreateTempStaticOrderAndGetDiscounts(wantedItems, storeInfoByID, curCustomer, date);
+            //todo send ajax of discounts..
+        }        
+        else {
+
+            Collection<ItemInfo> listOfAllItems = sdmByZone.getListOfAllItems();
+
+            for (ItemInfo cur : listOfAllItems) {
+                amountWanted = request.getParameter(cur.serialNumber.toString());
+                if (!amountWanted.isEmpty())
+                    wantedItems.add(new ItemInOrderInfo(cur,Double.parseDouble(amountWanted)));
+            }
+
+            OrderInfo dynamicOrderInfoBeforeDiscounts = sdmByZone.getDynamicOrderInfoBeforeDiscounts(wantedItems, curCustomer, date);
+
+
             //todo return all items     
+        }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (StoreDoesNotSellItemException e) {
+            e.printStackTrace();
+        } catch (PointOutOfGridException e) {
+            e.printStackTrace();
+        } catch (NoValidXMLException e) {
+            e.printStackTrace();
+        } catch (ItemIsNotSoldAtAllException e) {
+            e.printStackTrace();
         }
     }
 

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-class Customer extends Person implements Coordinatable {
+public class Customer extends Person implements Coordinatable {
 
     private Point m_currentLocation;
     private final Map<Long,Order> m_OrderHistory = new HashMap<>();
@@ -20,7 +20,7 @@ class Customer extends Person implements Coordinatable {
 
     Long getIdNumber () {return super.getIDNumber();}
 
-    void setCurrentLocation (Point i_newLocation)
+    public void setCurrentLocation (Point i_newLocation)
     {
         this.m_currentLocation = i_newLocation;
     }
