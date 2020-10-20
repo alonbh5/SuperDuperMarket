@@ -4,7 +4,7 @@ var Stores;
 var ItemChosen;
 
 function MakeOrderForm (stores) {
-    return ('<form>\n' +
+    return ('<form action="http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo" method="post">\n' +
         '    <li>\n' +
         '        <label for="datepicker">Please Choose Order Date :</label>\n' +
         '        <input type="date" id="datepicker" name="datepicker">\n' +
@@ -14,7 +14,7 @@ function MakeOrderForm (stores) {
         '        <h4 for="orderType">Please Choose Order Type:</h4>\n' +
         '        <input  type="radio" id="staticRadio" name="orderType" value="static">\n' +
         '        <label for="staticRadio">Static Order</label>\n' +
-        '        <input type="radio" id="dynamicRadio" name="orderType" value="costumer">\n' +
+        '        <input type="radio" id="dynamicRadio" name="orderType" value="dynamic">\n' +
         '        <label for="dynamicRadio">Dynamic Order</label><br>\n' +
         '    </li>\n' +
         '    <br>\n' +
@@ -33,6 +33,7 @@ function MakeOrderForm (stores) {
         '            <th>Item Name</th>\n' +
         '            <th>Purchase By</th>\n' +
         '            <th>Price</th>\n' +
+        '            <th>Wanted Amount</th>\n' +
         '        </tr>\n' +
         '        </thead>\n' +
         '        <tbody id="ItemTitles">\n' +
@@ -45,7 +46,6 @@ function MakeOrderForm (stores) {
         '    <br><br>\n' +
         '    <input type="submit" value="Continue">\n' +
         '    <input type="hidden" name="infoType" value="createOrder"> <!--for Servlet To Know what to do-->\n' +
-        '    <input type="submit" value="Submit">\n' +
         '</form>');
 
     // .append('<label for="stores">Choose a Store:</label>')
@@ -94,6 +94,7 @@ function linkOrderType() {
             orderIsStatic = true; //todo show here stores...
             $("#stores").prop("disabled", false);
             if (Stores == null) { //to no send over and over
+                $('#ItemTitles').empty();
                 getStoreCombo();
                 LinkStores();
             }
@@ -148,15 +149,20 @@ function fillStoreItem() {
 
 function addItem(item, index, array) {
 
+    var amount = "<input type=\"number\" id=\"quantity\" name=\"quantity\" step=\"any\" min=\"0.1\" >";
     var price= item.PriceInStore;
     if (price == null)
         price = "-";
+
+    if (item.PayBy.toString().toLowerCase() === "amount")
+        amount = "<input type=\"number\" id=\"quantity\" name=\"quantity\"  min=\"1\" >";
 
     $('#ItemTitles').append('<tr>\n' +
         '            <td value="'+item.serialNumber+'">'+item.serialNumber+'</td>\n' +
         '            <td value="'+item.serialNumber+'">'+item.Name+'</td>\n' +
         '            <td value="'+item.serialNumber+'">'+item.PayBy+'</td>\n' +
         '            <td value="'+item.serialNumber+'">'+price+'</td>\n' +
+        '            <td value="'+item.serialNumber+'" id="amountFromUser">'+amount+'</td>\n' +
         '        </tr>');
 }
 

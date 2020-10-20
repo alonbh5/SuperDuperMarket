@@ -169,11 +169,14 @@ ul, li {
 
 
 /* ------------------------------------ */
-input {
+
+
+/* ------------------------------------
+ input {
     display: block;
     outline: none;
     border: none !important;
-}
+}*/
 
 textarea {
     display: block;

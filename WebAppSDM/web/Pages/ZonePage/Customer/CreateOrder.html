@@ -31,7 +31,7 @@
 </head>
 <body>
 
-<form>
+<form action="http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo" method="post">
     <li>
         <label for="datepicker">Please Choose Order Date :</label>
         <input type="date" id="datepicker" name="datepicker">
@@ -41,7 +41,7 @@
         <h4 for="orderType">Please Choose Order Type:</h4>
         <input  type="radio" id="staticRadio" name="orderType" value="static">
         <label for="staticRadio">Static Order</label>
-        <input type="radio" id="dynamicRadio" name="orderType" value="costumer">
+        <input type="radio" id="dynamicRadio" name="orderType" value="dynamic">
         <label for="dynamicRadio">Dynamic Order</label><br>
     </li>
     <br>
@@ -60,6 +60,7 @@
             <th>Item Name</th>
             <th>Purchase By</th>
             <th>Price</th>
+            <th>Wanted Amount</th>
         </tr>
         </thead>
         <tbody id="ItemTitles">
@@ -72,7 +73,6 @@
     <br><br>
     <input type="submit" value="Continue">
     <input type="hidden" name="infoType" value="createOrder"> <!--for Servlet To Know what to do-->
-    <input type="submit" value="Submit">
 </form>
 
 
