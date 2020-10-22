@@ -140,8 +140,9 @@ function ShowItems() {
 }
 //====================Buyer====================
 function MakeNewOrder() {
-    $('.main').empty().append(MakeOrderForm());
-    LinkCreateOrderForm();
+    //$('.main').empty().append(MakeOrderForm());
+    $('.main').empty().load('http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/CreateOrder.html',LinkCreateOrderForm);
+    //LinkCreateOrderForm();
 }
 function BuyerOrderHistory() {
     $.ajax({
