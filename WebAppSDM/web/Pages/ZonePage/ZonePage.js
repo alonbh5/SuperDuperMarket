@@ -6,6 +6,9 @@ var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
 var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
 var ServletRequestAttributeName = "infoType=";
 
+var StoresList;
+var storeTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/StoreList.html";
+var SingleStoreUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Store.html";
 
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
 
@@ -79,6 +82,7 @@ function ShowStores() {
             "profitFromShipping":0.0,
             "Name":"super baba",
             "PPK":30,
+            "Owner":avi
             "Items":[
                         {"serialNumber":1,"Name":"Ketshop","PayBy":"AMOUNT","PriceInStore":20.0,"SoldCounter":0.0}
                         ,{"serialNumber":2,"Name":"Banana","PayBy":"WEIGHT","PriceInStore":10.0,"SoldCounter":0.0},
@@ -105,6 +109,8 @@ function ShowStores() {
             .
             ]
             */
+            StoresList = data;
+            setStoreTable();
         }
     });
 }
@@ -182,6 +188,20 @@ function setItemTable() {
 
 }
 
+function setStoreTable() {
+
+    $('.main').empty().load(storeTableURL,function () {
+
+        $.each(StoresList || [], function(index, store) {
+            //create a new <option> tag with a value in it and
+            //appeand it to the #userslist (div with id=userslist) element
+            SetStore(index,store);
+        });
+
+    });
+
+}
+
 function SetItem(item){
     $('#itemBody').append(' <tr>\\n" +\n' +
         '        "                        <td class=\"column1\">'+item.serialNumber+'</td>\\n" +\n' +
@@ -192,6 +212,68 @@ function SetItem(item){
         '        "                        <td class=\"column6\">'+item.SoldCount+'</td>\\n" +\n' +
         '        "                    </tr>\\n" +');
 }
+
+function SetStore(index,store){
+
+
+    var aTag = '<a href="#" id="store'+index+'" value="'+index+'">'+store.Name+'</a>';
+
+
+    $('#storeBody').append($(' <tr>\n' +
+        '    <td>'+store.StoreID+'</td>\n' +
+        '    <td>'+aTag +'\n' +
+        '</td>\n' +
+        '    <td>'+store.Owner+'</td>\n' +
+        '  </tr>'));
+
+    var aID = "#store"+index;
+    $(aID).on("click",function(){
+        var indexInArray =  $(this).attr("value");
+        makeStoreInfo(StoresList[indexInArray]);
+    })
+}
+
+function makeStoreInfo(store){
+
+    /*public final Point locationCoordinate;
+    public final String Owner;
+    public final Long StoreID;
+    public final Double profitFromShipping;
+    public final List<ItemInStoreInfo> Items;
+    public final List<OrderInfo> OrderHistory ;
+    public final List<DiscountInfo> Discount;
+    public final String Name;
+    public final Integer PPK;*/
+
+    var storeItems = store.Items;
+    var Orders = store.OrderHistory.length;
+
+    $('.main').empty().load(SingleStoreUrl,function () {
+
+        $('#NameTitle').append(store.Name);
+        $('#StoreID').append(store.StoreID);
+        $('#StoreName').append(store.Name);
+        $('#OwnerName').append(store.Owner);
+        $('#Location').append(store.locationCoordinate);
+        $('#PPK').append(store.PPK);
+        $('#ItemsProfit').append(store);
+        $('#ShippingProfit').append(store.profitFromShipping);
+        $('#TotalOrders').append(store.Orders);
+
+
+        $.each(storeItems || [], function(index, item) {
+
+            $('#StoreItems').append($('<tr>\n' +
+                '                <td>'+item.serialNumber+'</td>\n' +
+                '                <td>'+item.Name+'</td>\n' +
+                '                <td>'+item.PayBy+'</td>\n' +
+                '                <td>'+item.SoldCounter+'</td>\n' +
+                '                <td>'+item.PriceInStore+'</td>\n' +
+                '            </tr>'))
+        });
+
+    });
+} //todo back button
 
 var table = "<div class=\"limiter\">\n" + //todo this with ajax?
     "    <div class=\"container-table100\">\n" +

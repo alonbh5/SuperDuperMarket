@@ -6,6 +6,7 @@ import java.util.List;
 
 public class StoreInfo {
     public final Point locationCoordinate;
+    public final String Owner;
     public final Long StoreID;
     public final Double profitFromShipping;
     public final List<ItemInStoreInfo> Items;
@@ -14,7 +15,7 @@ public class StoreInfo {
     public final String Name;
     public final Integer PPK;
 
-    public StoreInfo(Point locationCoordinate, Long storeID, Double profitFromShipping, List<ItemInStoreInfo> items, List<OrderInfo> orderHistory, List<DiscountInfo> discount, String name, Integer PPK) {
+    public StoreInfo(Point locationCoordinate, Long storeID, Double profitFromShipping, List<ItemInStoreInfo> items, List<OrderInfo> orderHistory, List<DiscountInfo> discount, String name, Integer PPK,String owner) {
         this.locationCoordinate = locationCoordinate;
         StoreID = storeID;
         this.profitFromShipping = profitFromShipping;
@@ -23,6 +24,7 @@ public class StoreInfo {
         Discount = discount;
         Name = name;
         this.PPK = PPK;
+        this.Owner = owner;
     }
 
     public boolean isItemIDinStore (long ItemID)

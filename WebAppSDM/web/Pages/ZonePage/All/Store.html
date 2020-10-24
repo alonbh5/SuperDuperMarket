@@ -1,0 +1,124 @@
+<style>
+
+    html,
+    .root {
+        padding: 0;
+        margin: 0;
+        font-size: 18px;
+    }
+
+    body {
+        font: menu;
+        font-size: 1rem;
+        line-height: 1.4;
+        padding: 0;
+        margin: 0;
+    }
+    section {
+        padding-top: 4rem;
+        width: 50%;
+        margin: auto;
+    }
+    h1 {
+        font-size: 2rem;
+        font-weight: 500;
+    }
+    details[open] summary ~ * {
+        animation: open 0.3s ease-in-out;
+    }
+
+    @keyframes open {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    details summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details summary {
+        width: 100%;
+        padding: 0.5rem 0;
+        border-top: 1px solid black;
+        position: relative;
+        cursor: pointer;
+        font-size: 1.25rem;
+        font-weight: 300;
+        list-style: none;
+    }
+
+    details summary:after {
+        content: "+";
+        color: black;
+        position: absolute;
+        font-size: 1.75rem;
+        line-height: 0;
+        margin-top: 0.75rem;
+        right: 0;
+        font-weight: 200;
+        transform-origin: center;
+        transition: 200ms linear;
+    }
+    details[open] summary:after {
+        transform: rotate(45deg);
+        font-size: 2rem;
+    }
+    details summary {
+        outline: 0;
+    }
+    details p {
+        font-size: 0.95rem;
+        margin: 0 0 1rem;
+        padding-top: 1rem;
+    }
+
+
+</style>
+
+<section>
+    <h1 id="NameTitle">
+    </h1>
+    <details>
+        <summary>Basic</summary>
+        <p>
+            <span>Store ID: </span><span id="StoreID"></span><br>
+            <span>Store Name: </span><span id="StoreName"></span><br>
+            <span>Owner Name: </span><span id="OwnerName"></span><br>
+            <span>Location: </span><span id="Location"></span><br>
+            <span>PPK: </span><span id="PPK"></span><br>
+        </p>
+    </details>
+    <details>
+        <summary>Items</summary>
+        <p>
+        <table>
+            <thead>
+            <tr>
+                <th>ID #</th>
+                <th>Name</th>
+                <th>Pay By</th>
+                <th>Sold Count</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody id="StoreItems">
+            <tr>
+
+            </tr>
+            </tbody>
+        </table>
+        </p>
+    </details>
+    <details>
+        <summary>Summary
+        </summary>
+        <p>
+            <span>Items Profit: </span><span id="ItemsProfit"></span><br>
+            <span>Shipping Profit: </span><span id="ShippingProfit"></span><br>
+            <span>Total Orders: </span><span id="TotalOrders"></span><br>
+        </p>
+    </details>
+</section>

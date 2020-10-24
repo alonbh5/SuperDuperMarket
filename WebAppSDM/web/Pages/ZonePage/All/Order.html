@@ -1,0 +1,160 @@
+<style>
+
+    html,
+    .root {
+        padding: 0;
+        margin: 0;
+        font-size: 18px;
+    }
+
+    body {
+        font: menu;
+        font-size: 1rem;
+        line-height: 1.4;
+        padding: 0;
+        margin: 0;
+    }
+    section {
+        padding-top: 4rem;
+        width: 50%;
+        margin: auto;
+    }
+    h1 {
+        font-size: 2rem;
+        font-weight: 500;
+    }
+    details[open] summary ~ * {
+        animation: open 0.3s ease-in-out;
+    }
+
+    @keyframes open {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    details summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details summary {
+        width: 100%;
+        padding: 0.5rem 0;
+        border-top: 1px solid black;
+        position: relative;
+        cursor: pointer;
+        font-size: 1.25rem;
+        font-weight: 300;
+        list-style: none;
+    }
+
+    details summary:after {
+        content: "+";
+        color: black;
+        position: absolute;
+        font-size: 1.75rem;
+        line-height: 0;
+        margin-top: 0.75rem;
+        right: 0;
+        font-weight: 200;
+        transform-origin: center;
+        transition: 200ms linear;
+    }
+    details[open] summary:after {
+        transform: rotate(45deg);
+        font-size: 2rem;
+    }
+    details summary {
+        outline: 0;
+    }
+    details p {
+        font-size: 0.95rem;
+        margin: 0 0 1rem;
+        padding-top: 1rem;
+    }
+
+
+</style>
+
+<section>
+    <h1>
+        Hypertext Accordion
+    </h1>
+    <details>
+        <summary>Basic</summary>
+        <p>
+            <span>Order ID: </span><span id="OrderID"></span><br>
+            <span>Order Type: </span><span id="OrderType"></span><br>
+            <span>Customer Name: </span><span id="CustomerName"></span><br>
+            <span>Order Type: </span><span id="OrderType"></span><br>
+        </p>
+    </details>
+    <details>
+        <summary>Items</summary>
+        <p>
+        <table>
+            <thead>
+            <tr>
+                <th>ID #</th>
+                <th>Name</th>
+                <th>Pay By</th>
+                <th>From Store</th>
+                <th>Amount</th>
+                <th>Price Per Unit</th>
+                <th>Total Price</th>
+                <th>From Discount</th>
+            </tr>
+            </thead>
+            <tbody id="OrderItems">
+            <tr>
+                <td>Alfreds Futterkiste</td>
+                <td>Maria Anders</td>
+                <td>Germany</td>
+                <td>Alfreds Futterkiste</td>
+                <td>Maria Anders</td>
+                <td>Germany</td>
+                <td>Germany</td>
+                <td>Germany</td>
+            </tr>
+            </tbody>
+        </table>
+        </p>
+    </details>
+    <details>
+        <summary>Stores
+        </summary>
+        <p>
+        <table>
+            <thead>
+            <tr>
+                <th>ID #</th>
+                <th>Name</th>
+                <th>PPK</th>
+                <th>Distance</th>
+                <th>Shipping Price</th>
+            </tr>
+            </thead>
+            <tbody id="OrderStores">
+            <tr>
+                <td>Alfreds Futterkiste</td>
+                <td>Maria Anders</td>
+                <td>Germany</td>
+                <td>Alfreds Futterkiste</td>
+                <td>500$</td>
+            </tr>
+            </tbody>
+        </table>
+        </p>
+    </details>
+    <details>
+        <summary>Summary
+        </summary>
+        <p>
+            <span>Shipping Price: </span><span id="Shipping"></span><br>
+            <span>Price Without Shipping: </span><span id="PriceNoShipping"></span><br>
+            <span>Total Price: </span><span id="Total"></span><br>
+        </p>
+    </details>
+</section>

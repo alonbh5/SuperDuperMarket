@@ -286,7 +286,7 @@ class Store implements HasName, Coordinatable,Serializable {
                 getStoreID(),
                 getProfitFromShipping(),
                 null,null,null
-                ,getName(),getPPK());
+                ,getName(),getPPK(),m_Seller.getName());
     }
 
     int howManyDiscount(Long itemID) {

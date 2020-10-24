@@ -98,7 +98,12 @@ public class GetZoneInfoServlet extends HttpServlet {
 
 
             List<DiscountInfo> discountInfos = sdmByZone.CreateTempStaticOrderAndGetDiscounts(wantedItems, storeInfoByID, curCustomer, date);
-            //todo send ajax of discounts..
+            Gson gson = new Gson();
+            String allItemsJson = gson.toJson(discountInfos);
+            System.out.println(allItemsJson);
+            PrintWriter out = response.getWriter();
+            out.print(allItemsJson);
+            out.flush();
         }        
         else {
 
@@ -111,6 +116,12 @@ public class GetZoneInfoServlet extends HttpServlet {
             }
 
             OrderInfo dynamicOrderInfoBeforeDiscounts = sdmByZone.getDynamicOrderInfoBeforeDiscounts(wantedItems, curCustomer, date);
+            Gson gson = new Gson();
+            String allItemsJson = gson.toJson(dynamicOrderInfoBeforeDiscounts);
+            System.out.println(allItemsJson);
+            PrintWriter out = response.getWriter();
+            out.print(allItemsJson);
+            out.flush();
 
 
             //todo return all items     
@@ -124,6 +135,8 @@ public class GetZoneInfoServlet extends HttpServlet {
         } catch (NoValidXMLException e) {
             e.printStackTrace();
         } catch (ItemIsNotSoldAtAllException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -251,4 +264,6 @@ public class GetZoneInfoServlet extends HttpServlet {
             //todo error
         }
     }
+
+
 }

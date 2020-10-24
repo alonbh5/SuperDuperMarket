@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #stores {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #stores td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #stores tr:nth-child(even){background-color: #f2f2f2;}
+
+        #stores tr:hover {background-color: #ddd;}
+
+        #stores th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<table id="stores">
+    <thead>
+    <tr>
+        <th>Store ID</th>
+        <th>Store Name</th>
+        <th>Owner</th>
+    </tr>
+    </thead>
+    <tbody id="storeBody">
+
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -2,93 +2,141 @@ var orderIsStatic;
 var Items;
 var Stores;
 var ItemChosen;
+var Discounts = [];
 
-function MakeOrderForm (stores) {
-    return ('<form action="http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo" method="post">\n' +
-        '    <li>\n' +
-        '        <label for="datepicker">Please Choose Order Date :</label>\n' +
-        '        <input type="date" id="datepicker" name="datepicker">\n' +
-        '    </li>\n' +
-        '    <br>\n' +
-        '    <li>\n' +
-        '        <label>Please Enter Your Location (X,Y) :</label>       \n' +
-        '        <input type="number" class="point" name="LocX"  min="1" max =50 >\n' +
-        '        <span>,</span>\n' +
-        '        <input type="number" class="point" name="LocY"  min="1" max =50 >\n' +
-        '    </li>\n' +
-        '    <br>\n' +
-        '    <li>\n' +
-        '        <h4 for="orderType">Please Choose Order Type:</h4>\n' +
-        '        <input  type="radio" id="staticRadio" name="orderType" value="static">\n' +
-        '        <label for="staticRadio">Static Order</label>\n' +
-        '        <input type="radio" id="dynamicRadio" name="orderType" value="dynamic">\n' +
-        '        <label for="dynamicRadio">Dynamic Order</label><br>\n' +
-        '    </li>\n' +
-        '    <br>\n' +
-        '    <li>\n' +
-        '        <label for="stores">Choose a Store:</label>\n' +
-        '        <select name="stores" id="stores" >\n' +
-        '        <option disabled selected value> -- Select a Store -- </option>\n' +
-        '        </select>\n' +
-        '    </li>\n' +
-        '    <br>\n' +
-        '\n' +
-        '    <table id="OrderItems">\n' +
-        '        <thead>\n' +
-        '        <tr>\n' +
-        '            <th>Item ID</th>\n' +
-        '            <th>Item Name</th>\n' +
-        '            <th>Purchase By</th>\n' +
-        '            <th>Price</th>\n' +
-        '            <th>Wanted Amount</th>\n' +
-        '        </tr>\n' +
-        '        </thead>\n' +
-        '        <tbody id="ItemTitles">\n' +
-        '        </tbody>\n' +
-        '\n' +
-        '\n' +
-        '\n' +
-        '    </table>\n' +
-        '\n' +
-        '    <br><br>\n' +
-        '    <input type="submit" value="Continue">\n' +
-        '    <input type="hidden" name="infoType" value="createOrder"> <!--for Servlet To Know what to do-->\n' +
-        '</form>');
 
-    // .append('<label for="stores">Choose a Store:</label>')
-        //.append('<select name="stores" id="stores">') //add <option value="saab">Saab</option>
-}
+var StoreSum = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/DynamicStores.html";
+var DiscountMenu = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/DiscountPane.html";
+
 
 function LinkCreateOrderForm() {
     linkOrderType(); //bol bar for stores and shop..
     linkSubmit();//when form is sent what to do
-
 }
 
 
 function linkSubmit() {
-    $('#createOrderForm').submit(function () {
+    $('#createOrderForm').submit(function (e) {
+        e.preventDefault();
+
         $.ajax({
             data: $('#createOrderForm').serialize(), //{userdata: $('#createOrderForm').serialize(), infoType:"createOrder"},
             url: getZoneInfo,
             type: "POST",
             //while get "seller" or "customer" (with ")
-            success: function (data) {
+            success: function (DiscountOrSum) {
                 /*
                  data will arrive in array for each is the form:
                  [
-
+                 discounts:[{discount...}]
+                 sumUp:[{DiscountOrSum...}]
+                 ]
                  */
                 if (orderIsStatic) {
-                    //show items from store (data is json)
+                    //show discount from store (data is json)
+                    var Discount = DiscountOrSum;
+                    $('.main').empty().load(DiscountMenu,function () {linkDiscount(Discount);});
                 }
                 else
                 {
                     //show all items(data is json)
+                    var Stores = DiscountOrSum.Stores;
+                    $('.main').empty().load(StoreSum,function () {linkOrderSum(Stores);});
                 }
             }
+
         });
+        return false;
     })
+}
+
+function linkDiscount(Discount) {
+    $.each(Discount || [], function(index, cur) {
+        console.log("Discount is" + cur);
+
+        addDiscount(cur);
+    });
+}
+
+function linkOrderSum(Stores) {
+
+    $.each(Stores || [], function(index, cur) {
+        console.log("Store is" + cur);
+
+        addStoreToTable(cur);
+    });
+
+}
+
+function addStoreToTable(cur){
+    $('#OrderStores').append($('<tr>\n' +
+        '<td>'+cur.Store.StoreID+'</td>\n' +
+        '<td>'+cur.Store.Name+'</td>\n' +
+        '<td>'+cur.Store.PPK+'</td>\n' +
+        '<td>'+cur.DistanceFromUser+'</td>\n' +
+        '<td>'+cur.Store.locationCoordinate+'</td>\n' +
+        '<td>'+cur.ShippingCost+'</td>\n' +
+        '<td>'+cur.AmountOfItems+'</td>\n' +
+        '<td>$'+cur.PriceOfItems+'</td>\n' +
+        '</tr>'))
+}
+
+function addDiscount(discount) {
+    /*
+    public final String Name;
+    public final String DiscountOperator;
+    public final OfferItemInfo itemToBuy;
+    public final Double AmountToBuy;
+    public final Long StoreID;
+    public final List<OfferItemInfo> OfferedItem;
+    public final List<Integer> IndexOfWantedItem = new ArrayList<>();
+    */
+
+    var index = Discounts.length;
+    Discounts.push(discount);
+    var because = "Because You Bought: "+discount.AmountToBuy + " " +discount.itemToBuy.Name  ;
+    var AmountLeft = "Amount Left: "+discount.AmountEntitled.value;
+    var DiscountType = discount.DiscountOperator;
+
+    var IndexUniq = "index"+index;
+    var NextUniq = "next"+index;
+    var BuyUniq = "buy"+index;
+
+    var Item = discount.OfferedItem[0];
+    var ItemString = "Get "+Item.Amount+ " "+ Item.Name + ' (' + Item.ID + ') For: '+Item.PricePerOne+"$ Per One";
+
+    $('#DiscountBody').append($('<div class="column">\n' +
+        '        <div class="card">\n' +
+        '            <div class="flip-card">\n' +
+        '                <div class="flip-card-inner">\n' +
+        '                    <div class="flip-card-front">\n' +
+        '                        <h3 class="DiscountName">'+discount.Name+'</h3>\n' +
+        '                        <p id="Because">'+because+'</p>\n' +
+        '                        <p class="AmountLeft">'+AmountLeft+'</p>\n' +
+        '                    </div>\n' +
+        '                    <div class="flip-card-back">\n' +
+        '                        <h3 class="DiscountType">'+DiscountType+'</h3>\n' +
+        '                        <p id="DiscountGet">'+ItemString+'</p>\n' +
+        '                        <p class="AmountLeft">'+AmountLeft+' </p>\n' +
+        '                        <input type="button" value="Next" id="'+NextUniq+'"><br><br>\n' +
+        '                        <input type="button" value="Buy!" id="'+BuyUniq+'">\n' +
+        '                        <input type="hidden" value="'+index+'" id="'+IndexUniq+'">\n' +
+        '                        <input type="hidden" value="'+index+'" id="CurrentIndex">\n' +
+        '                    </div>\n' +
+        '                </div>\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>'));
+
+
+    $('#NextUniq').onclick(function (IndexUniq) {
+
+    });
+
+    $('#BuyUniq').onclick(function (IndexUniq) {
+
+    });
 }
 
 

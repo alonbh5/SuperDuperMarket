@@ -23,7 +23,7 @@ public class DiscountInfo {
 
     public DiscountInfo(String name, String discountOperator, OfferItemInfo itemToBuy, Double amountToBuy, List<OfferItemInfo> offeredItem,Long StoreID) {
         Name = name;
-        DiscountOperator = discountOperator;
+        DiscountOperator = getDiscountOp(discountOperator);
         this.itemToBuy = itemToBuy;
         AmountToBuy = Double.parseDouble(String.format("%.2f", amountToBuy));
         if (offeredItem == null)
@@ -51,6 +51,15 @@ public class DiscountInfo {
 
     }
 
+    public void setIndexOfWantedItem(Integer indexOfWantedItem) {
+        if (DiscountOperator.toLowerCase().equals("one_of"))
+            IndexOfWantedItem.add(indexOfWantedItem);
+    }
+
+    public boolean isIndex() {
+        return DiscountOperator.toLowerCase().equals("one_of");
+    }
+
     public void addListener (DiscountInfo affectedDiscount) { //i want other discount to go down if other buy
         AmountWanted.addListener( (observable, oldValue, newValue) -> {
                 affectedDiscount.OnOtherSelected();});
@@ -61,14 +70,7 @@ public class DiscountInfo {
         AmountEntitled.setValue(AmountEntitled.getValue()-1);
     }
 
-    public void setIndexOfWantedItem(Integer indexOfWantedItem) {
-        if (DiscountOperator.toLowerCase().equals("one_of"))
-            IndexOfWantedItem.add(indexOfWantedItem);
-    }
 
-    public boolean isIndex() {
-        return DiscountOperator.toLowerCase().equals("one_of");
-    }
 
     public int getIndex(int i) {
         return IndexOfWantedItem.get(i++);
@@ -90,11 +92,11 @@ public class DiscountInfo {
     }
 
 
-    public String getDiscountOp() {
-        if (DiscountOperator.toUpperCase().equals("ONE_OF"))
+    public String getDiscountOp(String discountOperator) {
+        if (discountOperator.toUpperCase().equals("ONE_OF"))
             return "One Of";
         else
-            if (DiscountOperator.toUpperCase().equals("ALL_OR_NOTHING"))
+            if (discountOperator.toUpperCase().equals("ALL_OR_NOTHING"))
                 return "All Or Nothing";
             else
                 return "Irrelevant";
