@@ -6,7 +6,7 @@ var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
 var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
 var ServletRequestAttributeName = "infoType=";
 
-var StoresList;
+var StoresList = [];
 var storeTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/StoreList.html";
 var SingleStoreUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Store.html";
 
@@ -69,8 +69,10 @@ function makeBars() {
 }
 //====================All====================
 function ShowStores() {
+
+    console.log("checking for new stores..");
     $.ajax({
-        data: ServletRequestAttributeName+"stores",
+        data: ServletRequestAttributeName + "stores",
         url: getZoneInfo,
         //while get "seller" or "customer" (with ")
         success: function (data) {
@@ -109,11 +111,21 @@ function ShowStores() {
             .
             ]
             */
-            StoresList = data;
+
+            if (data.length != StoresList.length)
+                StoresList = data;
+
             setStoreTable();
+
+
+            if ($.find('#stores') != null) {
+                setTimeout(ShowStores, 2000);
+            }
         }
     });
+
 }
+
 
 function ShowItems() {
     $.ajax({
@@ -198,6 +210,7 @@ function setStoreTable() {
             SetStore(index,store);
         });
 
+
     });
 
 }
@@ -237,8 +250,10 @@ function makeStoreInfo(store){
 
     /*public final Point locationCoordinate;
     public final String Owner;
+     public final String locationPoint;
     public final Long StoreID;
     public final Double profitFromShipping;
+    public final Double ProfitFromItems
     public final List<ItemInStoreInfo> Items;
     public final List<OrderInfo> OrderHistory ;
     public final List<DiscountInfo> Discount;
@@ -254,11 +269,11 @@ function makeStoreInfo(store){
         $('#StoreID').append(store.StoreID);
         $('#StoreName').append(store.Name);
         $('#OwnerName').append(store.Owner);
-        $('#Location').append(store.locationCoordinate);
+        $('#Location').append(store.locationPoint);
         $('#PPK').append(store.PPK);
-        $('#ItemsProfit').append(store);
+        $('#ItemsProfit').append(store.ProfitFromItems);
         $('#ShippingProfit').append(store.profitFromShipping);
-        $('#TotalOrders').append(store.Orders);
+        $('#TotalOrders').append(Orders);
 
 
         $.each(storeItems || [], function(index, item) {

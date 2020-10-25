@@ -183,7 +183,7 @@ public class SuperDuperMarketSystem {
                         curStore.getStoreID(),
                         curStore.getProfitFromShipping(),
                         items,orders,discounts
-                        ,curStore.getName(),curStore.getPPK(),curStore.getSeller().getName());
+                        ,curStore.getName(),curStore.getPPK(),curStore.getSeller().getName(),curStore.getItemsProfit());
 
             }
         throw  (new InvalidKeyException("Store #"+storeID+" is not in System"));

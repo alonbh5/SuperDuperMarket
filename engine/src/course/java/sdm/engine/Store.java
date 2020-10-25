@@ -14,7 +14,7 @@ class Store implements HasName, Coordinatable,Serializable {
     private final Seller m_Seller;
     private final Point m_locationCoordinate;
     private final Long m_StoreID;
-    private double m_profitFromShipping = 0;
+    private Double m_profitFromShipping = 0d;
     private final Map<Long,ProductInStore> m_items = new HashMap<>();
     private final Map<Long,Order> m_OrderHistory = new HashMap<>();
     private final Set<Discount> m_Discounts = new HashSet<>();
@@ -103,6 +103,21 @@ class Store implements HasName, Coordinatable,Serializable {
             m_OrderHistory.put(NewOrder.getOrderSerialNumber(), NewOrder);
         else
             throw (new IllegalArgumentException("Order #"+NewOrder.getOrderSerialNumber()+" does not buy from store #"+this.getStoreID()));
+    }
+
+    Double getItemsProfit() {
+        Double res = 0d;
+        for (Order cur : m_OrderHistory.values()) {
+            if (cur.isStatic())
+                res+=cur.getItemsPrice();
+            else {
+                for (ProductInOrder item : cur.getBasket()) {
+                    if (this.equals( item.getProductInStore().getStore()))
+                        res += item.getPriceOfTotalItems();
+                }
+            }
+        }
+        return res;
     }
 
     @Override
@@ -286,7 +301,7 @@ class Store implements HasName, Coordinatable,Serializable {
                 getStoreID(),
                 getProfitFromShipping(),
                 null,null,null
-                ,getName(),getPPK(),m_Seller.getName());
+                ,getName(),getPPK(),m_Seller.getName(),getItemsProfit());
     }
 
     int howManyDiscount(Long itemID) {

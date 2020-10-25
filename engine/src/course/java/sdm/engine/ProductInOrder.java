@@ -3,7 +3,7 @@ package course.java.sdm.engine;
 import java.io.Serializable;
 import java.util.Objects;
 
-class ProductInOrder implements Serializable {
+class ProductInOrder  {
 
         private final ProductInStore productInStore;
         private final boolean isFromSale;

@@ -20,7 +20,7 @@ public class StoreInOrderInfo {
     }
 
     public String getLocation() {
-        return Store.getPointString();
+        return Store.getPointString(Store.locationCoordinate);
     }
 
     public Double getDistanceFromUser() {
