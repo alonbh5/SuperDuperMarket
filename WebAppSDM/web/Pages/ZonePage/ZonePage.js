@@ -13,6 +13,7 @@ var StoresList = [];
 var storeTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/StoreList.html";
 var SingleStoreUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Store.html";
 var OrderTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/SellerOrders.html";
+var OrderItemsTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/ItemFromOrder.html";
 
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
 
@@ -345,8 +346,42 @@ function SetOrderForTable(index,order,id) {
 
     var aID = "#items"+index;
     $(aID).on("click",function(){
-        //todo show items from order...
+        setOrderItemsTable(order.ItemsInOrder);
     })
+}
+
+function setOrderItemsTable(items) {
+    $('.main').empty().load(OrderItemsTableURL,function () {
+
+        $.each(items || [], function(index, item) {
+            SetOrderItem(index,item);
+        });
+    });
+}
+
+function SetOrderItem(index,item) {
+    /*public final Long serialNumber;
+    public final Boolean FromSale;
+    public final String Name;
+    public final String PayBy;
+    public final Long FromStoreID;
+    public final String FromStoreName;
+    public Double amountBought;
+    public final Double PricePerUint;
+    public final Double TotalPrice;*/
+    var sale = "No";
+    if (item.FromSale)
+        sale = "Yes";
+
+    $('#OrderBody').append($('<tr>\n' +
+        '        <td>'+item.serialNumber+'</td>\n' +
+        '        <td>'+item.Name+'</td>\n' +
+        '        <td>'+item.PayBy+'</td>\n' +
+        '        <td>item.PricePerUint</td>\n' +
+        '        <td>item.amountBought</td>\n' +
+        '        <td>'+item.TotalPrice+'</td>\n' +
+        '        <td>'+sale+'</td>\n' +
+        '    </tr>'));
 }
 
 function makeStoreInfo(store){
