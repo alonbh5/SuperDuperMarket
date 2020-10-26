@@ -49,13 +49,15 @@ public class OrderInfo {
     }
 
     public void makeDynamic(StoreInfo store) {
-        List<ItemInOrderInfo> onlyItemsFromStore = new ArrayList<>();
+        if (!this.isStatic) {
+            List<ItemInOrderInfo> onlyItemsFromStore = new ArrayList<>();
 
-        for (ItemInOrderInfo cur : ItemsInOrder) {
-            if (cur.FromStoreID.equals(store.StoreID)) {
-                onlyItemsFromStore.add(cur);
+            for (ItemInOrderInfo cur : ItemsInOrder) {
+                if (cur.FromStoreID.equals(store.StoreID)) {
+                    onlyItemsFromStore.add(cur);
+                }
             }
+            ItemsInOrder = onlyItemsFromStore;
         }
-        ItemsInOrder=onlyItemsFromStore;
     }
 }

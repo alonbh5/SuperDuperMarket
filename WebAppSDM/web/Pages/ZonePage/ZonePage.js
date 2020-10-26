@@ -303,25 +303,27 @@ function makeOrderTable(store) {
 
 function SetOrderForTable(index,order,id) {
 
-    var AmountOfItems;
-    if (order.isStatic) {
+    var OrderInfoFromTheStore;
+    var amountItems = order.ItemsInOrder.length;
 
-    }
+    $.each(order.Stores || [], function(index, store) {
+        if (store.Store.storeID === id)
+            OrderInfoFromTheStore = store;
+    });
 
-    var aTag = '<a href="#" id="store'+index+'" value="'+index+'">'+order.Name+'</a>';
+    var aTag = '<a href="#" id="items'+index+'" value="'+index+'">'+amountItems+'</a>';
 
 
-    $('#storeBody').append($(' <tr>\n' +
+    $('#OrderBody').append($(' <tr>\n' + //todo add all the detel from order and OrderInfoFromTheStore
         '    <td>'+store.StoreID+'</td>\n' +
         '    <td>'+aTag +'\n' +
         '</td>\n' +
         '    <td>'+store.Owner+'</td>\n' +
         '  </tr>'));
 
-    var aID = "#store"+index;
+    var aID = "#items"+index;
     $(aID).on("click",function(){
-        var indexInArray =  $(this).attr("value");
-        makeOrderTable(StoreOrderList[indexInArray]);
+        //todo show items from order...
     })
 }
 

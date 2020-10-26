@@ -198,6 +198,10 @@ public class GetZoneInfoServlet extends HttpServlet {
                 if (cur.isOwnerName(UserName))
                     OnlyStoreFromUser.add(cur);
 
+            for (StoreInfo curStore : OnlyStoreFromUser)
+                for (OrderInfo curOrder : curStore.OrderHistory)
+                        curOrder.makeDynamic(curStore);
+
             Gson gson = new Gson();
             String sellerStoresJson = gson.toJson(OnlyStoreFromUser);
             System.out.println(sellerStoresJson);
