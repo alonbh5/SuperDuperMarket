@@ -57,4 +57,8 @@ public class StoreInfo {
                 "), at " + locationCoordinate +
                 ", PPK is " + PPK ;
     }
+
+    public boolean isOwnerName (String sellerName) {
+        return this.Owner.equals(sellerName);
+    }
 }

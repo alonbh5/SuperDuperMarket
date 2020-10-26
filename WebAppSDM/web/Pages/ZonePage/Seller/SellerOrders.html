@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #stores {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #stores td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #stores tr:nth-child(even){background-color: #f2f2f2;}
+
+        #stores tr:hover {background-color: #ddd;}
+
+        #stores th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<h3 id="storeName"></h3>
+<table id="stores">
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>Order Type</th>
+        <th>Order Date</th>
+        <th>Customer Name</th>
+        <th>Customer Location</th>
+        <th>Amount Of Items</th>
+        <th>Items Price</th>
+        <th>Shipping Price</th>
+    </tr>
+    </thead>
+    <tbody id="OrderBody">
+
+    </tbody>
+</table>
+
+</body>
+</html>

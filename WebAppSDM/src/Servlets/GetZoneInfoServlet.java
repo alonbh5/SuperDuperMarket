@@ -172,7 +172,7 @@ public class GetZoneInfoServlet extends HttpServlet {
                     SendUserWallet(request,response,MainSDM);
                     break;
                 case SellerOrderHistoryRequest:
-                    SendSellerOrderHistoryAjax(request,response,MainSDM);
+                    SendSellerOrderHistoryAjax(request,response,sdmByZone);
                     break;
                 default:
                     // code block //todo error
@@ -188,7 +188,25 @@ public class GetZoneInfoServlet extends HttpServlet {
         }
     }
 
-    private void SendSellerOrderHistoryAjax(HttpServletRequest request, HttpServletResponse response, MainSystem mainSDM) {
+    private void SendSellerOrderHistoryAjax(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone) {
+        try {
+            String UserName = SessionUtils.getUserName(request);;
+            Collection<StoreInfo> allStores = sdmByZone.getListOfAllStoresInSystem();
+            List<StoreInfo> OnlyStoreFromUser = new ArrayList<>();
+
+            for (StoreInfo cur : allStores)
+                if (cur.isOwnerName(UserName))
+                    OnlyStoreFromUser.add(cur);
+
+            Gson gson = new Gson();
+            String sellerStoresJson = gson.toJson(OnlyStoreFromUser);
+            System.out.println(sellerStoresJson);
+            PrintWriter out = response.getWriter();
+            out.print(sellerStoresJson);
+            out.flush();
+        } catch (NoValidXMLException | IOException e) {
+            //todo error
+        }
     }
 
     private void SendUserWallet(HttpServletRequest request, HttpServletResponse response, MainSystem mainSDM) {

@@ -6,18 +6,24 @@ var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
 var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
 var ServletRequestAttributeName = "infoType=";
 
+var updateStoresList  = false;
+
+var StoreOrderList = [];
 var StoresList = [];
 var storeTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/StoreList.html";
 var SingleStoreUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Store.html";
+var OrderTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/SellerOrders.html";
 
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
 
     $('#ItemsButton').on("click",function(){
-            ShowItems();
+        updateStoresList = false;
+        ShowItems();
     });
 
     $('#StoreButton').on("click",function(){
-            ShowStores();
+        updateStoresList = true;
+        ShowStores();
     });
 
     $.ajax({
@@ -40,28 +46,33 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
             CurUserType = data.userType;
             makeBars();
 
-    }});
+        }});
 });
 
 function makeBars() {
     if (CurUserType === "seller"){
         $('#MainBar').append(
             $('<a href="#" id="SellersOrderButton">Orders</a>').on("click",function(){
+                updateStoresList = false;
                 SellersOrder();
             })).append(
             $('<a href="#" id="ShowFeedbackButton">My FeedBacks</a>').on("click",function(){
+                updateStoresList = false;
                 ShowFeedback();
             })).append(
             $('<a href="#" id="OpenNewStoreButton">Open New Store</a>').on("click",function(){
+                updateStoresList = false;
                 OpenNewStore();
             }));
     }
     else { //case buyer
         $('#MainBar').append(
             $('<a href="#" id="MakeOrderButton">New Order</a>').on("click",function(){
+                updateStoresList = false;
                 MakeNewOrder();
             })).append(
             $('<a href="#" id="OrderHistoryButton">My Order History</a>').on("click",function(){
+                updateStoresList = false;
                 BuyerOrderHistory();
             }))}
 
@@ -70,60 +81,57 @@ function makeBars() {
 //====================All====================
 function ShowStores() {
 
-    console.log("checking for new stores..");
-    $.ajax({
-        data: ServletRequestAttributeName + "stores",
-        url: getZoneInfo,
-        //while get "seller" or "customer" (with ")
-        success: function (data) {
-            /*
-            data will arrive in array for each is the form:
-            [{
-            "locationCoordinate":{"x":3,"y":4},
-            "StoreID":1,
-            "profitFromShipping":0.0,
-            "Name":"super baba",
-            "PPK":30,
-            "Owner":avi
-            "Items":[
-                        {"serialNumber":1,"Name":"Ketshop","PayBy":"AMOUNT","PriceInStore":20.0,"SoldCounter":0.0}
-                        ,{"serialNumber":2,"Name":"Banana","PayBy":"WEIGHT","PriceInStore":10.0,"SoldCounter":0.0},
-                        {"serialNumber":5,"Name":"Tomato","PayBy":"WEIGHT","PriceInStore":50.0,"SoldCounter":0.0}
-                    ],
-            "OrderHistory":[],
-            "Discount":[
-                        {"Name":"Balabait ishtagea !",
-                        "DiscountOperator":"ONE_OF",
-                        "itemToBuy":{"ID":1,"Name":"Ketshop","PayBy":"AMOUNT","Amount":1.0,"PricePerOne":0.0},
-                        "AmountToBuy":1.0,
-                        "StoreID":1,
-                        "OfferedItem":[{"ID":5,"Name":"Tomato","PayBy":"WEIGHT","Amount":2.0,"PricePerOne":20.0}
-                        ,{"ID":2,"Name":"Banana","PayBy":"WEIGHT","Amount":1.0,"PricePerOne":0.0}],
-                        "IndexOfWantedItem":[],
-                        "MaxAmount":0,
-                        "i":0,
-                        "AmountEntitled":{"name":"","value":0,"valid":true},
-                        "AmountWanted":{"name":"","value":0,"valid":true}},
-                       ]
-            }]
-            .
-            .
-            .
-            ]
-            */
+    if (updateStoresList) {
+        console.log("checking for new stores..");
+        $.ajax({
+            data: ServletRequestAttributeName + "stores",
+            url: getZoneInfo,
+            //while get "seller" or "customer" (with ")
+            success: function (data) {
+                /*
+                data will arrive in array for each is the form:
+                [{
+                "locationCoordinate":{"x":3,"y":4},
+                "StoreID":1,
+                "profitFromShipping":0.0,
+                "Name":"super baba",
+                "PPK":30,
+                "Owner":avi
+                "Items":[
+                            {"serialNumber":1,"Name":"Ketshop","PayBy":"AMOUNT","PriceInStore":20.0,"SoldCounter":0.0}
+                            ,{"serialNumber":2,"Name":"Banana","PayBy":"WEIGHT","PriceInStore":10.0,"SoldCounter":0.0},
+                            {"serialNumber":5,"Name":"Tomato","PayBy":"WEIGHT","PriceInStore":50.0,"SoldCounter":0.0}
+                        ],
+                "OrderHistory":[],
+                "Discount":[
+                            {"Name":"Balabait ishtagea !",
+                            "DiscountOperator":"ONE_OF",
+                            "itemToBuy":{"ID":1,"Name":"Ketshop","PayBy":"AMOUNT","Amount":1.0,"PricePerOne":0.0},
+                            "AmountToBuy":1.0,
+                            "StoreID":1,
+                            "OfferedItem":[{"ID":5,"Name":"Tomato","PayBy":"WEIGHT","Amount":2.0,"PricePerOne":20.0}
+                            ,{"ID":2,"Name":"Banana","PayBy":"WEIGHT","Amount":1.0,"PricePerOne":0.0}],
+                            "IndexOfWantedItem":[],
+                            "MaxAmount":0,
+                            "i":0,
+                            "AmountEntitled":{"name":"","value":0,"valid":true},
+                            "AmountWanted":{"name":"","value":0,"valid":true}},
+                           ]
+                }]
+                .
+                .
+                .
+                ]
+                */
 
-            if (data.length != StoresList.length)
-                StoresList = data;
+                if (data.length !== StoresList.length)
+                    StoresList = data;
 
-            setStoreTable();
-
-
-            if ($.find('#stores') != null) {
-                setTimeout(ShowStores, 2000);
+                setStoreTable()
             }
-        }
-    });
+        });
 
+    }
 }
 
 
@@ -178,6 +186,12 @@ function SellersOrder() {
         url: getZoneInfo,
 
         success: function (data) {
+
+            StoreOrderList = data;
+            if (data.length === 0)
+                $('.main').empty().append($('<h3>You Dont Own Any Stores In This Zone</h3>'));
+            else
+                setStoreOrderTable();
         }
     });
 }
@@ -210,7 +224,8 @@ function setStoreTable() {
             SetStore(index,store);
         });
 
-
+        if (updateStoresList)
+            setTimeout(ShowStores, 2000);
     });
 
 }
@@ -241,8 +256,72 @@ function SetStore(index,store){
 
     var aID = "#store"+index;
     $(aID).on("click",function(){
+        updateStoresList = false;
         var indexInArray =  $(this).attr("value");
         makeStoreInfo(StoresList[indexInArray]);
+    })
+}
+
+function setStoreOrderTable (stores) {
+    $('.main').empty().load(storeTableURL,function () {
+
+        $.each(StoreOrderList || [], function(index, store) {
+            SetStoreForOrder(index,store);
+        });
+    });
+}
+
+function SetStoreForOrder(index,store) {
+    var aTag = '<a href="#" id="store'+index+'" value="'+index+'">'+store.Name+'</a>';
+
+
+    $('#storeBody').append($(' <tr>\n' +
+        '    <td>'+store.StoreID+'</td>\n' +
+        '    <td>'+aTag +'\n' +
+        '</td>\n' +
+        '    <td>'+store.Owner+'</td>\n' +
+        '  </tr>'));
+
+    var aID = "#store"+index;
+    $(aID).on("click",function(){
+        var indexInArray =  $(this).attr("value");
+        makeOrderTable(StoreOrderList[indexInArray]);
+    })
+}
+
+function makeOrderTable(store) {
+    var orders = store.OrderHistory; //
+    //todo make table -> click to see only one order..back
+
+    $('.main').empty().load(OrderTableURL,function () {
+
+        $.each(orders || [], function(index, order) {
+            SetOrderForTable(index,order,store.StoreID);
+        });
+    });
+}
+
+function SetOrderForTable(index,order,id) {
+
+    var AmountOfItems;
+    if (order.isStatic) {
+
+    }
+
+    var aTag = '<a href="#" id="store'+index+'" value="'+index+'">'+order.Name+'</a>';
+
+
+    $('#storeBody').append($(' <tr>\n' +
+        '    <td>'+store.StoreID+'</td>\n' +
+        '    <td>'+aTag +'\n' +
+        '</td>\n' +
+        '    <td>'+store.Owner+'</td>\n' +
+        '  </tr>'));
+
+    var aID = "#store"+index;
+    $(aID).on("click",function(){
+        var indexInArray =  $(this).attr("value");
+        makeOrderTable(StoreOrderList[indexInArray]);
     })
 }
 
