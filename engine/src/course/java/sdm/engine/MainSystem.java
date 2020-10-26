@@ -1,15 +1,14 @@
 package course.java.sdm.engine;
 
-import course.java.sdm.classesForUI.CustomerInfo;
-import course.java.sdm.classesForUI.FeedBackInfo;
-import course.java.sdm.classesForUI.OrderInfo;
-import course.java.sdm.classesForUI.WalletInfo;
+import com.sun.org.apache.xpath.internal.operations.Or;
+import course.java.sdm.classesForUI.*;
 import course.java.sdm.exceptions.*;
 import course.java.sdm.generatedClasses.AreaInfo;
 import course.java.sdm.generatedClasses.SuperDuperMarketDescriptor;
 
 import javax.xml.bind.JAXBException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainSystem {
@@ -49,6 +48,10 @@ public class MainSystem {
         return OrdersSerialGenerator++;
     }
 
+    public synchronized static Long getStoreSerial() {
+        return StoreSerialGenerator++;
+    }
+
     public synchronized Person addNewSeller(String name) { //todo this is sync
         Seller newSeller = new Seller(UsersSerialGenerator++,name);
         m_SellersInSystem.put(name,newSeller);
@@ -82,7 +85,7 @@ public class MainSystem {
         return res;
     }
 
-    Object key = new Object();
+    final Object key = new Object();
     public void uploadFile(InputStream inputStream, String sellerName) throws DuplicatePointOnGridException, DuplicateItemInStoreException, NoOffersInDiscountException, IllegalOfferException, PointOutOfGridException, DuplicateStoreInSystemException, ItemIsNotSoldAtAllException, StoreItemNotInSystemException, StoreDoesNotSellItemException, NegativePriceException, NoValidXMLException, NegativeQuantityException, DuplicateItemIDException, WrongPayingMethodException, DuplicateZoneException {
         Seller curSeller = m_SellersInSystem.get(sellerName);
 
@@ -172,4 +175,56 @@ public class MainSystem {
     public Customer getCustomer(String usernameFromParameter) {
         return m_CustomersInSystem.get(usernameFromParameter);
     }
+
+    public void addFeedback (FeedBackInfo feedback, String Zone,Long OrderId) {
+        Seller seller = m_SellersInSystem.get(feedback.SellerName);
+        Customer customer = m_CustomersInSystem.get(feedback.CustomerName);
+        Order order = customer.getOrderHistory().get(OrderId);
+        FeedBack newFeed = new FeedBack(feedback.stars,feedback.DateGiven,feedback.feed,customer,seller,order,Zone);
+        seller.addFeedBack(newFeed);
+        customer.addFeedBack(newFeed);
+        //todo notifaction
+    }
+
+    public void AddStore (StoreInfo storeToAdd,String Zone) throws DuplicatePointOnGridException, StoreDoesNotSellItemException, NegativePriceException, StoreItemNotInSystemException, DuplicateItemInStoreException {
+
+        SuperDuperMarketSystem sdm = getSDMByZone(Zone);
+        if (sdm.isLocationTaken(storeToAdd.locationCoordinate))
+            throw new DuplicatePointOnGridException(storeToAdd.locationCoordinate);
+        if (storeToAdd.Items.isEmpty())
+            throw new StoreDoesNotSellItemException(storeToAdd.StoreID);
+        Seller seller = m_SellersInSystem.get(storeToAdd.Owner);
+
+        Store newStore = new Store (getStoreSerial(),storeToAdd.locationCoordinate,storeToAdd.Name,
+                storeToAdd.PPK,seller,Zone);
+
+        for (ItemInStoreInfo cur : storeToAdd.Items) {
+
+            if (cur.PriceInStore <= 0) {
+                throw new NegativePriceException(cur.PriceInStore);
+            }
+            if (!sdm.isItemInSystem(cur.serialNumber)) {
+                throw new StoreItemNotInSystemException(cur.serialNumber, newStore.getStoreID());
+            }
+            if (newStore.isItemInStore(cur.serialNumber)) {
+                throw new DuplicateItemInStoreException(cur.serialNumber);
+            }
+
+            Item BaseItem = sdm.getItem(cur.serialNumber);
+            ProductInStore newItemForStore = new ProductInStore(BaseItem, cur.PriceInStore, newStore);
+            newStore.addItemToStore(newItemForStore);
+            ProductInSystem sysItem = sdm.getSysItem(cur.serialNumber);
+            sysItem.addSellingStore();
+            if (sysItem.getMinSellingStore() == null || cur.PriceInStore < sysItem.getMinSellingStore().getPriceForItem(BaseItem.getSerialNumber()))
+                sysItem.setMinSellingStore(newStore);
+        }
+
+        seller.addStore(newStore);
+        sdm.addStore(newStore);
+        //todo notify..
+    }
+
+
+
+
 }

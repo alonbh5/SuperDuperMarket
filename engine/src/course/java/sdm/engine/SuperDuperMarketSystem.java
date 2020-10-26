@@ -766,4 +766,15 @@ public class SuperDuperMarketSystem {
     }
 
 
+    void addStore(Store newStore) {
+        m_StoresInSystem.put(newStore.getStoreID(),newStore);
+    }
+
+    public Item getItem(Long serialNumber) {
+        return m_ItemsInSystem.get(serialNumber).getItem();
+    }
+
+    public ProductInSystem getSysItem(Long serialNumber) {
+        return m_ItemsInSystem.get(serialNumber);
+    }
 }
