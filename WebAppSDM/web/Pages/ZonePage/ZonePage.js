@@ -303,6 +303,20 @@ function makeOrderTable(store) {
 
 function SetOrderForTable(index,order,id) {
 
+    /* public final Long m_OrderSerialNumber;
+    public final Date m_Date;
+    public final List<StoreInOrderInfo> Stores;
+    public List<ItemInOrderInfo> ItemsInOrder;
+    public final CustomerInfo customer;
+    public final Double m_TotalPrice;
+    public final Double m_ShippingPrice;
+    public final Double m_ItemsPrice;
+    public final Integer m_amountOfItems;
+    //public final Double Distance;
+    //public final Integer StaticPPK;
+    public final boolean isStatic;*/
+
+    var type = "Dynamic";
     var OrderInfoFromTheStore;
     var amountItems = order.ItemsInOrder.length;
 
@@ -311,15 +325,23 @@ function SetOrderForTable(index,order,id) {
             OrderInfoFromTheStore = store;
     });
 
+    if (order.isStatic)
+        type = true;
+
     var aTag = '<a href="#" id="items'+index+'" value="'+index+'">'+amountItems+'</a>';
 
 
-    $('#OrderBody').append($(' <tr>\n' + //todo add all the detel from order and OrderInfoFromTheStore
-        '    <td>'+store.StoreID+'</td>\n' +
-        '    <td>'+aTag +'\n' +
-        '</td>\n' +
-        '    <td>'+store.Owner+'</td>\n' +
-        '  </tr>'));
+    $('#OrderBody').append($('<tr>\n' +
+        '        <td>'+order.m_OrderSerialNumber+'</td>\n' +
+        '        <td>'+type+'</td>\n' +
+        '        <td>'+order.m_Date+'</td>\n' +
+        '        <td>order.customer.name</td>\n' +
+        '        <td>order.customer.Location</td>\n' +
+        '        <td>'+aTag+'</td>\n' +
+        '        <td>'+OrderInfoFromTheStore.PriceOfItems+'</td>\n' +
+        '        <td>'+OrderInfoFromTheStore.ShippingCost+'</td>\n' +
+        '    </tr>')); //todo add all the detel from order and OrderInfoFromTheStore
+
 
     var aID = "#items"+index;
     $(aID).on("click",function(){
