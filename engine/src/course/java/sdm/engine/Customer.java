@@ -12,6 +12,7 @@ public class Customer extends Person implements Coordinatable {
     private final Map<Long,Order> m_OrderHistory = new HashMap<>();
     private final Map<Seller,FeedBack> FeedBacks = new HashMap<>();
     private final Wallet wallet = new Wallet();
+    Order m_tempOrder = null;
 
     Customer(Long i_IDNumber, String i_Name) {
         super(i_IDNumber, i_Name);

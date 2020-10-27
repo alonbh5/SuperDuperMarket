@@ -22,7 +22,6 @@ public class SuperDuperMarketSystem {
     private Map<Point,Coordinatable> m_SystemGrid = new HashMap<>(); //all the shops
     private Map<Long,Order> m_OrderHistory = new HashMap<>(); //all the shops
     private Map<Long,Store> m_StoresInSystem = new HashMap<>();
-    private Order m_tempOrder = null;
     private boolean locked = true;
 
     public SuperDuperMarketSystem(String zone, Seller zoneManger) {
@@ -269,13 +268,14 @@ public class SuperDuperMarketSystem {
             newOrder.addProductToOrder(newItem);
         }
 
-        m_tempOrder = newOrder;
+        customer.m_tempOrder = newOrder;
 
         return getAllEntitledDiscounts(newOrder);
     }
 
 
-    private void approveOrder() throws OrderIsNotForThisCustomerException {
+    private void approveOrder(Customer customer) throws OrderIsNotForThisCustomerException {
+        Order m_tempOrder = customer.m_tempOrder;
         for (ProductInOrder curItem :m_tempOrder.getBasket())
             m_ItemsInSystem.get(curItem.getSerialNumber()).addTimesSold(curItem.getAmountByPayingMethod());
 
@@ -285,12 +285,27 @@ public class SuperDuperMarketSystem {
         for (Store curStore : m_tempOrder.getStoreSet())
             curStore.addOrderToStoreHistory(m_tempOrder);
         m_tempOrder.getCostumer().addOrderToHistory(m_tempOrder); //todo add history to both seller and cosmer...and ask for feedback?
+        MoveMoney(customer);
+        m_tempOrder=null;
         //todo add wallet, todo notification....
 
     }
 
-    public OrderInfo getTempOrder() {
-        return createOrderInfo(m_tempOrder);
+    private void MoveMoney(Customer customer) {
+        //todo notify!!@!#$!@!@!$
+        //when order is done we move the money - no negative check!
+        Order curOrder = customer.m_tempOrder;
+        Double money;
+        customer.getWallet().Give(curOrder,curOrder.getTotalPrice());
+        for (Store curStore : curOrder.getStoreSet()) {
+            money = curOrder.getPriceFromStore(curStore); //items
+            money += CalculatePPK(curStore,curOrder.getCoordinate()); //shipping
+            curStore.getSeller().getWallet().Receive(curOrder,money);
+        }
+    }
+
+    public OrderInfo getTempOrder(Customer customer) {
+        return createOrderInfo(customer.m_tempOrder);
     } //todo fix that
 
     public OrderInfo getDynamicOrderInfoBeforeDiscounts (Collection<ItemInOrderInfo> itemsChosen,Customer customer, Date OrderDate) throws InvalidKeyException, PointOutOfGridException, ItemIsNotSoldAtAllException {
@@ -315,19 +330,20 @@ public class SuperDuperMarketSystem {
             newOrder.addProductToOrder(newItem); //added it to order
         }
 
-        m_tempOrder = newOrder;
+        customer.m_tempOrder = newOrder;
         return createOrderInfo(newOrder);
     }
 
-    public Collection<DiscountInfo> getDiscountsFromDynamicOrder () {       //create temp static order, return entitled discount..
+    public Collection<DiscountInfo> getDiscountsFromDynamicOrder (Customer customer) {       //create temp static order, return entitled discount..
         //part 2 - get discount - UI want to choose
-        if (m_tempOrder.isStatic())
+        if (customer.m_tempOrder.isStatic())
             return null;
-        return getAllEntitledDiscounts(m_tempOrder);
+        return getAllEntitledDiscounts(customer.m_tempOrder);
     }
 
-    public OrderInfo addDiscounts (Collection<DiscountInfo> DiscountWanted) throws OrderIsNotForThisCustomerException {
+    public OrderInfo addDiscounts (Collection<DiscountInfo> DiscountWanted,Customer customer) throws OrderIsNotForThisCustomerException {
 
+        Order m_tempOrder = customer.m_tempOrder;
         ProductInOrder newItem;
         Store curStore;
         for (DiscountInfo curDiscount : DiscountWanted) {
@@ -362,11 +378,11 @@ public class SuperDuperMarketSystem {
             }
         }
 
-        return getTempOrder();
+        return getTempOrder(customer);
     }
 
-    public void ApproveOrder() throws OrderIsNotForThisCustomerException {
-        approveOrder();
+    public void ApproveOrder(Customer customer) throws OrderIsNotForThisCustomerException {
+        approveOrder(customer);
     }
 
     private OrderInfo createOrderInfo(Order CurOrder) {
