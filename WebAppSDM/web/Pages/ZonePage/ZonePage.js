@@ -225,9 +225,12 @@ function setStoreTable() {
             SetStore(index,store);
         });
 
+
+
         if (updateStoresList)
             setTimeout(ShowStores, 2000);
     });
+
 
 }
 
@@ -294,12 +297,22 @@ function makeOrderTable(store) {
     var orders = store.OrderHistory; //
     //todo make table -> click to see only one order..back
 
-    $('.main').empty().load(OrderTableURL,function () {
+    if (orders.length === 0)
+        $('.main').empty().append($('<h3>Order List In Store Is Empty!</h3>'));
+    else {
+        $('.main').empty().load(OrderTableURL, function () {
 
-        $.each(orders || [], function(index, order) {
-            SetOrderForTable(index,order,store.StoreID);
+            $.each(orders || [], function (index, order) {
+                SetOrderForTable(index, order, store.StoreID);
+            });
         });
-    });
+    }
+
+    $('.main').append($('<button/>')
+        .text('Back')
+        .click(function () {
+            SellersOrder();
+        }));
 }
 
 function SetOrderForTable(index,order,id) {
@@ -425,8 +438,17 @@ function makeStoreInfo(store){
                 '            </tr>'))
         });
 
+        $('.main').append($('<button/>')
+            .text('Back')
+            .click(function () {
+                updateStoresList = true;
+                ShowStores();
+            }));
+
     });
-} //todo back button
+
+
+}
 
 var table = "<div class=\"limiter\">\n" + //todo this with ajax?
     "    <div class=\"container-table100\">\n" +

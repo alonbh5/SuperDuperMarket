@@ -295,9 +295,11 @@ public class SuperDuperMarketSystem {
         //todo notify!!@!#$!@!@!$
         //when order is done we move the money - no negative check!
         Order curOrder = customer.m_tempOrder;
-        Double money;
-        customer.getWallet().Give(curOrder,curOrder.getTotalPrice());
-        for (Store curStore : curOrder.getStoreSet()) {
+        Double money = 0d;
+
+        customer.getWallet().Give(curOrder,curOrder.getTotalPrice()); //take money from customer
+
+        for (Store curStore : curOrder.getStoreSet()) { //give to all the seller
             money = curOrder.getPriceFromStore(curStore); //items
             money += CalculatePPK(curStore,curOrder.getCoordinate()); //shipping
             curStore.getSeller().getWallet().Receive(curOrder,money);
