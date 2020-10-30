@@ -180,7 +180,8 @@ public class MainSystem {
         Seller seller = m_SellersInSystem.get(feedback.SellerName);
         Customer customer = m_CustomersInSystem.get(feedback.CustomerName);
         Order order = customer.getOrderHistory().get(OrderId);
-        FeedBack newFeed = new FeedBack(feedback.stars,feedback.DateGiven,feedback.feed,customer,seller,order,Zone);
+        Date date = order.getDate();
+        FeedBack newFeed = new FeedBack(feedback.stars,date,feedback.feed,customer,seller,order,Zone);
         seller.addFeedBack(newFeed);
         customer.addFeedBack(newFeed);
         //todo notifaction
@@ -225,6 +226,18 @@ public class MainSystem {
     }
 
 
+    public void AddMoney(String usernameFromParameter, Double amountToAdd, Date date) {
+        Customer customer = m_CustomersInSystem.get(usernameFromParameter);
+        customer.addMoney(amountToAdd,date);
+    }
 
+    public List<DiscountInfo> addDiscount(String usernameFromParameter, Integer indexOfItemWanted, Integer indexInArray) {
 
+        Customer customer = m_CustomersInSystem.get(usernameFromParameter);
+        List<DiscountInfo> discounts = customer.getTempDiscounts();
+        discounts.get(indexInArray).setIndexOfWantedItem(indexOfItemWanted);
+        discounts.get(indexInArray).addAmountWanted();
+        customer.setTempDiscounts(discounts);
+        return discounts;
+    }
 }

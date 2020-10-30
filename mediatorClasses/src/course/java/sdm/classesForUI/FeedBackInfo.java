@@ -17,4 +17,12 @@ public class FeedBackInfo {
         SellerName = sellerName;
         DateGiven = dateGiven;
     }
+
+    public FeedBackInfo(Integer stars, String feed) {
+        this.stars = stars;
+        this.feed = feed;
+        CustomerName = null;
+        SellerName = null;
+        DateGiven = null;
+    }
 }

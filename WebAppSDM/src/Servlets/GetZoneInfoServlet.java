@@ -8,10 +8,7 @@ import course.java.sdm.classesForUI.*;
 import course.java.sdm.engine.Customer;
 import course.java.sdm.engine.MainSystem;
 import course.java.sdm.engine.SuperDuperMarketSystem;
-import course.java.sdm.exceptions.ItemIsNotSoldAtAllException;
-import course.java.sdm.exceptions.NoValidXMLException;
-import course.java.sdm.exceptions.PointOutOfGridException;
-import course.java.sdm.exceptions.StoreDoesNotSellItemException;
+import course.java.sdm.exceptions.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,7 +32,11 @@ public class GetZoneInfoServlet extends HttpServlet {
     public final String ItemsRequest = "items";
     public final String SellerFeedbackRequest = "feedbacks";
     public final String AccentWalletRequest = "wallet";
-
+    public final String AddMoney = "addMoney";
+    public final String AddFeedback = "addFeedback";
+    public final String DiscountAdd = "addDiscount";
+    public final String FinishOrder = "finishOrder"; //add all discount..
+    public final String ApproveOrder = "approveOrder";
     public final String CreateOrderRequest = "createOrder";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,25 +47,118 @@ public class GetZoneInfoServlet extends HttpServlet {
         String CurUserZone = SessionUtils.getUserCurZone(request); //return null if no session
         String userRequest = request.getParameter(Constants.USER_REQUEST);
 
-        if (CurUserZone != null) {
-            SuperDuperMarketSystem sdmByZone = MainSDM.getSDMByZone(CurUserZone);
-
-            switch (userRequest) {
-                case CreateOrderRequest:
-                    CreatOrder(request,response,sdmByZone,MainSDM);
-                    break;
-                default:
-                    // code block //todo error
-            }
-        }
+        String CurUserName = SessionUtils.getUserName(request);
+        if (userRequest.equals(AccentWalletRequest) && CurUserName!=null)
+            SendUserWallet(request,response,MainSDM);
         else {
-            String CurUserName = SessionUtils.getUserName(request);
-            if (userRequest.equals(AccentWalletRequest) && CurUserName!=null)
-                SendUserWallet(request,response,MainSDM);
+            if (userRequest.equals(AddMoney) && CurUserName!=null)
+                SendCharge(request,response,MainSDM);
+            else
+            if (CurUserZone != null) {
+                SuperDuperMarketSystem sdmByZone = MainSDM.getSDMByZone(CurUserZone);
+
+                switch (userRequest) {
+                    case CreateOrderRequest:
+                        CreatOrder(request,response,sdmByZone,MainSDM);
+                        break;
+                    case DiscountAdd:
+                        SendDiscountInfo(request,response,sdmByZone,MainSDM);
+                        break;
+                    case FinishOrder:
+                        FinishOrder(request,response,sdmByZone,MainSDM);
+                        break;
+                    case ApproveOrder:
+                        ApproveBuyerOrder(request,response,sdmByZone,MainSDM);
+                        break;
+                    case AddFeedback:
+                        AddFeedbacks(request,response,sdmByZone,MainSDM);
+                        break;
+                    default:
+                        // code block //todo error
+                }
+            }
             else {
-                //todo error
+                    //todo error?
             }
         }
+
+
+    }
+
+    private void AddFeedbacks(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone, MainSystem mainSDM) {
+        Integer rate =  Integer.valueOf(request.getParameter("Rate"));
+        String feed =  (request.getParameter("Feed"));
+        Long orderid =  Long.valueOf(request.getParameter("orderID"));
+        String Zone = SessionUtils.getUserCurZone(request);
+        FeedBackInfo newFeed = new FeedBackInfo(rate,feed);
+        mainSDM.addFeedback(newFeed,Zone,orderid);
+
+    }
+
+    private void ApproveBuyerOrder(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone, MainSystem mainSDM) {
+        String usernameFromParameter = SessionUtils.getUserName(request);
+        Customer customer = mainSDM.getCustomer(usernameFromParameter);
+        try {
+            OrderInfo orderForStores = sdmByZone.ApproveOrder(customer);
+            Gson gson = new Gson();
+            String Stores = gson.toJson(orderForStores.Stores);
+            System.out.println(Stores);
+            PrintWriter out = response.getWriter();
+            out.print(Stores);
+            out.flush();
+        } catch (OrderIsNotForThisCustomerException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void FinishOrder(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone, MainSystem mainSDM) {
+        String usernameFromParameter = SessionUtils.getUserName(request);
+        Customer customer = mainSDM.getCustomer(usernameFromParameter);
+        OrderInfo orderSumUp = null;
+        try {
+            orderSumUp = sdmByZone.addDiscounts(customer);
+        Gson gson = new Gson();
+        String order = gson.toJson(orderSumUp);
+        System.out.println(order);
+        PrintWriter out = response.getWriter();
+        out.print(order);
+        out.flush();
+        } catch (OrderIsNotForThisCustomerException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void SendDiscountInfo(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone, MainSystem mainSDM) {
+        System.out.println("tait");
+        Integer indexInArray = Integer.valueOf(request.getParameter("indexInArray"));
+        Integer IndexOfItemWanted =  Integer.valueOf(request.getParameter("IndexOfItemWanted"));
+        String usernameFromParameter = SessionUtils.getUserName(request);
+        List<DiscountInfo> discountInfos = mainSDM.addDiscount(usernameFromParameter,IndexOfItemWanted,indexInArray);
+        Gson gson = new Gson();
+        String allItemsJson = gson.toJson(discountInfos);
+        System.out.println(allItemsJson);
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.print(allItemsJson);
+        out.flush();
+
+    }
+
+    private void SendCharge(HttpServletRequest request, HttpServletResponse response, MainSystem mainSDM) {
+        String usernameFromParameter = SessionUtils.getUserName(request);
+        Double amountToAdd = Double.valueOf(request.getParameter("money"));
+        String dateInput = request.getParameter("date");
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(dateInput);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        mainSDM.AddMoney(usernameFromParameter,amountToAdd,date);
     }
 
     private void CreatOrder(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone, MainSystem mainSDM) {
@@ -261,7 +355,7 @@ public class GetZoneInfoServlet extends HttpServlet {
     private void SendBuyerOrderHistoryAjax(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem mainSDM) {
         try {
             String CurUserName = SessionUtils.getUserName(request);
-            Collection<OrderInfo> allOrders = mainSDM.getListOfAllOrderByUser(CurUserName); //todo now its by zone and not all?
+            Collection<OrderInfo> allOrders = mainSDM.getListOfAllOrderByUser(CurUserName);
             Gson gson = new Gson();
             String allOrdersJson = gson.toJson(allOrders);
             System.out.println(allOrdersJson);

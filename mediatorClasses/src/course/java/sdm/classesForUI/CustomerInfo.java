@@ -5,7 +5,7 @@ public class CustomerInfo {
 
     public final String name;
     public final Long ID;
-    public final Point Location;
+    public final String Location;
     public final Double AvgPriceForShipping;
     public final Double AvgPriceForOrderWithoutShipping;
     public final Integer AmountOfOrders;
@@ -14,14 +14,14 @@ public class CustomerInfo {
     public CustomerInfo(String name, long ID, Point location, double avgPriceForShipping, double avgPriceForOrderWithoutShipping, int amountOfOrders,WalletInfo wallet) {
         this.name = name;
         this.ID = ID;
-        Location = location;
+        Location = getLocationString(location);
         AvgPriceForShipping = Double.parseDouble(String.format("%.2f", avgPriceForShipping));
         AvgPriceForOrderWithoutShipping = Double.parseDouble(String.format("%.2f", avgPriceForOrderWithoutShipping));
         AmountOfOrders = amountOfOrders;
         this.Wallet = wallet;
     }
 
-    public String getLocationString (){
+    public String getLocationString (Point Location){
         return ("("+(int)Location.getX()+","+(int)Location.getY()+")");
     }
 
@@ -33,9 +33,7 @@ public class CustomerInfo {
         return ID;
     }
 
-    public String getLocation() {
-        return getLocationString();
-    }
+
 
     public Double getAvgPriceForShipping() {
         return Double.parseDouble(String.format("%.2f", AvgPriceForShipping));
@@ -53,6 +51,6 @@ public class CustomerInfo {
     public String toString() {
         return "Customer #"+ID+
                 " (" + name +
-                ") , Location at " + getLocationString() ;}
+                ") , Location at " + Location ;}
 
 }

@@ -287,6 +287,7 @@ public class SuperDuperMarketSystem {
         m_tempOrder.getCostumer().addOrderToHistory(m_tempOrder); //todo add history to both seller and cosmer...and ask for feedback?
         MoveMoney(customer);
         m_tempOrder=null;
+        customer.m_tempDiscounts = null;
         //todo add wallet, todo notification....
 
     }
@@ -343,39 +344,42 @@ public class SuperDuperMarketSystem {
         return getAllEntitledDiscounts(customer.m_tempOrder);
     }
 
-    public OrderInfo addDiscounts (Collection<DiscountInfo> DiscountWanted,Customer customer) throws OrderIsNotForThisCustomerException {
+    public OrderInfo addDiscounts (Customer customer) throws OrderIsNotForThisCustomerException {
 
+        Collection<DiscountInfo> DiscountWanted = customer.getTempDiscounts();
         Order m_tempOrder = customer.m_tempOrder;
         ProductInOrder newItem;
         Store curStore;
-        for (DiscountInfo curDiscount : DiscountWanted) {
-            if (curDiscount.AmountWanted.getValue() > 0) {
-                ProductInStore curProd;
-                curStore = getStoreByID(curDiscount.StoreID);
-                if (curDiscount.DiscountOperator.toUpperCase().equals("ONE_OF")) {
-                    for (int i = 0; i < curDiscount.AmountWanted.getValue(); i++) {
-                        int curIndex = curDiscount.getIndex(i);
-                        curProd = curStore.getProductInStoreByID(curDiscount.OfferedItem.get(curIndex).ID);
-                        newItem = new ProductInOrder(curProd, true);
-                        newItem.setAmountBoughtFromSale(curDiscount.OfferedItem.get(curIndex).Amount, curDiscount.OfferedItem.get(curIndex).PricePerOne);
-                        m_tempOrder.addProductToOrder(newItem);
-                    }
-                } else if (curDiscount.DiscountOperator.toUpperCase().equals("ALL_OR_NOTHING")) { //go over all the thing and add them
-                    for (int j = 0; j < curDiscount.OfferedItem.size(); j++) {
-                        curProd = curStore.getProductInStoreByID(curDiscount.OfferedItem.get(j).ID);
+        if (DiscountWanted != null) {
+            for (DiscountInfo curDiscount : DiscountWanted) {
+                if (curDiscount.AmountWanted.getValue() > 0) {
+                    ProductInStore curProd;
+                    curStore = getStoreByID(curDiscount.StoreID);
+                    if (curDiscount.DiscountOperator.toUpperCase().equals("ONE_OF")) {
+                        for (int i = 0; i < curDiscount.AmountWanted.getValue(); i++) {
+                            int curIndex = curDiscount.getIndex(i);
+                            curProd = curStore.getProductInStoreByID(curDiscount.OfferedItem.get(curIndex).ID);
+                            newItem = new ProductInOrder(curProd, true);
+                            newItem.setAmountBoughtFromSale(curDiscount.OfferedItem.get(curIndex).Amount, curDiscount.OfferedItem.get(curIndex).PricePerOne);
+                            m_tempOrder.addProductToOrder(newItem);
+                        }
+                    } else if (curDiscount.DiscountOperator.toUpperCase().equals("ALL_OR_NOTHING")) { //go over all the thing and add them
+                        for (int j = 0; j < curDiscount.OfferedItem.size(); j++) {
+                            curProd = curStore.getProductInStoreByID(curDiscount.OfferedItem.get(j).ID);
+                            newItem = new ProductInOrder(curProd, true);
+                            newItem.setAmountBoughtFromSale(
+                                    curDiscount.AmountWanted.getValue() * curDiscount.OfferedItem.get(j).Amount,
+                                    curDiscount.OfferedItem.get(j).PricePerOne);
+                            m_tempOrder.addProductToOrder(newItem);
+                        }
+                    } else {  //IRRELEVANT
+                        curProd = curStore.getProductInStoreByID(curDiscount.OfferedItem.get(0).ID);
                         newItem = new ProductInOrder(curProd, true);
                         newItem.setAmountBoughtFromSale(
-                                curDiscount.AmountWanted.getValue() * curDiscount.OfferedItem.get(j).Amount,
-                                curDiscount.OfferedItem.get(j).PricePerOne);
+                                curDiscount.AmountWanted.getValue() * curDiscount.OfferedItem.get(0).Amount,
+                                curDiscount.OfferedItem.get(0).PricePerOne);
                         m_tempOrder.addProductToOrder(newItem);
                     }
-                } else {  //IRRELEVANT
-                    curProd = curStore.getProductInStoreByID(curDiscount.OfferedItem.get(0).ID);
-                    newItem = new ProductInOrder(curProd, true);
-                    newItem.setAmountBoughtFromSale(
-                            curDiscount.AmountWanted.getValue() * curDiscount.OfferedItem.get(0).Amount,
-                            curDiscount.OfferedItem.get(0).PricePerOne);
-                    m_tempOrder.addProductToOrder(newItem);
                 }
             }
         }
@@ -383,8 +387,10 @@ public class SuperDuperMarketSystem {
         return getTempOrder(customer);
     }
 
-    public void ApproveOrder(Customer customer) throws OrderIsNotForThisCustomerException {
+    public OrderInfo ApproveOrder(Customer customer) throws OrderIsNotForThisCustomerException {
+        OrderInfo res = createOrderInfo(customer.m_tempOrder);
         approveOrder(customer);
+        return res;
     }
 
     private OrderInfo createOrderInfo(Order CurOrder) {
@@ -661,7 +667,7 @@ public class SuperDuperMarketSystem {
     private List<DiscountInfo> getAllEntitledDiscounts(Order order) {
 
         List<DiscountInfo> res =null;
-
+        Customer customer = order.getCostumer();
 
         if (order.isStatic()) {
             Store staticStore = getStoreByID(order.getStaticStore());
@@ -678,6 +684,7 @@ public class SuperDuperMarketSystem {
             }
         }
 
+        customer.setTempDiscounts(res);
         return res;
     }
 

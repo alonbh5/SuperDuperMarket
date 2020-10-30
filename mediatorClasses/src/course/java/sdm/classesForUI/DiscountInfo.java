@@ -76,7 +76,7 @@ public class DiscountInfo {
         return IndexOfWantedItem.get(i++);
     }
 
-    public void addItemYouGet (OfferItemInfo newItem) {
+    public void addItemYouGet (OfferItemInfo newItem) { //for adding discount bonus..
         boolean flag =true;
         for (OfferItemInfo cur : OfferedItem) {
             if (cur.ID.equals(newItem.ID))

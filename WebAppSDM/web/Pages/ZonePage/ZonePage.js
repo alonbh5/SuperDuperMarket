@@ -12,8 +12,11 @@ var StoreOrderList = [];
 var StoresList = [];
 var storeTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/StoreList.html";
 var SingleStoreUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Store.html";
+var SingleOrderUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Order.html";
 var OrderTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/SellerOrders.html";
 var OrderItemsTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/ItemFromOrder.html";
+var BuyerOrderTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/BuyerOrders.html";
+var FeedBackURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/AddFeedBack.html";
 
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
 
@@ -177,7 +180,124 @@ function BuyerOrderHistory() {
         url: getZoneInfo,
 
         success: function (data) {
+            var orders = data; //
+            var msg = "Empty! Buy Something "+CurUserName+"!";
+
+            if (orders.length === 0)
+                $('.main').empty().append($('<h3>'+msg+'</h3>'));
+            else {
+                $('.main').empty().load(BuyerOrderTableURL, function () {
+
+                    $.each(orders || [], function (index, order) {
+                        SetBuyerOrderForTable(index, order);
+                    });
+                });
+            }
         }
+    });
+}
+
+function SetBuyerOrderForTable(index, order) {
+
+
+
+    var type = "Dynamic";
+    if (order.isStatic)
+        type = "Static";
+
+    var aTag = '<a href="#" id="orderID'+index+'" value="'+index+'">'+order.m_OrderSerialNumber+'</a>';
+
+
+    $('#OrderBody').append($('<tr>\n' +
+        '        <td>'+aTag+'</td>\n' +
+        '        <td>'+type+'</td>\n' +
+        '        <td>'+order.m_Date+'</td>\n' +
+        '        <td>'+order.m_TotalPrice+'</td>\n' +
+        '    </tr>')); //todo add all the detel from order and OrderInfoFromTheStore
+
+
+    var aID = "#orderID"+index;
+    $(aID).on("click",function(){
+        setBuyerOrder(order,false);
+    })
+
+    //todo back
+}
+
+function  setBuyerOrder(order,fromCreate) {
+    $('.main').empty().load(SingleOrderUrl, function () {
+        var type = "Dynamic";
+        if (order.isStatic)
+            type = "Static";
+        var OrderStores = order.Stores;
+        var OrderItems = order.ItemsInOrder;
+
+    /* public final Long m_OrderSerialNumber;
+    public final Date m_Date;
+    public final List<StoreInOrderInfo> Stores;
+    public List<ItemInOrderInfo> ItemsInOrder;
+    public final CustomerInfo customer.Location;
+    public final Double m_TotalPrice;
+    public final Double m_ShippingPrice;
+    public final Double m_ItemsPrice;
+    public final Integer m_amountOfItems;
+    public final boolean isStatic;*/
+
+        $('#numberTitle').append(order.m_OrderSerialNumber);
+
+        $('#OrderType').append(type);
+        $('#CustomerName').append(order.m_OrderSerialNumber);
+        $('#Shipping').append(order.m_ShippingPrice);
+        $('#PriceNoShipping').append(order.m_ItemsPrice);
+        $('#Total').append(order.m_TotalPrice);
+        $('#OrderDate').append(order.m_Date);
+        $('#OrderID').append(order.m_OrderSerialNumber);
+        $('#OrderLocation').append(order.customer.Location);
+
+        $.each(OrderStores || [], function (index, store) {
+            $('#OrderStores').append('<tr>\n' +
+                '                <td>'+store.Store.StoreID+'</td>\n' +
+                '                <td>'+store.Store.Name+'</td>\n' +
+                '                <td>'+store.Store.PPK+'</td>\n' +
+                '                <td>'+store.DistanceFromUser+'</td>\n' +
+                '                <td>'+store.ShippingCost+'</td>\n' +
+                '            </tr>');
+        });
+
+        $.each(OrderItems || [], function (index, item) {
+            var ans = "No";
+            if (item.FromSale)
+                ans="Yes";
+
+            var storeDet = item.FromStoreName +" #"+item.FromStoreID;
+
+            $('#OrderItems').append(' <tr>\n' +
+                '                <td>'+item.serialNumber+'</td>\n' +
+                '                <td>'+item.Name+'</td>\n' +
+                '                <td>'+item.PayBy+'</td>\n' +
+                '                <td>'+storeDet+'</td>\n' +
+                '                <td>'+item.amountBought+'</td>\n' +
+                '                <td>'+item.PricePerUint+'</td>\n' +
+                '                <td>'+item.TotalPrice+'</td>\n' +
+                '                <td>'+ans+'</td>\n' +
+                '            </tr>');
+        });
+
+        if (fromCreate) {
+
+            $('.main').append($('<button/>')
+                .text('Approve!')
+                .click(function () {
+                    aprroveOrder();
+                }));
+
+            $('.main').append($('<button/>')
+                .text('Cancel!')
+                .click(function () {
+                    $('.main').empty().append('<h2>Order Was Canceled!</h2>');
+                }));
+        }
+
     });
 }
 //====================seller====================

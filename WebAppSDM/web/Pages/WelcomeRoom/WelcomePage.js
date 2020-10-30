@@ -7,6 +7,8 @@ var UserListUrl = 'http://localhost:8080/WebAppSDM_war_exploded/UsersList';
 var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
 var ServletRequestAttributeName = "infoType=";
 
+var isCustomer = false;
+
 //todo I need to if areas are changes!
 
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
@@ -45,7 +47,7 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
                     }));
             }
             else {
-                //todo
+                isCustomer = true;
             }
         }
 
@@ -58,6 +60,7 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
 function ShowAccount() {
     updateArea=false;
     SetAccount();
+    console.log("showing Account!")
 
     $.ajax({
         data: ServletRequestAttributeName+"wallet",
@@ -75,18 +78,23 @@ function ShowAccount() {
 
              */
 
-            //todo append to accountBody (ID) /*<tr>\n" +
-            //         "                        <td class=\"column1\">2017-09-29 01:22</td>\n" +
-            //         "                        <td class=\"column2\">200398</td>\n" +
-            //         "                        <td class=\"column3\">iPhone X 64Gb Grey</td>\n" +
-            //         "                        <td class=\"column4\">$999.00</td>\n" +
-            //         "                        <td class=\"column5\">1</td>\n" +
-            //         "                        <td class=\"column6\">$999.00</td>\n" +
-            //         "                    </tr>\n" +
-            //         "                    \n" +
-            //         "\n" +*/
-            $("#balance").text(data.Balance);
-            $.each(data.AllTransactions || [], SetTransatcion(index, transction));
+            var msg = "Balance is: " + data.Balance + "$";
+            $("#balance").text(msg);
+            $.each(data.AllTransactions || [], function (index, transction){SetTransatcion(index, transction);});
+
+            if (isCustomer) {
+                $('.main').append($('<li>\n' +
+                    '        <label for="datepicker">Please Choose Charge Date :</label>\n' +
+                    '        <input type="date" id="datepicker" name="datepicker">\n' +
+                    '    </li>'));
+                $('.main').append($('<input type="number" id="moneyToAdd" name="money" step="any" min="0.1">'));
+                $('.main').append($('<button/>')
+                    .text('Charge Money')
+                    .attr('id', 'chargeButton')
+                    .click(function () {
+                        addMoney();
+                    }));
+            }
         }
     });
 }
@@ -94,7 +102,7 @@ function ShowAccount() {
 function SetAccount() {
     $('.main').empty().append("<div class=\"limiter\">\n" +
         "    <div class=\"container-table100\">\n" +
-        "        <div class=\"wrap-table100\"><div class=\"balanceDiv\"> <br> <h1 id=\"balance\">150</h1><br><br></div>\n" +
+        "        <div class=\"wrap-table100\"><div class=\"balanceDiv\"> <br> <h1 id=\"balance\"></h1><br><br></div>\n" +
         "            <div class=\"table100\">\n" +
         "                <table>\n" +
         "                    <thead>\n" +
@@ -117,15 +125,41 @@ function SetAccount() {
         "</div>");
 }
 
+function  addMoney() {
+
+    var moneyToAdd = $('#moneyToAdd').val();
+    var jsDate = $('#datepicker').val();
+    console.log("adding " + moneyToAdd +" on "+jsDate);
+
+    if (moneyToAdd > 0 && jsDate !== null) {
+
+            var myData = ServletRequestAttributeName + "addMoney" & "money="+moneyToAdd & "date="+jsDate;
+
+            $.ajax({
+               // data: ServletRequestAttributeName+"addMoney",
+                data: {infoType:"addMoney",money:moneyToAdd,date:jsDate},
+                type: "POST",
+                url: getZoneInfo,
+
+                success: function (data) {
+
+                }
+            });
+
+        setTimeout(ShowAccount,2000);
+    }
+
+}
+
 function SetTransatcion(index, transction) {
 
 $('#accountBody').append(' <tr>\\n" +\n' +
-    '        "                        <td class=\\"column1\\">transction.SerialNumber</td>\\n" +\n' +
-    '        "                        <td class=\\"column2\\">transction.transactionMethod</td>\\n" +\n' +
-    '        "                        <td class=\\"column3\\">transction.date</td>\\n" +\n' +
-    '        "                        <td class=\\"column4\\">transction.AmountOfTransaction</td>\\n" +\n' +
-    '        "                        <td class=\\"column5\\">transction.BalanceBefore</td>\\n" +\n' +
-    '        "                        <td class=\\"column6\\">transction.BalanceAfter</td>\\n" +\n' +
+    '        "                        <td class=\\"column1\\">'+transction.SerialNumber+'</td>\\n" +\n' +
+    '        "                        <td class=\\"column2\\">'+transction.transactionMethod+'</td>\\n" +\n' +
+    '        "                        <td class=\\"column3\\">'+transction.date+'</td>\\n" +\n' +
+    '        "                        <td class=\\"column4\\">'+transction.AmountOfTransaction+'</td>\\n" +\n' +
+    '        "                        <td class=\\"column5\\">'+transction.BalanceBefore+'</td>\\n" +\n' +
+    '        "                        <td class=\\"column6\\">'+transction.BalanceAfter+'</td>\\n" +\n' +
     '        "                    </tr>\\n" +');
 }
 

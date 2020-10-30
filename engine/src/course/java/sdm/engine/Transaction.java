@@ -34,7 +34,10 @@ public class Transaction {
     }
 
     public Long getFromOrderID() {
-        return FromOrder.getOrderSerialNumber();
+        if (FromOrder!=null)
+            return FromOrder.getOrderSerialNumber();
+        else
+            return 0l;
     }
 
     public TransactionMethod getTransactionMethod() {

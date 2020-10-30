@@ -3,6 +3,9 @@ var Items;
 var Stores;
 var ItemChosen;
 var Discounts = [];
+var storesForFeedBack =[];
+
+var StoreIdForFeedBack;
 
 
 var StoreSum = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/DynamicStores.html";
@@ -35,7 +38,7 @@ function linkSubmit() {
                 if (orderIsStatic) {
                     //show discount from store (data is json)
                     var Discount = DiscountOrSum;
-                    $('.main').empty().load(DiscountMenu,function () {linkDiscount(Discount);});
+                    showDiscountsMenu(Discount);
                 }
                 else
                 {
@@ -50,7 +53,98 @@ function linkSubmit() {
     })
 }
 
+function showDiscountsMenu(discounts ) {
+    Discounts = [];
+    $('.main').empty().load(DiscountMenu,function () {
+        linkDiscount(discounts);
+       $('#discountOn').on('click',function () {
+           $.ajax({
+               data: ServletRequestAttributeName+"finishOrder",
+               type: "POST",
+               url: getZoneInfo,
+
+               success: function (data) { //this is order
+                   setBuyerOrder(data,true);
+
+               }
+           });
+       })
+    });
+}
+
+function aprroveOrder() {
+    $.ajax({
+        data: ServletRequestAttributeName+"approveOrder",
+        type:"POST",
+        url: getZoneInfo,
+        success: function (data) {
+            storesForFeedBack = data;
+            askFeedBack();
+        }
+    });
+}
+
+function askFeedBack() {
+    $('.main').empty().load(storeTableURL, function () {
+
+
+        $.each(storesForFeedBack || [], function(index, store) {
+
+         var aTag = '<a href="#" id="storeName'+index+'" value="'+store.Store.StoreID+'">'+store.Store.Name+'</a>';
+
+            $('#storeBody').append($(' <tr>\n' +
+                '    <td>'+store.Store.StoreID+'</td>\n' +
+                '    <td>'+aTag +'\n' +
+                '</td>\n' +
+                '    <td>'+store.Store.Owner+'</td>\n' +
+                '  </tr>'));
+
+            var aID = "#storeName"+index;
+            $(aID).on("click",function(){
+                StoreIdForFeedBack =  parseInt($(this).attr("value"));
+                showStoreFeedBack(index);
+
+
+        });
+
+    });
+});
+}
+
+function showStoreFeedBack(index) {
+    $('.main').empty().load(FeedBackURL, function () {
+
+        $('#sendFeedBack').on('click',function () {
+
+            var rate = $('input[name="rate"]:checked').val();
+            var feed = $('#feed').val();
+            if (rate !== null) {
+                $.ajax({
+                    data: {infoType: "addFeedback",Rate:rate,Feed:feed},
+                    type: "POST",
+                    url: getZoneInfo,
+                    success: function (data) {
+                        storesForFeedBack = data;
+                        askFeedBack();
+                    }
+                });
+
+
+            }
+            else
+            {
+                //todo error..
+            }
+
+        });
+
+    });
+}
+
+
+
 function linkDiscount(Discount) {
+
     $.each(Discount || [], function(index, cur) {
         console.log("Discount is" + cur);
 
@@ -65,6 +159,14 @@ function linkOrderSum(Stores) {
 
         addStoreToTable(cur);
     });
+
+    $('.main').append($('<button/>')
+        .text('Continue')
+        .click(function () {
+            showDiscountsMenu();
+        }));
+
+
 
 }
 
@@ -98,9 +200,16 @@ function addDiscount(discount) {
     var AmountLeft = "Amount Left: "+discount.AmountEntitled.value;
     var DiscountType = discount.DiscountOperator;
 
-    var IndexUniq = "index"+index;
-    var NextUniq = "next"+index;
-    var BuyUniq = "buy"+index;
+    if (AmountLeft <= 0) {
+        AmountLeft = 0;
+    }
+
+    var IndexUniq = "index"+index; //index in ?
+    var NextUniq = "next"+index; //next button
+    var BuyUniq = "buy"+index; //buy button
+    var CurrentItemIndexUniq = "current"+index;
+    var maxAmountUniq = "max"+index;
+    var DiscountGetUniq = "DiscountGet"+index;
 
     var Item = discount.OfferedItem[0];
     var ItemString = "Get "+Item.Amount+ " "+ Item.Name + ' (' + Item.ID + ') For: '+Item.PricePerOne+"$ Per One";
@@ -116,12 +225,13 @@ function addDiscount(discount) {
         '                    </div>\n' +
         '                    <div class="flip-card-back">\n' +
         '                        <h3 class="DiscountType">'+DiscountType+'</h3>\n' +
-        '                        <p id="DiscountGet">'+ItemString+'</p>\n' +
+        '                        <p id="'+DiscountGetUniq+'">'+ItemString+'</p>\n' +
         '                        <p class="AmountLeft">'+AmountLeft+' </p>\n' +
         '                        <input type="button" value="Next" id="'+NextUniq+'"><br><br>\n' +
         '                        <input type="button" value="Buy!" id="'+BuyUniq+'">\n' +
         '                        <input type="hidden" value="'+index+'" id="'+IndexUniq+'">\n' +
-        '                        <input type="hidden" value="'+index+'" id="CurrentIndex">\n' +
+        '                        <input type="hidden" value="0" id="'+CurrentItemIndexUniq+'">\n' +
+        '                        <input type="hidden" value="'+discount.MaxAmount+'" id="'+maxAmountUniq+'">\n' +
         '                    </div>\n' +
         '                </div>\n' +
         '            </div>\n' +
@@ -130,12 +240,40 @@ function addDiscount(discount) {
         '</div>'));
 
 
-    $('#NextUniq').onclick(function (IndexUniq) {
+    var nextName = '#'+NextUniq;
+    $(nextName).on('click',function () {
+        var x1='#'+CurrentItemIndexUniq;
+        var x2 = '#'+maxAmountUniq;
+        var x3 = '#'+IndexUniq;
 
+        var nextIndex = parseInt($(x1).val()) + 1;
+        var IndexInThisArray =  parseInt($(x3).val());
+        nextIndex = nextIndex % Discounts[IndexInThisArray].OfferedItem.length;
+
+        var curItem = Discounts[IndexInThisArray].OfferedItem[nextIndex];
+        var curItemString = "Get "+curItem.Amount+ " "+ curItem.Name + ' (' + curItem.ID + ') For: '+curItem.PricePerOne+"$ Per One";
+
+        var x4= "#"+DiscountGetUniq;
+        var x5= '#'+CurrentItemIndexUniq;
+        $(x5).val(nextIndex);
+        $(x4).empty().append(curItemString);
     });
 
-    $('#BuyUniq').onclick(function (IndexUniq) {
+    var buyName = '#'+BuyUniq;
+    $(buyName).on('click',function () {
 
+        var x1 = '#'+CurrentItemIndexUniq;
+        var wantedItemIndex = parseInt($(x1).val());
+
+        $.ajax({
+            data: {infoType:"addDiscount",indexInArray:index,IndexOfItemWanted:wantedItemIndex},
+            type: "POST",
+            url: getZoneInfo,
+
+            success: function (data) {
+                showDiscountsMenu(data);
+            }
+        });
     });
 }
 
@@ -148,7 +286,7 @@ function linkOrderType() {
         {
             orderIsStatic = true; //todo show here stores...
             $("#stores").prop("disabled", false);
-            if (Stores == null) { //to no send over and over
+            if (Stores === null || $('#stores').val() === null) { //to no send over and over
                 $('#ItemTitles').empty();
                 getStoreCombo();
                 LinkStores();

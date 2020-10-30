@@ -40,7 +40,7 @@ public class OrderInfo {
     }
 
     public String getPointString () {
-        return customer.getLocationString();
+        return customer.Location;
     }
 
     public String getDateString () {

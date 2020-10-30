@@ -1,8 +1,11 @@
 package course.java.sdm.engine;
+import course.java.sdm.classesForUI.DiscountInfo;
 import course.java.sdm.exceptions.OrderIsNotForThisCustomerException;
 
 import java.awt.*;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -13,6 +16,8 @@ public class Customer extends Person implements Coordinatable {
     private final Map<Seller,FeedBack> FeedBacks = new HashMap<>();
     private final Wallet wallet = new Wallet();
     Order m_tempOrder = null;
+    List<DiscountInfo> m_tempDiscounts;
+
 
     Customer(Long i_IDNumber, String i_Name) {
         super(i_IDNumber, i_Name);
@@ -74,6 +79,10 @@ public class Customer extends Person implements Coordinatable {
         return m_OrderHistory.size();
     }
 
+    void addMoney (Double money, Date date) {
+        this.wallet.Charge(money,date);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,5 +95,13 @@ public class Customer extends Person implements Coordinatable {
     @Override
     public int hashCode() {
         return Objects.hash(m_currentLocation, m_OrderHistory);
+    }
+
+    List<DiscountInfo> getTempDiscounts () {
+        return m_tempDiscounts;
+    }
+
+    void setTempDiscounts (List<DiscountInfo> discounts) {
+        m_tempDiscounts = discounts;
     }
 }
