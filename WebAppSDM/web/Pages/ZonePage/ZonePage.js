@@ -242,6 +242,7 @@ function  setBuyerOrder(order,fromCreate) {
     public final Double m_ItemsPrice;
     public final Integer m_amountOfItems;
     public final boolean isStatic;*/
+        orderIdForFeed =order.m_OrderSerialNumber;
 
         $('#numberTitle').append(order.m_OrderSerialNumber);
 
@@ -454,8 +455,10 @@ function SetOrderForTable(index,order,id) {
     var OrderInfoFromTheStore;
     var amountItems = order.ItemsInOrder.length;
 
-    $.each(order.Stores || [], function(index, store) {
-        if (store.Store.storeID === id)
+    var theStores = order.Stores;
+
+    $.each(theStores || [], function(index, store) {
+        if (store.Store.StoreID === id)
             OrderInfoFromTheStore = store;
     });
 
@@ -469,8 +472,8 @@ function SetOrderForTable(index,order,id) {
         '        <td>'+order.m_OrderSerialNumber+'</td>\n' +
         '        <td>'+type+'</td>\n' +
         '        <td>'+order.m_Date+'</td>\n' +
-        '        <td>order.customer.name</td>\n' +
-        '        <td>order.customer.Location</td>\n' +
+        '        <td>'+order.customer.name+'</td>\n' +
+        '        <td>'+order.customer.Location+'</td>\n' +
         '        <td>'+aTag+'</td>\n' +
         '        <td>'+OrderInfoFromTheStore.PriceOfItems+'</td>\n' +
         '        <td>'+OrderInfoFromTheStore.ShippingCost+'</td>\n' +
@@ -506,12 +509,12 @@ function SetOrderItem(index,item) {
     if (item.FromSale)
         sale = "Yes";
 
-    $('#OrderBody').append($('<tr>\n' +
+    $('#OrderItemsBody').append($('<tr>\n' +
         '        <td>'+item.serialNumber+'</td>\n' +
         '        <td>'+item.Name+'</td>\n' +
         '        <td>'+item.PayBy+'</td>\n' +
-        '        <td>item.PricePerUint</td>\n' +
-        '        <td>item.amountBought</td>\n' +
+        '        <td>'+item.PricePerUint+'</td>\n' +
+        '        <td>'+item.amountBought+'</td>\n' +
         '        <td>'+item.TotalPrice+'</td>\n' +
         '        <td>'+sale+'</td>\n' +
         '    </tr>'));

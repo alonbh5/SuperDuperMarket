@@ -86,12 +86,27 @@ public class GetZoneInfoServlet extends HttpServlet {
     }
 
     private void AddFeedbacks(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone, MainSystem mainSDM) {
+
+        String usernameFromParameter = SessionUtils.getUserName(request);
         Integer rate =  Integer.valueOf(request.getParameter("Rate"));
-        String feed =  (request.getParameter("Feed"));
+        String feed =  (request.getParameter("Feed")).trim();
         Long orderid =  Long.valueOf(request.getParameter("orderID"));
+        Long storeid =  Long.valueOf(request.getParameter("storeID"));
         String Zone = SessionUtils.getUserCurZone(request);
         FeedBackInfo newFeed = new FeedBackInfo(rate,feed);
-        mainSDM.addFeedback(newFeed,Zone,orderid);
+        List<StoreInOrderInfo> storeLeft= mainSDM.addFeedback(usernameFromParameter,newFeed,Zone,orderid,storeid);
+
+        Gson gson = new Gson();
+        String Stores = gson.toJson(storeLeft);
+        System.out.println(Stores);
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.print(Stores);
+        out.flush();
 
     }
 

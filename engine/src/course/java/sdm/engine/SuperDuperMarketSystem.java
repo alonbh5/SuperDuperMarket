@@ -802,4 +802,8 @@ public class SuperDuperMarketSystem {
     public ProductInSystem getSysItem(Long serialNumber) {
         return m_ItemsInSystem.get(serialNumber);
     }
+
+    Store getStore(Long storeId) {
+        return m_StoresInSystem.get(storeId);
+    }
 }

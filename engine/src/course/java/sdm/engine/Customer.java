@@ -3,17 +3,14 @@ import course.java.sdm.classesForUI.DiscountInfo;
 import course.java.sdm.exceptions.OrderIsNotForThisCustomerException;
 
 import java.awt.*;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class Customer extends Person implements Coordinatable {
 
     private Point m_currentLocation;
     private final Map<Long,Order> m_OrderHistory = new HashMap<>();
-    private final Map<Seller,FeedBack> FeedBacks = new HashMap<>();
+    private final List<FeedBack> FeedBacks = new ArrayList<>();
     private final Wallet wallet = new Wallet();
     Order m_tempOrder = null;
     List<DiscountInfo> m_tempDiscounts;
@@ -72,7 +69,11 @@ public class Customer extends Person implements Coordinatable {
     }
 
     void addFeedBack (FeedBack FeedbackToAdd) {
-        FeedBacks.put(FeedbackToAdd.getSeller(),FeedbackToAdd);
+        FeedBacks.add(FeedbackToAdd);
+    }
+
+    List<FeedBack>  getFeedBacks () {
+        return FeedBacks;
     }
 
     int getAmountOFOrders() {
@@ -88,13 +89,12 @@ public class Customer extends Person implements Coordinatable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(m_currentLocation, customer.m_currentLocation) &&
-                Objects.equals(m_OrderHistory, customer.m_OrderHistory);
+        return this.getId().equals(customer.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(m_currentLocation, m_OrderHistory);
+        return Objects.hash(getIDNumber());
     }
 
     List<DiscountInfo> getTempDiscounts () {

@@ -7,6 +7,7 @@ var storesForFeedBack =[];
 
 var StoreIdForFeedBack;
 
+var orderIdForFeed;
 
 var StoreSum = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/DynamicStores.html";
 var DiscountMenu = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/DiscountPane.html";
@@ -120,12 +121,16 @@ function showStoreFeedBack(index) {
             var feed = $('#feed').val();
             if (rate !== null) {
                 $.ajax({
-                    data: {infoType: "addFeedback",Rate:rate,Feed:feed},
+                    data: {infoType: "addFeedback",Rate:rate,Feed:feed,orderID:orderIdForFeed,storeID:StoreIdForFeedBack},
                     type: "POST",
                     url: getZoneInfo,
                     success: function (data) {
-                        storesForFeedBack = data;
-                        askFeedBack();
+                        if (data.length !== 0) {
+                            storesForFeedBack = data;
+                            askFeedBack();
+                        }
+                        else
+                            $('.main').empty().append('<h3>No More Stores To Rate!</h3>')
                     }
                 });
 

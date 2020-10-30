@@ -13,7 +13,7 @@ public class Seller extends Person {
     private final List<String> Zones= new ArrayList<>();
     private final Map<String,SuperDuperMarketSystem> AllSuperMarket = new HashMap<>(); //by zone..
     private final Map<Long,Store> Stores = new HashMap<>();
-    private final Map<Customer,FeedBack> FeedBacks = new HashMap<>();
+    private final List<FeedBack> FeedBacks = new ArrayList<>();
     private final Wallet wallet = new Wallet();
 
     public Map<String, SuperDuperMarketSystem> getAllSuperMarket() {
@@ -24,7 +24,7 @@ public class Seller extends Person {
         return Stores;
     }
 
-    public Map<Customer, FeedBack> getFeedBacks() {
+    public List<FeedBack> getFeedBacks() {
         return FeedBacks;
     }
 
@@ -53,12 +53,12 @@ public class Seller extends Person {
     }
 
     void addFeedBack (FeedBack FeedbackToAdd) {
-        FeedBacks.put(FeedbackToAdd.getCustomer(),FeedbackToAdd);
+        FeedBacks.add(FeedbackToAdd);
     }
 
-    boolean isCustomerGaveFeedBack (Customer customer) {
+   /* boolean isCustomerGaveFeedBack (Customer customer) {
         return FeedBacks.containsKey(customer);
-    }
+    }*/
 
     void UploadInfoFromXML (String Zone,SuperDuperMarketDescriptor superDuperMarketDescriptor) throws NoValidXMLException, IllegalOfferException, DuplicateItemIDException, WrongPayingMethodException, NoOffersInDiscountException, DuplicateItemInStoreException, ItemIsNotSoldAtAllException, StoreDoesNotSellItemException, DuplicateStoreInSystemException, DuplicatePointOnGridException, NegativePriceException, PointOutOfGridException, NegativeQuantityException, StoreItemNotInSystemException {
 
@@ -81,5 +81,22 @@ public class Seller extends Person {
         if (!AllSuperMarket.containsKey(zone))
             return null;
         return AllSuperMarket.get(zone);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Seller seller = (Seller) o;
+        return Objects.equals(Zones, seller.Zones) &&
+                Objects.equals(AllSuperMarket, seller.AllSuperMarket) &&
+                Objects.equals(Stores, seller.Stores) &&
+                Objects.equals(FeedBacks, seller.FeedBacks) &&
+                Objects.equals(wallet, seller.wallet);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIDNumber());
     }
 }

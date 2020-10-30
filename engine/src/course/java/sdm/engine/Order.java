@@ -10,7 +10,7 @@ import java.util.List;
 
 class Order implements Coordinatable, Serializable {
 
-    private final long m_OrderSerialNumber;
+    private final Long m_OrderSerialNumber;
     private Date m_Date;
     private final Customer m_Costumer;
     private double m_TotalPrice=0;
@@ -28,7 +28,7 @@ class Order implements Coordinatable, Serializable {
         this.isStatic=isStatic;
     }
 
-     public long getOrderSerialNumber() {
+     public Long getOrderSerialNumber() {
         return m_OrderSerialNumber;
     }
 

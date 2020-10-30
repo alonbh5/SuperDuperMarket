@@ -9,13 +9,15 @@ public class FeedBackInfo {
     public final String CustomerName;
     public final String SellerName;
     public final Date DateGiven;
+    public final StoreInfo Store;
 
-    public FeedBackInfo(Integer stars, String feed, String customerName, String sellerName, Date dateGiven) {
+    public FeedBackInfo(Integer stars, String feed, String customerName, String sellerName, Date dateGiven,StoreInfo store) {
         this.stars = stars;
         this.feed = feed;
         CustomerName = customerName;
         SellerName = sellerName;
         DateGiven = dateGiven;
+        Store = store;
     }
 
     public FeedBackInfo(Integer stars, String feed) {
@@ -24,5 +26,6 @@ public class FeedBackInfo {
         CustomerName = null;
         SellerName = null;
         DateGiven = null;
+        Store = null;
     }
 }

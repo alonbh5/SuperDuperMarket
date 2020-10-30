@@ -4,6 +4,7 @@ import course.java.sdm.classesForUI.WalletInfo;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Wallet {
@@ -46,5 +47,19 @@ public class Wallet {
 
     public WalletInfo getWalletInfo () {
         return new WalletInfo(this.getBalance(),this.Transactions);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wallet wallet = (Wallet) o;
+        return Objects.equals(Transactions, wallet.Transactions) &&
+                Objects.equals(Balance, wallet.Balance);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Transactions, Balance);
     }
 }

@@ -316,4 +316,15 @@ class Store implements HasName, Coordinatable,Serializable {
                 counter++;
         return counter;
     }
+
+    public boolean gotFeedFor(Order order) {
+        boolean flag = false;
+       Customer customer = order.getCostumer();
+       for(FeedBack cur : customer. getFeedBacks()) {
+           if (cur.getFromOrder().getOrderSerialNumber().equals(order.getOrderSerialNumber())) //feedback for order?
+                if(this.m_StoreID.equals(cur.getStore().getStoreID())) //feedback for this store?
+                    flag = true;
+       }
+       return flag;
+    }
 }

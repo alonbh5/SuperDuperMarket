@@ -145,12 +145,12 @@ public class MainSystem {
         if (!m_SellersInSystem.containsKey(curUserName))
             return res;
         Seller curSeller = m_SellersInSystem.get(curUserName);
-        for (FeedBack curFeed : curSeller.getFeedBacks().values())
+        for (FeedBack curFeed : curSeller.getFeedBacks())
             if (curFeed.isFromZone(zone))
                 res.add(new FeedBackInfo(
                         curFeed.getStars(), curFeed.getFeed(),
                         curFeed.getCustomer().getName(),
-                        curFeed.getSeller().getName(), curFeed.getDate()));
+                        curFeed.getSeller().getName(), curFeed.getDate(),curFeed.getStore().getStoreInfo()));
         return res;
     }
 
@@ -176,15 +176,26 @@ public class MainSystem {
         return m_CustomersInSystem.get(usernameFromParameter);
     }
 
-    public void addFeedback (FeedBackInfo feedback, String Zone,Long OrderId) {
-        Seller seller = m_SellersInSystem.get(feedback.SellerName);
-        Customer customer = m_CustomersInSystem.get(feedback.CustomerName);
+    public List<StoreInOrderInfo> addFeedback (String customerName,FeedBackInfo feedback, String Zone,Long OrderId,Long StoreId) {
+
+        Customer customer = m_CustomersInSystem.get(customerName);
         Order order = customer.getOrderHistory().get(OrderId);
+        Store store = getSDMByZone(Zone).getStore(StoreId);
         Date date = order.getDate();
-        FeedBack newFeed = new FeedBack(feedback.stars,date,feedback.feed,customer,seller,order,Zone);
+        Seller seller = store.getSeller();
+        FeedBack newFeed = new FeedBack(feedback.stars, date, feedback.feed, customer, seller, order, Zone, store);
         seller.addFeedBack(newFeed);
         customer.addFeedBack(newFeed);
+
         //todo notifaction
+
+
+        List<StoreInOrderInfo> res = new ArrayList<>();
+        for (Store cur : order.getStoreSet())
+            if (!cur.gotFeedFor(order))
+                res.add(new StoreInOrderInfo(cur.getStoreInfo(), 0d, 0d, 0d, 0));
+
+        return res;
     }
 
     public void AddStore (StoreInfo storeToAdd,String Zone) throws DuplicatePointOnGridException, StoreDoesNotSellItemException, NegativePriceException, StoreItemNotInSystemException, DuplicateItemInStoreException {
