@@ -1,7 +1,7 @@
 var orderIsStatic;
 var Items;
 var Stores;
-var ItemChosen;
+var ItemChosen=false;
 var Discounts = [];
 var storesForFeedBack =[];
 
@@ -23,35 +23,60 @@ function linkSubmit() {
     $('#createOrderForm').submit(function (e) {
         e.preventDefault();
 
-        $.ajax({
-            data: $('#createOrderForm').serialize(), //{userdata: $('#createOrderForm').serialize(), infoType:"createOrder"},
-            url: getZoneInfo,
-            type: "POST",
-            //while get "seller" or "customer" (with ")
-            success: function (DiscountOrSum) {
-                /*
-                 data will arrive in array for each is the form:
-                 [
-                 discounts:[{discount...}]
-                 sumUp:[{DiscountOrSum...}]
-                 ]
-                 */
-                if (orderIsStatic) {
-                    //show discount from store (data is json)
-                    var Discount = DiscountOrSum;
-                    showDiscountsMenu(Discount);
-                }
+        var flag = false;
+        var date = $('#datepicker').val();
+        var x = $('#xInput').val();
+        var y = $('#yInput').val();
+        var choice = $('input[name="orderType"]:checked').val();
+        if (date.length === 0)
+            alert("Enter Date!");
+        else
+            if (x.length === 0 || y.length === 0)
+                alert("Enter Location!");
+            else
+                if (choice == null)
+                    alert("Pick Order Type!");
                 else
-                {
-                    //show all items(data is json)
-                    var Stores = DiscountOrSum.Stores;
-                    $('.main').empty().load(StoreSum,function () {linkOrderSum(Stores);});
-                }
-            }
+                    if (ItemChosen == null)
+                        alert("You Didn't Pick Items!");
+                    else
+                        flag=true;
 
-        });
-        return false;
-    })
+
+        if (flag) {
+            ItemChosen=false;
+            $.ajax({
+                data: $('#createOrderForm').serialize(), //{userdata: $('#createOrderForm').serialize(), infoType:"createOrder"},
+                url: getZoneInfo,
+                type: "POST",
+                //while get "seller" or "customer" (with ")
+                success: function (DiscountOrSum) {
+                    /*
+                     data will arrive in array for each is the form:
+                     [
+                     discounts:[{discount...}]
+                     sumUp:[{DiscountOrSum...}]
+                     ]
+                     */
+                    if (orderIsStatic) {
+                        //show discount from store (data is json)
+                        var Discount = DiscountOrSum;
+                        showDiscountsMenu(Discount);
+                    } else {
+                        //show all items(data is json)
+                        var Stores = DiscountOrSum.Stores;
+                        $('.main').empty().load(StoreSum, function () {
+                            linkOrderSum(Stores);
+                        });
+                    }
+                }
+
+            });
+            return false;
+        }
+    });
+
+
 }
 
 function showDiscountsMenu(discounts ) {
@@ -287,6 +312,7 @@ function addDiscount(discount) {
 function linkOrderType() {
 
     $('#staticRadio').click(function(){
+        ItemChosen = false;
         if ($(this).is(':checked'))
         {
             orderIsStatic = true; //todo show here stores...
@@ -302,13 +328,22 @@ function linkOrderType() {
     });
 
     $('#dynamicRadio').click(function(){
+        ItemChosen = false;
         if ($(this).is(':checked'))
         {
             $("#stores").prop("disabled", true);
             orderIsStatic = false;
                 SetAllItems();
         }
+
     });
+}
+
+function changeItemChosen() {
+    $('.quantity').on("change",function () {
+        console.log("ItemChosen Change to True");
+        ItemChosen = true;
+    })
 }
 
 function  getStoreCombo(){
@@ -362,6 +397,8 @@ function addItem(item, index, array) {
         '            <td value="'+item.serialNumber+'">'+price+'</td>\n' +
         '            <td value="'+item.serialNumber+'" id="amountFromUser">'+amount+'</td>\n' +
         '        </tr>');
+
+    changeItemChosen();
 }
 
 function SetAllItems() {

@@ -5,22 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        #OrderItems {
+        #StoreItems {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
             width: 100%;
         }
 
-        #OrderItems td, #OrderItems th {
+        #StoreItems td, #StoreItems th {
             border: 1px solid #ddd;
             padding: 8px;
         }
 
-        #OrderItems tr:nth-child(even){background-color: #f2f2f2;}
+        #StoreItems tr:nth-child(even){background-color: #f2f2f2;}
 
-        #OrderItems tr:hover {background-color: #ddd;}
+        #StoreItems tr:hover {background-color: #ddd;}
 
-        #OrderItems th {
+        #StoreItems th {
             padding-top: 12px;
             padding-bottom: 12px;
             text-align: left;
@@ -31,46 +31,36 @@
 </head>
 <body>
 
-<form id="createOrderForm" action="#" method="post">
+<form id="OpenStoreForm" action="#" method="post">
     <li>
-        <label for="datepicker">Please Choose Order Date :</label>
-        <input type="date" id="datepicker" name="datepicker">
+        <label for="sname">Please Enter Store Name:</label>
+        <input type="text" id="sname" name="sname"><br><br>
     </li>
-    <br>
+
     <li>
-        <label>Please Enter Your Location (X,Y) :</label>
+        <label>Please Enter Store Location (X,Y) :</label>
         <input type="number" id="xInput" class="point" name="LocX"  min="1" max =50 >
         <span>,</span>
         <input type="number" id="yInput" class="point" name="LocY"  min="1" max =50 >
     </li>
     <br>
     <li>
-        <h4 for="orderType">Please Choose Order Type:</h4>
-        <input  type="radio" id="staticRadio" name="orderType" value="static">
-        <label for="staticRadio">Static Order</label>
-        <input type="radio" id="dynamicRadio" name="orderType" value="dynamic">
-        <label for="dynamicRadio">Dynamic Order</label><br>
-    </li>
-    <br>
-    <li>
-        <label for="stores">Choose a Store:</label>
-        <select name="stores" id="stores" >
-            <option disabled selected value> -- Select a Store -- </option>
-        </select>
+        <label for="PPK">Please Enter Store PPK:</label>
+        <input type="text" id="PPK" name="PPK"><br><br>
     </li>
     <br>
 
-    <table id="OrderItems">
+    <table id="StoreItems">
         <thead>
         <tr>
             <th>Item ID</th>
             <th>Item Name</th>
             <th>Purchase By</th>
-            <th>Price</th>
-            <th>Wanted Amount</th>
+            <th>Price In Store</th>
         </tr>
         </thead>
         <tbody id="ItemTitles">
+
         </tbody>
 
 

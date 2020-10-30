@@ -15,6 +15,7 @@ var SingleStoreUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePa
 var SingleOrderUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Order.html";
 var OrderTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/SellerOrders.html";
 var OrderItemsTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/ItemFromOrder.html";
+var OpenStoreURL ="http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/OpenStore.html";
 var BuyerOrderTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/BuyerOrders.html";
 var FeedBackURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/AddFeedBack.html";
 
@@ -318,14 +319,63 @@ function SellersOrder() {
     });
 }
 function OpenNewStore() {
+    $('.main').empty().load(OpenStoreURL,function () {
 
+        $.ajax({
+            data: ServletRequestAttributeName+"items",
+            url: getZoneInfo,
+            //while get "seller" or "customer" (with ")
+            success: function (data) {
+                /*
+                 data will arrive in array for each is the form:
+                 [
+                 {"serialNumber":1,
+                 "Name":"Toilet Paper",
+                 "PayBy":"AMOUNT",
+                 "AvgPrice":30.5,
+                 "NumOfSellingStores":2,
+                 "SoldCount":0},
+                 .
+                 .
+                 .
+                 ]
+                 */
+
+                $.each(data || [], function(index, item) {
+                    OpenStoreItem(item);
+                });
+
+            }
+        });
+
+    });
 }
+
+var OpenStoreFlag = false;
+function OpenStoreItem(item) {
+    var amount = "<input type=\"number\" class=\"quantity\" name=\""+item.serialNumber+"\" step=\"any\" min=\"0.1\" >";
+    var id = item.serialNumber;
+
+    $('#ItemTitles').append('<tr>\n' +
+        '            <td value="'+item.serialNumber+'">'+item.serialNumber+'</td>\n' +
+        '            <td value="'+item.serialNumber+'">'+item.Name+'</td>\n' +
+        '            <td value="'+item.serialNumber+'">'+item.PayBy+'</td>\n' +
+        '            <td value="'+item.serialNumber+'" id="amountFromUser">'+amount+'</td>\n' +
+        '        </tr>');
+
+    $('.quantity').on("change",function () {
+        console.log("OpenStoreFlag Change to True");
+        OpenStoreFlag = true;
+    })
+}
+
 function ShowFeedback() {
     $.ajax({
         data: ServletRequestAttributeName+"feedbacks",
         url: getZoneInfo,
         //while get "seller" or "customer" (with ")
         success: function (data) {
+            //makeFeedBackMenu(data)
         }
     });
 }
@@ -492,6 +542,13 @@ function setOrderItemsTable(items) {
         $.each(items || [], function(index, item) {
             SetOrderItem(index,item);
         });
+
+        $('.main').append($('<button/>')
+            .text('Back')
+            .click(function () {
+                updateStoresList = false;
+                SellersOrder();
+            }));
     });
 }
 
@@ -518,6 +575,8 @@ function SetOrderItem(index,item) {
         '        <td>'+item.TotalPrice+'</td>\n' +
         '        <td>'+sale+'</td>\n' +
         '    </tr>'));
+
+
 }
 
 function makeStoreInfo(store){
