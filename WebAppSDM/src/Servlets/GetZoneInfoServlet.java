@@ -33,6 +33,7 @@ public class GetZoneInfoServlet extends HttpServlet {
     public final String SellerFeedbackRequest = "feedbacks";
     public final String AccentWalletRequest = "wallet";
     public final String AddMoney = "addMoney";
+    public final String OpenStore = "openStore";
     public final String AddFeedback = "addFeedback";
     public final String DiscountAdd = "addDiscount";
     public final String FinishOrder = "finishOrder"; //add all discount..
@@ -73,6 +74,9 @@ public class GetZoneInfoServlet extends HttpServlet {
                     case AddFeedback:
                         AddFeedbacks(request,response,sdmByZone,MainSDM);
                         break;
+                    case OpenStore:
+                        addNewStore(request,response,sdmByZone,MainSDM);
+                        break;
                     default:
                         // code block //todo error
                 }
@@ -82,6 +86,45 @@ public class GetZoneInfoServlet extends HttpServlet {
             }
         }
 
+
+    }
+
+    private void addNewStore(HttpServletRequest request, HttpServletResponse response, SuperDuperMarketSystem sdmByZone, MainSystem mainSDM) {
+        String usernameFromParameter = SessionUtils.getUserName(request);
+        String Zone = SessionUtils.getUserCurZone(request);
+        String StoreName =  (request.getParameter("sname")).trim();
+        Integer PPK =  Integer.parseInt((request.getParameter("PPK")).trim());
+        int x= Integer.parseInt(request.getParameter("LocX"));
+        int y= Integer.parseInt(request.getParameter("LocY"));
+        Point location = new Point(x,y);
+
+        String wantedPrice;
+        List<ItemInStoreInfo> items = new ArrayList<>();
+
+        try {
+            for (ItemInfo cur : sdmByZone.getListOfAllItems()) {
+                wantedPrice = request.getParameter(cur.serialNumber.toString());
+                if (!wantedPrice.isEmpty())
+                    items.add(new ItemInStoreInfo(cur.serialNumber,Double.parseDouble(wantedPrice)));
+            }
+
+        StoreInfo newStore = new StoreInfo(location, MainSystem.getStoreSerial(),0d,items,
+                null,null,StoreName,PPK,usernameFromParameter,0d);
+
+        mainSDM.AddStore(newStore,Zone);
+        } catch (NoValidXMLException e) {
+            e.printStackTrace();
+        } catch (DuplicateItemInStoreException e) {
+            e.printStackTrace();
+        } catch (DuplicatePointOnGridException e) {
+            e.printStackTrace();
+        } catch (StoreDoesNotSellItemException e) {
+            e.printStackTrace();
+        } catch (NegativePriceException e) {
+            e.printStackTrace();
+        } catch (StoreItemNotInSystemException e) {
+            e.printStackTrace();
+        }
 
     }
 

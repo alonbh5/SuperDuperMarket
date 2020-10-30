@@ -319,12 +319,13 @@ function SellersOrder() {
     });
 }
 function OpenNewStore() {
+    OpenStoreFlag = false;
     $('.main').empty().load(OpenStoreURL,function () {
 
         $.ajax({
             data: ServletRequestAttributeName+"items",
             url: getZoneInfo,
-            //while get "seller" or "customer" (with ")
+
             success: function (data) {
                 /*
                  data will arrive in array for each is the form:
@@ -340,7 +341,7 @@ function OpenNewStore() {
                  .
                  ]
                  */
-
+                OpenStoreFlag = false;
                 $.each(data || [], function(index, item) {
                     OpenStoreItem(item);
                 });
@@ -348,6 +349,45 @@ function OpenNewStore() {
             }
         });
 
+        linkSubmitOfCreateStore();
+
+    });
+}
+
+function linkSubmitOfCreateStore() {
+    $('#OpenStoreForm').submit(function (e) {
+        e.preventDefault();
+
+        var flag = false;
+        var ppk = $('#PPK').val();
+        var storeName = $('#sname').val();
+        var x = $('#xInput').val();
+        var y = $('#yInput').val();
+        if (ppk.length === 0)
+            alert("Enter PPK!");
+        else if (x.length === 0 || y.length === 0)
+            alert("Enter Location!");
+        else if (storeName.length === 0)
+            alert("Pick Store Name!");
+        else if (!OpenStoreFlag)
+            alert("You Didn't Pick Items For Store!");
+        else
+            flag = true;
+
+
+        if (flag) {
+            ItemChosen = false;
+            $.ajax({
+                data: $('#OpenStoreForm').serialize(), //{userdata: $('#createOrderForm').serialize(), infoType:"createOrder"},
+                url: getZoneInfo,
+                type: "POST",
+                success: function (data) {
+
+                }
+
+            });
+            return false;
+        }
     });
 }
 
