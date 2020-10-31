@@ -108,10 +108,16 @@ public class GetZoneInfoServlet extends HttpServlet {
                     items.add(new ItemInStoreInfo(cur.serialNumber,Double.parseDouble(wantedPrice)));
             }
 
-        StoreInfo newStore = new StoreInfo(location, MainSystem.getStoreSerial(),0d,items,
+        StoreInfo newStore = new StoreInfo(location, null,0d,items,
                 null,null,StoreName,PPK,usernameFromParameter,0d);
 
         mainSDM.AddStore(newStore,Zone);
+
+
+        PrintWriter writer = response.getWriter() ;
+        writer.println("Done!");
+        writer.flush();
+
         } catch (NoValidXMLException e) {
             e.printStackTrace();
         } catch (DuplicateItemInStoreException e) {
@@ -123,6 +129,8 @@ public class GetZoneInfoServlet extends HttpServlet {
         } catch (NegativePriceException e) {
             e.printStackTrace();
         } catch (StoreItemNotInSystemException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

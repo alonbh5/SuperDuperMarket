@@ -365,18 +365,29 @@ function  getStoreCombo(){
 
 function LinkStores() {
     $('#stores').on('change', function() {
-        var indexInStores = this.value - 1;
+        var indexInStores = parseInt($('#stores').val());
+        var theStore;
+
+        for (var i =0; i < Stores.length ; i++)
+            if (indexInStores === Stores[i].StoreID)
+                theStore = Stores[i];
         $('#ItemTitles').empty();
-        var ItemsInStore = Stores[indexInStores].Items;
+        var ItemsInStore = theStore.Items;
         ItemsInStore.forEach(addItem);
 
     });
 }
 
 function fillStoreItem() {
-    var indexInStores = $('#stores').val() - 1;
+    var indexInStores = parseInt($('#stores').val());
+    var theStore;
+
+    for (var i =0; i < Stores.length ; i++)
+        if (indexInStores === Stores[i].StoreID)
+            theStore = Stores[i];
+
     $('#ItemTitles').empty();
-    var ItemsInStore = Stores[indexInStores].Items;
+    var ItemsInStore = theStore.Items;
     ItemsInStore.forEach(addItem);
 }
 

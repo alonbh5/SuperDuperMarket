@@ -793,6 +793,7 @@ public class SuperDuperMarketSystem {
 
     void addStore(Store newStore) {
         m_StoresInSystem.put(newStore.getStoreID(),newStore);
+        m_SystemGrid.put(newStore.getCoordinate(),newStore);
     }
 
     public Item getItem(Long serialNumber) {

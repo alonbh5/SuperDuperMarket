@@ -16,6 +16,7 @@ var SingleOrderUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePa
 var OrderTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/SellerOrders.html";
 var OrderItemsTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/ItemFromOrder.html";
 var OpenStoreURL ="http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/OpenStore.html";
+var ShowFeedBack ="http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/ShowFeedBacks.html";
 var BuyerOrderTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/BuyerOrders.html";
 var FeedBackURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/AddFeedBack.html";
 
@@ -382,7 +383,8 @@ function linkSubmitOfCreateStore() {
                 url: getZoneInfo,
                 type: "POST",
                 success: function (data) {
-
+                    $('.main').empty().append('<h3>New Store Is Open For Business!</h3>');
+                    console.log("a store has been open")
                 }
 
             });
@@ -413,9 +415,32 @@ function ShowFeedback() {
     $.ajax({
         data: ServletRequestAttributeName+"feedbacks",
         url: getZoneInfo,
-        //while get "seller" or "customer" (with ")
         success: function (data) {
-            //makeFeedBackMenu(data)
+
+            if (data.length === 0)
+                $('.main').empty().append('<h3>No FeedBack Yet!</h3>');
+            else {
+
+                $('.main').empty().load(ShowFeedBack, function () {
+
+                    $.each(data || [], function (index, feedback) {
+                        /*
+                        public final Integer stars;
+                        public final String feed;
+                        public final String CustomerName;
+                        public final String SellerName;
+                        public final Date DateGiven;
+                        public final StoreInfo Store;
+                        */
+                        $('#feedBackBody').append($('<tr>\n' +
+                            '        <td>'+feedback.CustomerName+'</td>\n' +
+                            '        <td>'+feedback.DateGiven+'</td>\n' +
+                            '        <td>'+feedback.stars+'</td>\n' +
+                            '        <td>'+feedback.feed+'</td>\n' +
+                            '    </tr>'));
+                    });
+                });
+            }
         }
     });
 }
