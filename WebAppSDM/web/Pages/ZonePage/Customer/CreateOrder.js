@@ -9,11 +9,10 @@ var StoreIdForFeedBack;
 
 var orderIdForFeed;
 
-var StoreSum = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/DynamicStores.html";
-var DiscountMenu = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/DiscountPane.html";
 
-/*var StoreSum = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/DynamicStores.html";
-var DiscountMenu = "http://localhost:8080/WebAppSDM/Pages/ZonePage/All/DiscountPane.html";*/
+
+var StoreSum = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/DynamicStores.html";
+var DiscountMenu = "http://localhost:8080/WebAppSDM/Pages/ZonePage/All/DiscountPane.html";
 
 
 function LinkCreateOrderForm() {
@@ -72,6 +71,9 @@ function linkSubmit() {
                             linkOrderSum(Stores);
                         });
                     }
+                },
+                error: function (data) {
+                    alert(data.responseText);
                 }
 
             });
@@ -83,22 +85,30 @@ function linkSubmit() {
 }
 
 function showDiscountsMenu(discounts ) {
-    Discounts = [];
-    $('.main').empty().load(DiscountMenu,function () {
-        linkDiscount(discounts);
-       $('#discountOn').on('click',function () {
-           $.ajax({
-               data: ServletRequestAttributeName+"finishOrder",
-               type: "POST",
-               url: getZoneInfo,
+    if (discounts.length === 0)
+        AfterDiscounts();
+    else {
+        Discounts = [];
+        $('.main').empty().load(DiscountMenu, function () {
+            linkDiscount(discounts);
+            $('#discountOn').on('click',function () {
+                AfterDiscounts();
+            });
+        });
+    }
+}
 
-               success: function (data) { //this is order
-                   setBuyerOrder(data,true);
+function AfterDiscounts() {
+        $.ajax({
+            data: ServletRequestAttributeName+"finishOrder",
+            type: "POST",
+            url: getZoneInfo,
 
-               }
-           });
-       })
-    });
+            success: function (data) { //this is order
+                setBuyerOrder(data,true);
+
+            }
+        });
 }
 
 function aprroveOrder() {

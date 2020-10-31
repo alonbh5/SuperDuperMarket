@@ -14,31 +14,33 @@
     <link rel="stylesheet" href="Common/LoginCss.css">
 </head>
 <body>
-<div class="container ">
-    <h1>Welcome to the Super Duper Market!</h1>
-    <br/>
-    <h2>Please Enter a Unique User Name,Select Type of User and then Press "Login":</h2>
-    <br>
+<div class="login-box">
+    <h2>Super Super Market</h2>
     <form id="loginSubmitForm" method="GET" action="login">
+
         <div class="user-box">
-        <input id="UserNameTextBox" type="text" name="username" class=""/>
+            <input id="UserNameTextBox" type="text" name="username" class=""/>
+
+            <label>Username</label>
         </div>
         <div class="user-box">
-        <input  type="radio" id="seller" name="userType" value="seller">
-        <label for="seller">Seller</label>
-        <input type="radio" id="costumer" name="userType" value="costumer">
-        <label for="costumer">Customer</label><br>
+
+            <h3>Seller</h3>
+            <input  type="radio" id="seller" name="userType" value="seller">
+            <h3>Customer</h3>
+            <input type="radio" id="costumer" name="userType" value="costumer">
+
+
+            <label>User Type</label>
         </div>
-        <input class="btn btn-primary btn-ghost" id="submitLogin" type="submit" value="Login"/>
-
-
+        <a href="#" id="pretty">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Login
+        </a>
     </form>
-
-    <br><br>
-    <div >
-        <h1 id="ErrorMassage"></h1>
-    </div>
-
 </div>
 </body>
 </html>

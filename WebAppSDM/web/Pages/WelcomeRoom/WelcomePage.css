@@ -185,8 +185,16 @@ ul, li {
 input {
     display: block;
     outline: none;
-    border: none !important;
+    /*border: none !important;*/
+    border:2px inset #EBE9ED;
 }
+
+.centerMe {
+    margin-right: 30%;
+    margin-left: 30%;
+}
+
+
 
 #submitButton {
     display: block;

@@ -1,16 +1,11 @@
 var Version = 0;
 var refreshRate = 2000; //milli seconds
 var updateArea = false;
-var getAreasUrl = "http://localhost:8080/WebAppSDM_war_exploded/getAreas";
-var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
-var UserListUrl = 'http://localhost:8080/WebAppSDM_war_exploded/UsersList';
-var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
-var showNotifyURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/showNotify.html";
-/*var getAreasUrl = "http://localhost:8080/WebAppSDM/getAreas";
+var getAreasUrl = "http://localhost:8080/WebAppSDM/getAreas";
 var getUserTypeUrl = 'http://localhost:8080/WebAppSDM/getUserType';
 var UserListUrl = 'http://localhost:8080/WebAppSDM/UsersList';
 var getZoneInfo = 'http://localhost:8080/WebAppSDM/GetZoneInfo';
-var showNotifyURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/showNotify.html";*/
+var showNotifyURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/showNotify.html";
 var ServletRequestAttributeName = "infoType=";
 
 var isCustomer = false;
@@ -101,13 +96,14 @@ function ShowAccount() {
 
             if (isCustomer) {
                 $('.main').append($('<li>\n' +
-                    '        <label for="datepicker">Please Choose Charge Date :</label>\n' +
-                    '        <input type="date" id="datepicker" name="datepicker">\n' +
+                    '        <label class="centerMe" for="datepicker">Please Choose Charge Date :</label>\n' +
+                    '        <input class="centerMe" type="date" id="datepicker" name="datepicker">\n' +
                     '    </li>'));
-                $('.main').append($('<input type="number" id="moneyToAdd" name="money" step="any" min="0.1">'));
+                $('.main').append($('<input type="number" class="centerMe" id="moneyToAdd" name="money" step="any" min="0.1">'));
                 $('.main').append($('<button/>')
                     .text('Charge Money')
                     .attr('id', 'chargeButton')
+                    .attr('class', 'centerMe')
                     .click(function () {
                         addMoney();
                     }));
@@ -240,7 +236,7 @@ function createAreaEntry(entry) {
     var zone=entry.Zone;
     return $('<tr>\n' +
         '       <td>'+entry.UserName+'</td>\n' +
-        '       <td><a href="http://localhost:8080/WebAppSDM_war_exploded/LocalZones?zoneSelected='+entry.Zone+'">'+entry.Zone+'</a></td>\n' +
+        '       <td><a href="http://localhost:8080/WebAppSDM/LocalZones?zoneSelected='+entry.Zone+'">'+entry.Zone+'</a></td>\n' +
         '       <td>'+entry.AmountOfStores+'</td>\n' +
         '       <td>'+entry.AmountOfItems+'</td>\n' +
         '       <td>'+entry.AmountOfOrder+'</td>\n' +

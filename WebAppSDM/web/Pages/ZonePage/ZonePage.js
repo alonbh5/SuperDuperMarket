@@ -7,21 +7,8 @@ var updateStoresList  = false;
 var StoreOrderList = [];
 var StoresList = [];
 
-var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
-var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
-var storeTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/StoreList.html";
-var SingleStoreUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Store.html";
-var SingleOrderUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Order.html";
-var OrderTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/SellerOrders.html";
-var OrderItemsTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/ItemFromOrder.html";
-var OpenStoreURL ="http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/OpenStore.html";
-var ShowFeedBack ="http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/ShowFeedBacks.html";
-var showNotifyURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/showNotify.html";
-var BuyerOrderTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/BuyerOrders.html";
-var FeedBackURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/AddFeedBack.html";
-var createNewOrderURl = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/CreateOrder.html";
 
-/*var getUserTypeUrl = 'http://localhost:8080/WebAppSDM/getUserType';
+var getUserTypeUrl = 'http://localhost:8080/WebAppSDM/getUserType';
 var getZoneInfo = 'http://localhost:8080/WebAppSDM/GetZoneInfo';
 var storeTableURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/All/StoreList.html";
 var SingleStoreUrl =  "http://localhost:8080/WebAppSDM/Pages/ZonePage/All/Store.html";
@@ -33,7 +20,7 @@ var ShowFeedBack ="http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/ShowFee
 var showNotifyURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/showNotify.html";
 var BuyerOrderTableURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/BuyerOrders.html";
 var FeedBackURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/AddFeedBack.html";
-var createNewOrderURl = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/CreateOrder.html";*/
+var createNewOrderURl = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/CreateOrder.html";
 
 var notifySize = 0;
 
@@ -318,13 +305,13 @@ function  setBuyerOrder(order,fromCreate) {
         });
 
         if (fromCreate) {
-
+            $('.main').append('<br>');
             $('.main').append($('<button/>')
-                .text('Approve!')
+                .text('Approve!!')
                 .click(function () {
                     aprroveOrder();
                 }));
-
+            $('.main').append('<br>');
             $('.main').append($('<button/>')
                 .text('Cancel!')
                 .click(function () {
@@ -385,10 +372,13 @@ function OpenNewStore() {
     });
 }
 
+
+var flagGood = true;
 function linkSubmitOfCreateStore() {
+    flagGood = true;
     $('#OpenStoreForm').submit(function (e) {
         //e.preventDefault();
-
+        flagGood = true;
         var flag = false;
         var ppk = $('#PPK').val();
         var storeName = $('#sname').val();
@@ -417,9 +407,19 @@ function linkSubmitOfCreateStore() {
                     console.log("a store has been open");
                 },
                 complete: function () {
-                    $('.main').empty().append('<h3>New Store Is Open For Business!</h3>');
-                    console.log("a store has been open");
+                    if (flagGood) {
+                        $('.main').empty().append('<h3>New Store Is Open For Business!</h3>');
+                        console.log("a store has been open");
+                    }
+                    else{
+                        OpenNewStore();
+                    }
+                },
+                error: function (data) {
+                    flagGood=false;
+                    alert(data.responseText);
                 }
+
 
             });
             return false;

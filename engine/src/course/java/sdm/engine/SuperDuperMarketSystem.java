@@ -248,14 +248,16 @@ public class SuperDuperMarketSystem {
 
 
 
-    public List<DiscountInfo> CreateTempStaticOrderAndGetDiscounts (Collection<ItemInOrderInfo> itemsChosen, StoreInfo storeChosen, Customer customer, Date OrderDate) throws PointOutOfGridException, StoreDoesNotSellItemException {
+    public List<DiscountInfo> CreateTempStaticOrderAndGetDiscounts (Collection<ItemInOrderInfo> itemsChosen, StoreInfo storeChosen, Customer customer, Date OrderDate) throws PointOutOfGridException, StoreDoesNotSellItemException, DuplicatePointOnGridException, WrongPayingMethodException {
         //create temp static order, return entitled discount..
         //todo add seller and all that...
         if (!m_StoresInSystem.containsKey(storeChosen.StoreID))
             throw (new RuntimeException("Store ID #"+storeChosen.StoreID+" is not in System"));
         if (itemsChosen.isEmpty())
-            throw (new RuntimeException("Empty List"));
+            throw (new WrongPayingMethodException("sadfas","Empty List"));
 
+        if (customer.getCoordinate() == null || isLocationTaken(customer.getCoordinate()))
+            throw (new DuplicatePointOnGridException(null));
 
         Store curStore = m_StoresInSystem.get(storeChosen.StoreID);
         Order newOrder = createEmptyOrder(customer,OrderDate,true);

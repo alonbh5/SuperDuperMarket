@@ -115,7 +115,7 @@ public class GetZoneInfoServlet extends HttpServlet {
 
         mainSDM.AddStore(newStore,Zone);
 
-
+        response.setStatus(HttpServletResponse.SC_ACCEPTED);
         PrintWriter writer = response.getWriter() ;
         writer.println("Done!");
         writer.flush();
@@ -125,7 +125,14 @@ public class GetZoneInfoServlet extends HttpServlet {
         } catch (DuplicateItemInStoreException e) {
             e.printStackTrace();
         } catch (DuplicatePointOnGridException e) {
-            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            PrintWriter outy = null;
+            try {
+                outy = response.getWriter();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            outy.println("There Is A Store At This Location!");
         } catch (StoreDoesNotSellItemException e) {
             e.printStackTrace();
         } catch (NegativePriceException e) {
@@ -244,7 +251,6 @@ public class GetZoneInfoServlet extends HttpServlet {
         try {
             
             Date date=new SimpleDateFormat("yyyy-MM-dd").parse(userDate);
-            
         if (OrderType.toLowerCase().equals("static")){
 
             String storeIdChosen = request.getParameter("stores");
@@ -300,6 +306,22 @@ public class GetZoneInfoServlet extends HttpServlet {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (DuplicatePointOnGridException e) {
+            try {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                PrintWriter outy = response.getWriter();
+                outy.println("There Is A Store At This Location!");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } catch (WrongPayingMethodException e) {
+            try {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                PrintWriter outy = response.getWriter();
+                outy.println("Peek At least 1 Items!");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
