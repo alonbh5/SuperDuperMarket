@@ -322,7 +322,6 @@ function SellersOrder() {
 function OpenNewStore() {
     OpenStoreFlag = false;
     $('.main').empty().load(OpenStoreURL,function () {
-
         $.ajax({
             data: ServletRequestAttributeName+"items",
             url: getZoneInfo,
@@ -357,7 +356,7 @@ function OpenNewStore() {
 
 function linkSubmitOfCreateStore() {
     $('#OpenStoreForm').submit(function (e) {
-        e.preventDefault();
+        //e.preventDefault();
 
         var flag = false;
         var ppk = $('#PPK').val();
@@ -379,12 +378,16 @@ function linkSubmitOfCreateStore() {
         if (flag) {
             ItemChosen = false;
             $.ajax({
-                data: $('#OpenStoreForm').serialize(), //{userdata: $('#createOrderForm').serialize(), infoType:"createOrder"},
+                data: $('#OpenStoreForm').serialize(),
                 url: getZoneInfo,
                 type: "POST",
                 success: function (data) {
                     $('.main').empty().append('<h3>New Store Is Open For Business!</h3>');
-                    console.log("a store has been open")
+                    console.log("a store has been open");
+                },
+                complete: function () {
+                    $('.main').empty().append('<h3>New Store Is Open For Business!</h3>');
+                    console.log("a store has been open");
                 }
 
             });
