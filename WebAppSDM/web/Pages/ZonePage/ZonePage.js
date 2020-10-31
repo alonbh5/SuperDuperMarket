@@ -17,8 +17,11 @@ var OrderTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePag
 var OrderItemsTableURL =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/ItemFromOrder.html";
 var OpenStoreURL ="http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/OpenStore.html";
 var ShowFeedBack ="http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/ShowFeedBacks.html";
+var showNotifyURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/showNotify.html";
 var BuyerOrderTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/BuyerOrders.html";
 var FeedBackURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/AddFeedBack.html";
+
+var notifySize = 0;
 
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
 
@@ -69,7 +72,15 @@ function makeBars() {
             $('<a href="#" id="OpenNewStoreButton">Open New Store</a>').on("click",function(){
                 updateStoresList = false;
                 OpenNewStore();
-            }));
+            }))
+        .append($('<a href="#" class="notification">\n' +
+            '  <span>Notification</span>\n' +
+            '  <span id="notifyNumber" class="badge"></span>\n' +
+            '</a>').on("click",function(){
+            ShowNewMsg();
+        }));
+
+        GetNotify();
     }
     else { //case buyer
         $('#MainBar').append(
@@ -724,3 +735,55 @@ var table = "<div class=\"limiter\">\n" + //todo this with ajax?
     "    </div>\n" +
     "</div>";
 
+
+var AllNotifyArray = [];
+function GetNotify() {
+
+    $.ajax({
+        data: {infoType:"notify",curSize:notifySize},
+        url: getZoneInfo,
+
+        success: function (data) {
+            if (data.length !== 0) {
+                AllNotifyArray = AllNotifyArray.concat(data)
+                addNotifyToScreen(data);
+                notifySize += data.length;
+            }
+
+            setTimeout(GetNotify,3000);
+        }
+    });
+
+}
+
+function addNotifyToScreen(msgToAdd) {
+    var x  = msgToAdd.length;
+    var currentNumber = parseInt($('#notifyNumber').text());
+    if (isNaN(currentNumber))
+        $('#notifyNumber').empty().append(x);
+    else {
+        x +=currentNumber;
+        $('#notifyNumber').empty().append(x);
+    }
+
+}
+
+
+function ShowNewMsg() {
+    if (AllNotifyArray.length === 0)
+        $('.main').empty().append('<h3>No Massages Yet...</h3>');
+    else {
+
+        $('#notifyNumber').empty();
+        var rev = AllNotifyArray.reverse();
+        $('.main').empty().load(showNotifyURL, function () {
+
+            rev.forEach(function (value) {
+                $('#msgArea').append('<div class="alert info">\n' +
+                    '    <span class="closebtn">&times;</span>\n' +
+                    '    <strong>Notice!</strong>' + value + '.\n' +
+                    '</div>')
+            })
+        });
+    }
+}

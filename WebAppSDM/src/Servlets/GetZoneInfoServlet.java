@@ -39,6 +39,8 @@ public class GetZoneInfoServlet extends HttpServlet {
     public final String FinishOrder = "finishOrder"; //add all discount..
     public final String ApproveOrder = "approveOrder";
     public final String CreateOrderRequest = "createOrder";
+    public final String GiveNotification = "notify";
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //todo post for getting new store or order or waller
@@ -334,6 +336,9 @@ public class GetZoneInfoServlet extends HttpServlet {
                 case SellerOrderHistoryRequest:
                     SendSellerOrderHistoryAjax(request,response,sdmByZone);
                     break;
+                case GiveNotification:
+                    SendNotification(request,response,MainSDM);
+                    break;
                 default:
                     // code block //todo error
             }
@@ -345,6 +350,22 @@ public class GetZoneInfoServlet extends HttpServlet {
             else {
                 //todo error
             }
+        }
+    }
+
+    private void SendNotification(HttpServletRequest request, HttpServletResponse response, MainSystem MainSDM) {
+        try {
+            String UserName = SessionUtils.getUserName(request);
+            Integer size =  Integer.parseInt((request.getParameter("curSize")).trim());
+            List<String> notification = MainSDM.getAllNotification(UserName,size);
+            Gson gson = new Gson();
+            String addNotification = gson.toJson(notification);
+            System.out.println(addNotification);
+            PrintWriter out = response.getWriter();
+            out.print(addNotification);
+            out.flush();
+        } catch (IOException e) {
+            //todo error
         }
     }
 

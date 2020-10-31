@@ -16,6 +16,9 @@ public class Seller extends Person {
     private final List<FeedBack> FeedBacks = new ArrayList<>();
     private final Wallet wallet = new Wallet();
 
+    private final List<String> Notification = new ArrayList<>();
+
+
     public Map<String, SuperDuperMarketSystem> getAllSuperMarket() {
         return AllSuperMarket;
     }
@@ -54,6 +57,7 @@ public class Seller extends Person {
 
     void addFeedBack (FeedBack FeedbackToAdd) {
         FeedBacks.add(FeedbackToAdd);
+        addNotification("New FeedBack From "+FeedbackToAdd.getCustomer().getName());
     }
 
    /* boolean isCustomerGaveFeedBack (Customer customer) {
@@ -98,5 +102,14 @@ public class Seller extends Person {
     @Override
     public int hashCode() {
         return Objects.hash(getIDNumber());
+    }
+
+
+    void addNotification (String msg) {
+        Notification.add(msg);
+    }
+
+    List<String> getNotification () {
+        return Notification;
     }
 }

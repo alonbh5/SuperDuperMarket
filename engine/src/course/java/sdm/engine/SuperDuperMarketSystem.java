@@ -29,6 +29,10 @@ public class SuperDuperMarketSystem {
         ZoneManger = zoneManger;
     }
 
+    public Seller getZoneManger () {
+        return ZoneManger;
+    }
+
     static double CalculatePPK(Store FromStore, Point curLocation)   {
         return (double)FromStore.getPPK() * FromStore.getCoordinate().distance(curLocation);
     }
@@ -284,16 +288,31 @@ public class SuperDuperMarketSystem {
         updateSoldCounterInStore(m_tempOrder); // updated the counter of item in the store (how many times has been sold)
         for (Store curStore : m_tempOrder.getStoreSet())
             curStore.addOrderToStoreHistory(m_tempOrder);
-        m_tempOrder.getCostumer().addOrderToHistory(m_tempOrder); //todo add history to both seller and cosmer...and ask for feedback?
+        m_tempOrder.getCostumer().addOrderToHistory(m_tempOrder);
+        notifyAllSellers(createOrderInfo(m_tempOrder),m_tempOrder);
         MoveMoney(customer);
         m_tempOrder=null;
         customer.m_tempDiscounts = null;
-        //todo add wallet, todo notification....
+
+
 
     }
 
+    private void notifyAllSellers(OrderInfo Order,Order origOrder) {
+
+        Seller seller;
+        Store store;
+
+        for (StoreInOrderInfo cur : Order.Stores) {
+            store = m_StoresInSystem.get(cur.Store.StoreID);
+            seller = store.getSeller();
+            seller.addNotification("New Order #"+Order.m_OrderSerialNumber+" From "+Order.customer.name+
+                    ", He Bought "+cur.AmountOfItems+" Items For "+cur.PriceOfItems+" And Paid "+cur.ShippingCost+" For Shipping");
+        }
+    }
+
     private void MoveMoney(Customer customer) {
-        //todo notify!!@!#$!@!@!$
+
         //when order is done we move the money - no negative check!
         Order curOrder = customer.m_tempOrder;
         Double money = 0d;

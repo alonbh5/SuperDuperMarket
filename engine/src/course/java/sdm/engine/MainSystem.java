@@ -187,7 +187,7 @@ public class MainSystem {
         seller.addFeedBack(newFeed);
         customer.addFeedBack(newFeed);
 
-        //todo notifaction
+
 
 
         List<StoreInOrderInfo> res = new ArrayList<>();
@@ -233,7 +233,11 @@ public class MainSystem {
 
         seller.addStore(newStore);
         sdm.addStore(newStore);
-        //todo notify..
+
+        if (!(newStore.getSeller().getName().equals(sdm.getZoneManger().getName()))) //if this is a new seller in zone
+            sdm.getZoneManger().addNotification("New Store Was Open In Your Zone ("+Zone+") at "+StoreInfo.getPointString(newStore.getCoordinate())+
+                    " by Seller "+seller.getName()+
+                    ",He Sell "+newStore.getAmountOfItems()+" Out Of "+sdm.getAmountOfItemsInSystem());
     }
 
 
@@ -250,5 +254,13 @@ public class MainSystem {
         discounts.get(indexInArray).addAmountWanted();
         customer.setTempDiscounts(discounts);
         return discounts;
+    }
+
+    public List<String> getAllNotification (String Name,Integer SizeTheyHave) {
+        List<String> res = new ArrayList<>();
+        List<String> AllNotification = m_SellersInSystem.get(Name).getNotification();
+        if (SizeTheyHave != AllNotification.size()) //cant be size is smaller..
+            res = AllNotification.subList(SizeTheyHave,AllNotification.size());
+        return res;
     }
 }
