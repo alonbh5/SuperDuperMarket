@@ -348,7 +348,12 @@ public class GetZoneInfoServlet extends HttpServlet {
             if (userRequest.equals(AccentWalletRequest) && CurUserName!=null)
                 SendUserWallet(request,response,MainSDM);
             else {
-                //todo error
+                if (userRequest.equals(GiveNotification))
+                    SendNotification(request,response,MainSDM);
+                else{
+                    //todo error
+                }
+
             }
         }
     }
@@ -356,8 +361,13 @@ public class GetZoneInfoServlet extends HttpServlet {
     private void SendNotification(HttpServletRequest request, HttpServletResponse response, MainSystem MainSDM) {
         try {
             String UserName = SessionUtils.getUserName(request);
-            Integer size =  Integer.parseInt((request.getParameter("curSize")).trim());
+            //Integer size =  Integer.parseInt((request.getParameter("curSize")).trim());
+            Integer size =  SessionUtils.getSellerNotify(request);
+            if (size== null)
+                size =0;
             List<String> notification = MainSDM.getAllNotification(UserName,size);
+            size+=notification.size();
+            request.getSession(false).setAttribute(Constants.NOTIFYSEEN,size); //added seen..
             Gson gson = new Gson();
             String addNotification = gson.toJson(notification);
             System.out.println(addNotification);

@@ -23,7 +23,11 @@ var FeedBackURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/C
 
 var notifySize = 0;
 
+var ShowNotify = true;
+
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
+
+    ShowNotify = true;
 
     $('#ItemsButton').on("click",function(){
         updateStoresList = false;
@@ -234,7 +238,9 @@ function SetBuyerOrderForTable(index, order) {
         setBuyerOrder(order,false);
     })
 
-    //todo back
+    $('#BackButton').on("click",function(){
+        ShowNotify = false;
+    })
 }
 
 function  setBuyerOrder(order,fromCreate) {
@@ -750,7 +756,8 @@ function GetNotify() {
                 notifySize += data.length;
             }
 
-            setTimeout(GetNotify,3000);
+            if (ShowNotify)
+                setTimeout(GetNotify,3000);
         }
     });
 

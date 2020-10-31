@@ -12,6 +12,12 @@ public class SessionUtils {
         return sessionAttribute != null ? (Long) sessionAttribute : null;
     }
 
+    public static Integer getSellerNotify (HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Object sessionAttribute = session != null ? session.getAttribute(Constants.NOTIFYSEEN) : null;
+        return sessionAttribute != null ? (Integer) sessionAttribute : null;
+    }
+
     public static String getUserName (HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Object sessionAttribute = session != null ? session.getAttribute(Constants.USERNAME) : null;

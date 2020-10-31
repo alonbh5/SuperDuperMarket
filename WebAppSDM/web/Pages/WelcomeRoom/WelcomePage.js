@@ -11,6 +11,8 @@ var isCustomer = false;
 
 //todo I need to if areas are changes!
 
+var ShowNotify = true;
+
 $(function () {//todo here you can block no good user..(if he type the url) redirct to
 
     $('#HomeButton').on("click",function(){
@@ -41,10 +43,19 @@ $(function () {//todo here you can block no good user..(if he type the url) redi
              */
             $('#HayButton').text("Hallo "+data.userName+"!")
             if (data.userType.includes("seller")){
+                ShowNotify = true;
+
                 $('#MainBar').append(
                     $('<a href="#" id="uploadButton">Upload New Zone</a>').on("click",function(){
                         HandelFile();
-                    }));
+                    })).append($('<a href="#" class="notification">\n' +
+                    '  <span>Notification</span>\n' +
+                    '  <span id="notifyNumber" class="badge"></span>\n' +
+                    '</a>').on("click",function(){
+                    ShowNewMsg();
+                }));
+
+                GetNotify();;
             }
             else {
                 isCustomer = true;
@@ -303,4 +314,58 @@ function HandelFile() {
 
 
    // $('#uploadButton').onclick($('#submitButton').setAttribute("disabled","false"));
+var AllNotifyArray = [];
+function GetNotify() {
 
+    $.ajax({
+        data: {infoType:"notify",curSize:notifySize},
+        url: getZoneInfo,
+
+        success: function (data) {
+            if (data.length !== 0) {
+                AllNotifyArray = AllNotifyArray.concat(data)
+                addNotifyToScreen(data);
+                notifySize += data.length;
+            }
+
+            if (ShowNotify)
+                setTimeout(GetNotify,3000);
+        }
+    });
+
+}
+
+function addNotifyToScreen(msgToAdd) {
+    var x  = msgToAdd.length;
+    var currentNumber = parseInt($('#notifyNumber').text());
+    if (isNaN(currentNumber))
+        $('#notifyNumber').empty().append(x);
+    else {
+        x +=currentNumber;
+        $('#notifyNumber').empty().append(x);
+    }
+
+}
+
+
+function ShowNewMsg() {
+    if (AllNotifyArray.length === 0)
+        $('.main').empty().append('<h3>No Massages Yet...</h3>');
+    else {
+
+        $('#notifyNumber').empty();
+        var rev = AllNotifyArray.reverse();
+        $('.main').empty().load(showNotifyURL, function () {
+
+            rev.forEach(function (value) {
+                $('#msgArea').append('<div class="alert info">\n' +
+                    '    <span class="closebtn">&times;</span>\n' +
+                    '    <strong>Notice!</strong>' + value + '.\n' +
+                    '</div>')
+            })
+        });
+    }
+}
+
+var notifySize = 0;
+var showNotifyURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/showNotify.html";
