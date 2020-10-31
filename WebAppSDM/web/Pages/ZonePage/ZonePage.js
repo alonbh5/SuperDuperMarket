@@ -2,14 +2,13 @@ var CurUserName="";
 var CurUserZone="";
 var CurUserID="";
 var CurUserType="";
-var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
-var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
 var ServletRequestAttributeName = "infoType=";
-
 var updateStoresList  = false;
-
 var StoreOrderList = [];
 var StoresList = [];
+
+var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
+var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
 var storeTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/StoreList.html";
 var SingleStoreUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Store.html";
 var SingleOrderUrl =  "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/Order.html";
@@ -20,6 +19,21 @@ var ShowFeedBack ="http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/S
 var showNotifyURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/showNotify.html";
 var BuyerOrderTableURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/BuyerOrders.html";
 var FeedBackURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/AddFeedBack.html";
+var createNewOrderURl = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/CreateOrder.html";
+
+/*var getUserTypeUrl = 'http://localhost:8080/WebAppSDM/getUserType';
+var getZoneInfo = 'http://localhost:8080/WebAppSDM/GetZoneInfo';
+var storeTableURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/All/StoreList.html";
+var SingleStoreUrl =  "http://localhost:8080/WebAppSDM/Pages/ZonePage/All/Store.html";
+var SingleOrderUrl =  "http://localhost:8080/WebAppSDM/Pages/ZonePage/All/Order.html";
+var OrderTableURL =  "http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/SellerOrders.html";
+var OrderItemsTableURL =  "http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/ItemFromOrder.html";
+var OpenStoreURL ="http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/OpenStore.html";
+var ShowFeedBack ="http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/ShowFeedBacks.html";
+var showNotifyURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/showNotify.html";
+var BuyerOrderTableURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/BuyerOrders.html";
+var FeedBackURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/AddFeedBack.html";
+var createNewOrderURl = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/CreateOrder.html";*/
 
 var notifySize = 0;
 
@@ -188,7 +202,7 @@ function ShowItems() {
 //====================Buyer====================
 function MakeNewOrder() {
     //$('.main').empty().append(MakeOrderForm());
-    $('.main').empty().load('http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/CreateOrder.html',LinkCreateOrderForm);
+    $('.main').empty().load(createNewOrderURl,LinkCreateOrderForm);
     //LinkCreateOrderForm();
 }
 function BuyerOrderHistory() {

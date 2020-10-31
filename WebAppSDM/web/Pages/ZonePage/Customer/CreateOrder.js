@@ -12,6 +12,9 @@ var orderIdForFeed;
 var StoreSum = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Customer/DynamicStores.html";
 var DiscountMenu = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/All/DiscountPane.html";
 
+/*var StoreSum = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Customer/DynamicStores.html";
+var DiscountMenu = "http://localhost:8080/WebAppSDM/Pages/ZonePage/All/DiscountPane.html";*/
+
 
 function LinkCreateOrderForm() {
     linkOrderType(); //bol bar for stores and shop..

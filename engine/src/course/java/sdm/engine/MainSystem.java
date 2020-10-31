@@ -116,10 +116,18 @@ public class MainSystem {
 
 
     public synchronized List<AreaInfo> getAreaEntries(int fromIndex) {
-        if (fromIndex < 0 || fromIndex > Areas.size()) {
+       /* if (fromIndex < 0 || fromIndex > Areas.size()) {
             fromIndex = 0;
         }
-        return Areas.subList(fromIndex, Areas.size());
+        return Areas.subList(fromIndex, Areas.size());*/
+
+       List<AreaInfo> res = new ArrayList<>();
+       for (AreaInfo cur : Areas)
+           for (Seller seller : m_SellersInSystem.values())
+               if (seller.isZoneInUser(cur.Zone))
+                   res.add(seller.getAreaInfo(cur.Zone));
+
+       return res;
     }
 
     public synchronized List<AreaInfo> getAllAreaEntries() {

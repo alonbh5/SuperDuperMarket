@@ -5,6 +5,12 @@ var getAreasUrl = "http://localhost:8080/WebAppSDM_war_exploded/getAreas";
 var getUserTypeUrl = 'http://localhost:8080/WebAppSDM_war_exploded/getUserType';
 var UserListUrl = 'http://localhost:8080/WebAppSDM_war_exploded/UsersList';
 var getZoneInfo = 'http://localhost:8080/WebAppSDM_war_exploded/GetZoneInfo';
+var showNotifyURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/showNotify.html";
+/*var getAreasUrl = "http://localhost:8080/WebAppSDM/getAreas";
+var getUserTypeUrl = 'http://localhost:8080/WebAppSDM/getUserType';
+var UserListUrl = 'http://localhost:8080/WebAppSDM/UsersList';
+var getZoneInfo = 'http://localhost:8080/WebAppSDM/GetZoneInfo';
+var showNotifyURL = "http://localhost:8080/WebAppSDM/Pages/ZonePage/Seller/showNotify.html";*/
 var ServletRequestAttributeName = "infoType=";
 
 var isCustomer = false;
@@ -177,7 +183,7 @@ $('#accountBody').append(' <tr>\\n" +\n' +
 
 function SetAres() {
     $('.main').empty().append('<h2>Areas Information</h2><br>\n' +
-        '        <table id="AreasTable">\n' +
+        '        <table id="AreasTable"><thead\n' +
         '            <tr>\n' +
         '                <th>User Name</th>\n' +
         '                <th>Area Name</th>\n' +
@@ -186,6 +192,7 @@ function SetAres() {
         '                <th>Amount Of Orders</th>\n' +
         '                <th>Average Order Price</th>\n' +
         '            </tr>\n' +
+        '</thead><tbody id="bodyAreas"></tbody>'+
         '        </table>');
     //todo set interval for update
     updateArea=true;
@@ -202,24 +209,7 @@ function showAreas() {
         url: getAreasUrl,
         dataType: 'json',
         success: function (data) {
-            /*
-             data will arrive in the next form:
-             {
-                "entries": [
-                    {
-                        "chatString":"Hi",
-                        "username":"bbb",
-                        "time":1485548397514
-                    },
-                    {
-                        "chatString":"Hello",
-                        "username":"bbb",
-                        "time":1485548397514
-                    }
-                ],
-                "version":1
-             }
-             */
+
             if (data.version !== Version) {
                 Version = data.version;
                 appendToAreas(data.entries);
@@ -236,14 +226,15 @@ function showAreas() {
 function appendToAreas(entries) {
 
     // add the relevant entries
+    $("#bodyAreas").empty();
     $.each(entries || [], appendAreaEntry);
 }
 
 function appendAreaEntry(index, entry) {
     var entryElement = createAreaEntry(entry);
-    $("#AreasTable").append(entryElement);
+    $("#bodyAreas").append(entryElement);
 }
-
+//todo !@$!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function createAreaEntry(entry) {
 
     var zone=entry.Zone;
@@ -349,6 +340,7 @@ function addNotifyToScreen(msgToAdd) {
 
 
 function ShowNewMsg() {
+    updateArea=false;
     if (AllNotifyArray.length === 0)
         $('.main').empty().append('<h3>No Massages Yet...</h3>');
     else {
@@ -368,4 +360,4 @@ function ShowNewMsg() {
 }
 
 var notifySize = 0;
-var showNotifyURL = "http://localhost:8080/WebAppSDM_war_exploded/Pages/ZonePage/Seller/showNotify.html";
+
