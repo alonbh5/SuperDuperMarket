@@ -13,7 +13,7 @@ How To Run:
 1.After Deployment: Go To "http://localhost:8080/WebAppSDM/"
 2.Login Via User Name and Choose User Type (Seller/Customer).
 
-For Seller:
+2.For Seller:
 
 Main Menu: 
 * "Account" Will Allow You to See Your Wallet (All Transactions You Made).
@@ -32,7 +32,7 @@ Zone Menu:
 * See Order-History In Current Zone.
 * "Notifications" Will Show you All Unread Notifications 
 
-For Custoemr:
+3.For Custoemr:
 
 Main Menu: 
 * "Account" Will Allow You to See Your Wallet (All Transactions You Made, Charge Money To Wallet).
