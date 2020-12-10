@@ -35,7 +35,7 @@ Zone Menu:
 * See Order-History In Current Zone.
 * "Notifications" Will Show you All Unread Notifications 
 
-4. For Custoemr:
+4. For Customer:
 
 Main Menu: 
 * "Account" Will Allow You to See Your Wallet (All Transactions You Made, Charge Money To Wallet).
