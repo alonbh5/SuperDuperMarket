@@ -1,7 +1,7 @@
 Web SuperDuperMarket System - Built Using:
 
--Srever Side - Java (For engien and Servlet), Tomcat For deploy Server.
--Client Side - HTML,JS (jQuery), CSS.
+- Srever Side - Java (For engien and Servlet), Tomcat For deploy Server.
+- Client Side - HTML,JS (jQuery), CSS.
 
 The System Extends The GUI System (https://github.com/alonbh5/SuperDuperMarket-GUI-JavaFX) 
 Now Each Seller Can Open Stores In Different Areas Of The World. When He Does He Is Now The "Owner" Of That Zone.
