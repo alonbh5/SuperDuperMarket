@@ -15,22 +15,22 @@ How To Run:
 
 2.For Seller:
 
-  Main Menu: 
-    * "Account" Will Allow You to See Your Wallet (All Transactions You Made).
-    * "Zones" Will Show You Basic Info About Each Zone In System, You can Enter Zone By Clicking It.
-    * "Notifications" Will Show you All Unread Notifications 
-     (Seller Get Notify When:
-     - Customer Buy From It.
-     - Other Seller Opened a New Store in its Area.
-      - Customer Rated Seller.
+Main Menu: 
+* "Account" Will Allow You to See Your Wallet (All Transactions You Made).
+* "Zones" Will Show You Basic Info About Each Zone In System, You can Enter Zone By Clicking It.
+* "Notifications" Will Show you All Unread Notifications 
+  (Seller Get Notify When:
+  - Customer Buy From It.
+  - Other Seller Opened a New Store in its Area.
+  - Customer Rated Seller.
   
-  Zone Menu:
-  * See All Store In Current Zone.
-  * See All Items In Current Zone.
-  * Show All Feedbacks.
-  * Open New Store.
-  * See Order-History In Current Zone.
-  * "Notifications" Will Show you All Unread Notifications 
+Zone Menu:
+* See All Store In Current Zone.
+* See All Items In Current Zone.
+* Show All Feedbacks.
+* Open New Store.
+* See Order-History In Current Zone.
+* "Notifications" Will Show you All Unread Notifications 
 
 3.For Custoemr:
 
