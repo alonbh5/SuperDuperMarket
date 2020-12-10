@@ -5,6 +5,7 @@ Web SuperDuperMarket System - Built Using:
 
 The System Extends The GUI System (https://github.com/alonbh5/SuperDuperMarket-GUI-JavaFX) 
 Now Each Seller Can Open Stores In Different Areas Of The World. When He Does He Is Now The "Owner" Of That Zone.
+* Info About The Developing can Be Found at readme.pdf at "Run" Folder.
 
 How To Run:
 
@@ -47,4 +48,4 @@ Zone Menu:
 * See Order-History In Current Zone.
 
 
-* Info About The Developing can Be Found at readme.pdf at "Run" Folder.
+
