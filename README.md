@@ -37,6 +37,7 @@ For Custoemr:
 Main Menu: 
 * "Account" Will Allow You to See Your Wallet (All Transactions You Made, Charge Money To Wallet).
 * "Zones" Will Show You Basic Info About Each Zone In System, You can Enter Zone By Clicking It.
+
 Zone Menu:
 * See All Store In Current Zone.
 * See All Items In Current Zone.
