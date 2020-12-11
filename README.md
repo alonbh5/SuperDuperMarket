@@ -9,7 +9,7 @@ Now Each Seller Can Open Stores In Different Areas Of The World. When He Does He
 
 How To Run:
 
-* The "Run" Folder Contain .war file, in Order To View Site You can use TomCat (or any other war deployer)
+* The "Run" Folder Contain .war file, in Order To View The Site You can use Tomcat (or any other war deployer)
 * Use Chrome Browser! 
 
 1. After Deployment: Go To "http://localhost:8080/WebAppSDM/"
@@ -18,14 +18,14 @@ How To Run:
 3. For Seller:
 
 Main Menu: 
-* "Account" Will Allow You to See Your Wallet (All Transactions You Made).
+* "Account" Will Allow You to See Your Wallet (All Transactions Youv'e Made).
 * "Zones" Will Show You Basic Info About Each Zone In System, You can Enter Zone By Clicking It.
 * "Upload" Will Allow You Upload XML File Describing a New Zone (can be found at Test Files Folder).
 * "Notifications" Will Show you All Unread Notifications 
-  (Seller Get Notify When:
-  - Customer Buy From It.
-  - Other Seller Opened a New Store in its Area.
-  - Customer Rated Seller.
+  -Seller Get Notify When:
+  - Customer Bought From Him.
+  - Other Seller Opened a New Store in One of His Area.
+  - Some Customer Rated Him.
   
 Zone Menu:
 * See All Store In Current Zone.
