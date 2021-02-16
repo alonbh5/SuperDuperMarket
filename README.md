@@ -1,6 +1,6 @@
 Web SuperDuperMarket System - Built Using:
 
-- Srever Side - Java (For engien and Servlet), Tomcat For deploy Server.
+- Srever Side - Java (For engine and Servlet), Tomcat For Server deployment.
 - Client Side - HTML,JS (jQuery), CSS.
 
 The System Extends The GUI System (https://github.com/alonbh5/SuperDuperMarket-GUI-JavaFX) 
