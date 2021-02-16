@@ -18,7 +18,7 @@ How To Run:
 3. For Seller:
 
 Main Menu: 
-* "Account" Will Allow You to See Your Wallet (All Transactions Youv'e Made).
+* "Account" Will Allow You to See Your Wallet (All Transactions You've Made).
 * "Zones" Will Show You Basic Info About Each Zone In System, You can Enter Zone By Clicking It.
 * "Upload" Will Allow You Upload XML File Describing a New Zone (can be found at Test Files Folder).
 * "Notifications" Will Show you All Unread Notifications 
