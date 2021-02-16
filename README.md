@@ -23,12 +23,12 @@ Main Menu:
 * "Upload" Will Allow You Upload XML File Describing a New Zone (can be found at Test Files Folder).
 * "Notifications" Will Show you All Unread Notifications 
   -Seller Get Notify When:
-  - Customer Bought From Him.
-  - Other Seller Opened a New Store in One of His Area.
+  - a Customer Bought From Him.
+  - Other Seller has Opened a New Store in One of His Areas.
   - Some Customer Rated Him.
   
 Zone Menu:
-* See All Store In Current Zone.
+* See All Stores In Current Zone.
 * See All Items In Current Zone.
 * Show All Feedbacks.
 * Open New Store.
@@ -42,7 +42,7 @@ Main Menu:
 * "Zones" Will Show You Basic Info About Each Zone In System, You can Enter Zone By Clicking It.
 
 Zone Menu:
-* See All Store In Current Zone.
+* See All Stores In Current Zone.
 * See All Items In Current Zone.
 * Make New Order From a Store In That Zone.
 * Rate a Store That You Purchase From.
